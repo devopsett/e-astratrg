@@ -331,7 +331,6 @@
       transform: rotate(180deg);
     }
 
-    /* Sub-menu Dropdown */
     .sub-nav-list {
       display: grid;
       gap: 3px;
@@ -970,7 +969,7 @@
     .m-btn svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 2.2; }
     .m-btn.active { color: var(--primary); font-weight: 800; background: var(--primary-soft); }
 
-    /* Susun Atur Kiri & Kanan (2 Kolum Desktop) */
+    /* Modul Kursus Umrah Split Layout */
     .umrah-container {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -1005,6 +1004,90 @@
       border: 1.5px solid #86efac;
       border-radius: 12px;
       padding: 16px;
+    }
+
+    /* KOTAK MUAT NAIK & PRATONTON POSTER KORPORAT */
+    .poster-upload-zone {
+      border: 2px dashed #cbd5e1;
+      background: #f8fafc;
+      border-radius: 10px;
+      padding: 18px 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .poster-upload-zone:hover {
+      border-color: var(--primary);
+      background: #f1f5f9;
+    }
+
+    .poster-upload-zone svg {
+      width: 30px;
+      height: 30px;
+      stroke: #64748b;
+      margin-bottom: 6px;
+    }
+
+    .poster-preview-card {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      box-shadow: var(--shadow-sm);
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 12px;
+    }
+
+    .poster-preview-img {
+      width: 58px;
+      height: 58px;
+      border-radius: 6px;
+      object-fit: cover;
+      border: 1px solid var(--border);
+      background: #000;
+    }
+
+    .poster-preview-details {
+      flex: 1;
+      min-width: 0;
+      text-align: left;
+    }
+
+    .poster-preview-name {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .poster-preview-size {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .btn-remove-poster {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+      padding: 4px 8px;
+      font-size: 11.5px;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btn-remove-poster:hover {
+      background: #fca5a5;
     }
 
     .umrah-forms-grid {
@@ -1187,7 +1270,7 @@
   <div id="toast" class="toast">Notifikasi</div>
 
   <!-- BUTANG TERAPUNG (FAB) - HANYA MUNCUL DI MODUL INVENTORI -->
-  <button type="button" id="mainFabBtn" class="fab-btn" onclick="openTxModal()" title="Rekod Transaksi Stok">
+  <button type="button" id="mainFabBtn" class="fab-btn" onclick="openTxModal()" title="Daftar Transaksi Stok">
     <svg viewBox="0 0 24 24">
       <line x1="12" y1="5" x2="12" y2="19"></line>
       <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -1256,7 +1339,7 @@
 
             <div>
               <label id="txNoteLabel">Catatan / Rujukan Urusan</label>
-              <textarea id="txNote" placeholder="Tujuan, no. rujukan atau nota ringkas"></textarea>
+              <textarea id="txNote" placeholder="Tujuan, no. rujukan atau nota ringkas urusan"></textarea>
             </div>
 
             <button type="submit" id="btnSubmitTx" class="btn btn-primary" style="width: 100%;">Sahkan Transaksi</button>
@@ -1405,7 +1488,6 @@
             <svg id="chevronStock" class="chevron-icon open" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
           
-          <!-- SUB-MENU DROPDOWN -->
           <ul id="subStockMenu" class="sub-nav-list">
             <li>
               <button id="subBtnDashboard" class="sub-nav-btn active" type="button" onclick="switchTab('dashboard')">
@@ -1585,28 +1667,49 @@
                 <div class="form-group">
                   <div class="input-row">
                     <div>
-                      <label>Tarikh Kursus</label>
+                      <label>Tarikh Pelaksanaan Kursus</label>
                       <input type="date" id="ufTarikhInput" required>
                     </div>
                     <div>
                       <label>Waktu Kursus</label>
-                      <input type="text" id="ufWaktu" required value="9.00 PAGI - 12.00 TENGAHARI">
+                      <input type="text" id="ufWaktu" required placeholder="Contoh: 9.00 PAGI - 12.00 TENGAHARI" value="9.00 PAGI - 12.00 TENGAHARI">
                     </div>
                   </div>
 
                   <div>
-                    <label>Lokasi / Premis</label>
-                    <input type="text" id="ufTempat" required value="DEWAN IMAM A'ASIM, MASJID AL-MUKTAFI BILLAH SHAH (MASJID LADANG)">
+                    <label>Lokasi / Premis Kursus</label>
+                    <input type="text" id="ufTempat" required placeholder="Contoh: DEWAN IMAM A'ASIM, MASJID AL-MUKTAFI BILLAH SHAH (MASJID LADANG)" value="DEWAN IMAM A'ASIM, MASJID AL-MUKTAFI BILLAH SHAH (MASJID LADANG)">
                   </div>
 
                   <div>
-                    <label>Talian Khidmat Pelanggan</label>
-                    <input type="text" id="ufNoTel" required value="011-5508 3367">
+                    <label>Talian Khidmat Pelanggan (Hotline)</label>
+                    <input type="text" id="ufNoTel" required placeholder="Contoh: 011-5508 3367" value="011-5508 3367">
                   </div>
 
+                  <!-- KAWASAN MUAT NAIK POSTER & PRATONTON -->
                   <div>
-                    <label>Poster Program (Pilihan)</label>
-                    <input type="file" id="ufPosterFile" accept="image/*" style="padding: 6px 10px;">
+                    <label>Poster Program Kursus (Pilihan)</label>
+                    
+                    <div id="posterDropzone" class="poster-upload-zone" onclick="document.getElementById('ufPosterFile').click()">
+                      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                        <polyline points="21 15 16 10 5 21"></polyline>
+                      </svg>
+                      <div style="font-weight: 700; color: #1e293b; font-size: 12.5px;">Pilih imej poster baharu</div>
+                      <div style="font-size: 11px; color: #64748b; margin-top: 2px;">Format JPG atau PNG (Poster lalai digunakan jika tidak diubah)</div>
+                    </div>
+                    
+                    <input type="file" id="ufPosterFile" accept="image/*" class="hidden" onchange="handlePosterSelection(event)">
+
+                    <div id="posterPreviewContainer" class="poster-preview-card hidden">
+                      <img id="posterPreviewImg" src="" alt="Pratonton Poster" class="poster-preview-img">
+                      <div class="poster-preview-details">
+                        <div id="posterPreviewName" class="poster-preview-name">poster.jpg</div>
+                        <div id="posterPreviewSize" class="poster-preview-size">0 KB</div>
+                      </div>
+                      <button type="button" class="btn-remove-poster" onclick="removePosterFile()">Padam</button>
+                    </div>
                   </div>
 
                   <button type="submit" id="btnGenForm" class="btn btn-primary" style="width: 100%; min-height: 44px; margin-top: 8px; font-size: 13.5px;">
@@ -1726,6 +1829,37 @@
       checkAutoSystemUpdate();
     });
 
+    /* PENGENDALI PRATONTON POSTER */
+    function handlePosterSelection(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const dropzone = document.getElementById('posterDropzone');
+      const container = document.getElementById('posterPreviewContainer');
+      const img = document.getElementById('posterPreviewImg');
+      const nameEl = document.getElementById('posterPreviewName');
+      const sizeEl = document.getElementById('posterPreviewSize');
+
+      nameEl.textContent = file.name;
+      sizeEl.textContent = (file.size / 1024).toFixed(1) + ' KB';
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        img.src = e.target.result;
+        dropzone.classList.add('hidden');
+        container.classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removePosterFile() {
+      const fileInput = document.getElementById('ufPosterFile');
+      fileInput.value = '';
+      document.getElementById('posterPreviewImg').src = '';
+      document.getElementById('posterPreviewContainer').classList.add('hidden');
+      document.getElementById('posterDropzone').classList.remove('hidden');
+    }
+
     function toggleStockMenu() {
       appState.stockMenuOpen = !appState.stockMenuOpen;
       const subMenu = document.getElementById('subStockMenu');
@@ -1739,7 +1873,6 @@
         chevron.classList.remove('open');
       }
 
-      // Jika pengguna tekan menu induk, buka dashboard stok
       if (appState.activeTab === 'umrahForm') {
         switchTab('dashboard');
       }
@@ -1751,28 +1884,23 @@
       const isStockTab = ['dashboard', 'transactions', 'items'].includes(tab);
       const isUmrahTab = (tab === 'umrahForm');
 
-      // Kemas kini butang navigasi desktop
       const btnParentStock = document.getElementById('btnParentStock');
       const btnNavUmrah = document.getElementById('btnNavUmrah');
       
       if (btnParentStock) btnParentStock.classList.toggle('active', isStockTab);
       if (btnNavUmrah) btnNavUmrah.classList.toggle('active', isUmrahTab);
 
-      // Kemas kini sub-menu dropdown
       document.getElementById('subBtnDashboard').classList.toggle('active', tab === 'dashboard');
       document.getElementById('subBtnTransactions').classList.toggle('active', tab === 'transactions');
       document.getElementById('subBtnItems').classList.toggle('active', tab === 'items');
 
-      // Buka dropdown jika berada di tab stok
       if (isStockTab && !appState.stockMenuOpen) {
         toggleStockMenu();
       }
 
-      // Kemas kini mobile bar
       document.getElementById('mBtnStock').classList.toggle('active', isStockTab);
       document.getElementById('mBtnUmrah').classList.toggle('active', isUmrahTab);
 
-      // Paparan seksyen kandungan
       document.getElementById('tab-dashboard').classList.toggle('hidden', tab !== 'dashboard');
       document.getElementById('tab-transactions').classList.toggle('hidden', tab !== 'transactions');
       document.getElementById('tab-items').classList.toggle('hidden', tab !== 'items');
@@ -1787,7 +1915,6 @@
       document.getElementById('viewTitle').textContent = titles[tab][0];
       document.getElementById('viewSubtitle').textContent = titles[tab][1];
 
-      // Kawal butang Cetak QR dan butang terapung (FAB)
       const qrBtn = document.getElementById('btnStockQR');
       const fabBtn = document.getElementById('mainFabBtn');
       
