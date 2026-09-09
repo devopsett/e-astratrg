@@ -96,147 +96,23 @@
       to { transform: translate(-50%, 0); opacity: 1; }
     }
 
-    .update-content {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
+    .update-content { display: flex; flex-direction: column; gap: 10px; }
+    .update-header-row { display: flex; justify-content: space-between; align-items: center; }
+    .update-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 800; color: #a7f3d0; text-transform: uppercase; letter-spacing: 0.6px; }
+    .update-badge-dot { width: 7px; height: 7px; background: #10b981; border-radius: 50%; box-shadow: 0 0 8px #10b981; }
+    .update-title { font-size: 14px; font-weight: 800; color: #ffffff; margin-top: 2px; }
+    .update-details-box { background: rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 8px 12px; font-size: 12px; line-height: 1.45; color: #ecfdf5; border: 1px solid rgba(255, 255, 255, 0.12); max-height: 75px; overflow-y: auto; }
+    .update-action-row { display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin-top: 2px; }
+    .btn-update-later { background: transparent; color: #a7f3d0; border: none; font-family: inherit; font-size: 12px; font-weight: 600; padding: 7px 12px; cursor: pointer; }
+    .btn-update-confirm { background: #ffffff; color: #0b3818; border: none; font-family: inherit; font-size: 12px; font-weight: 800; padding: 8px 16px; border-radius: 8px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: transform 0.15s ease; }
 
-    .update-header-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .update-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 11px;
-      font-weight: 800;
-      color: #a7f3d0;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-    }
-
-    .update-badge-dot {
-      width: 7px;
-      height: 7px;
-      background: #10b981;
-      border-radius: 50%;
-      box-shadow: 0 0 8px #10b981;
-    }
-
-    .update-title {
-      font-size: 14px;
-      font-weight: 800;
-      color: #ffffff;
-      margin-top: 2px;
-    }
-
-    .update-details-box {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 12px;
-      line-height: 1.45;
-      color: #ecfdf5;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      max-height: 75px;
-      overflow-y: auto;
-    }
-
-    .update-action-row {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      gap: 8px;
-      margin-top: 2px;
-    }
-
-    .btn-update-later {
-      background: transparent;
-      color: #a7f3d0;
-      border: none;
-      font-family: inherit;
-      font-size: 12px;
-      font-weight: 600;
-      padding: 7px 12px;
-      cursor: pointer;
-    }
-
-    .btn-update-confirm {
-      background: #ffffff;
-      color: #0b3818;
-      border: none;
-      font-family: inherit;
-      font-size: 12px;
-      font-weight: 800;
-      padding: 8px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      transition: transform 0.15s ease;
-    }
-
-    .loading-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(8px);
-      display: grid;
-      place-items: center;
-      z-index: 999999 !important;
-    }
-
-    .update-anim-container {
-      position: relative;
-      width: 86px;
-      height: 86px;
-      margin: 0 auto 18px;
-      display: grid;
-      place-items: center;
-    }
-
-    .update-anim-logo {
-      width: 60px;
-      height: 60px;
-      border-radius: 14px;
-      object-fit: cover;
-      box-shadow: 0 8px 20px rgba(11, 56, 24, 0.25);
-      animation: pulseLogo 1.6s ease-in-out infinite;
-      z-index: 2;
-    }
-
-    .update-spinner-ring {
-      position: absolute;
-      inset: 0;
-      border: 3px solid rgba(11, 56, 24, 0.15);
-      border-top-color: var(--primary);
-      border-radius: 50%;
-      animation: spin 0.9s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
-      z-index: 1;
-    }
-
-    @keyframes pulseLogo {
-      0%, 100% { transform: scale(1); filter: drop-shadow(0 4px 6px rgba(11, 56, 24, 0.2)); }
-      50% { transform: scale(1.08); filter: drop-shadow(0 10px 15px rgba(11, 56, 24, 0.35)); }
-    }
-
-    .spinner {
-      width: 38px;
-      height: 38px;
-      border: 3px solid var(--border);
-      border-top-color: var(--primary);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
+    .loading-overlay { position: fixed; inset: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); display: grid; place-items: center; z-index: 999999 !important; }
+    .spinner { width: 38px; height: 38px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
     .app-layout {
       display: grid;
-      grid-template-columns: 250px minmax(0, 1fr);
+      grid-template-columns: 260px minmax(0, 1fr);
       height: 100vh;
       width: 100%;
       max-width: 100vw;
@@ -283,7 +159,7 @@
       color: #6ee7b7;
       text-transform: uppercase;
       letter-spacing: 0.8px;
-      padding: 6px 14px 4px;
+      padding: 8px 14px 4px;
     }
 
     .nav-list { display: grid; gap: 4px; list-style: none; margin-bottom: 10px; }
@@ -307,29 +183,13 @@
       transition: all 0.18s;
     }
 
-    .nav-btn-content {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
+    .nav-btn-content { display: flex; align-items: center; gap: 12px; }
     .nav-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.2; flex-shrink: 0; }
     .nav-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
-    .nav-btn.active {
-      background: #ffffff;
-      color: var(--primary);
-      font-weight: 800;
-      box-shadow: var(--shadow-sm);
-    }
+    .nav-btn.active { background: #ffffff; color: var(--primary); font-weight: 800; box-shadow: var(--shadow-sm); }
 
-    .chevron-icon {
-      width: 14px !important;
-      height: 14px !important;
-      transition: transform 0.2s ease;
-    }
-    .chevron-icon.open {
-      transform: rotate(180deg);
-    }
+    .chevron-icon { width: 14px !important; height: 14px !important; transition: transform 0.2s ease; }
+    .chevron-icon.open { transform: rotate(180deg); }
 
     .sub-nav-list {
       display: grid;
@@ -337,12 +197,6 @@
       list-style: none;
       padding-left: 28px;
       margin-bottom: 8px;
-      animation: fadeIn 0.18s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-4px); }
-      to { opacity: 1; transform: translateY(0); }
     }
 
     .sub-nav-btn {
@@ -363,23 +217,9 @@
       transition: all 0.15s;
     }
 
-    .sub-nav-btn:hover {
-      background: rgba(255,255,255,0.08);
-      color: #ffffff;
-    }
-
-    .sub-nav-btn.active {
-      background: rgba(255,255,255,0.18);
-      color: #a7f3d0;
-      font-weight: 800;
-    }
-
-    .sub-nav-dot {
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: currentColor;
-    }
+    .sub-nav-btn:hover { background: rgba(255,255,255,0.08); color: #ffffff; }
+    .sub-nav-btn.active { background: rgba(255,255,255,0.18); color: #a7f3d0; font-weight: 800; }
+    .sub-nav-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
 
     .sidebar-footer {
       margin-top: auto;
@@ -390,13 +230,7 @@
       padding-top: 16px;
     }
 
-    main { 
-      padding: 26px 32px; 
-      height: 100vh;
-      overflow-y: auto; 
-      width: 100%; 
-      min-width: 0; 
-    }
+    main { padding: 26px 32px; height: 100vh; overflow-y: auto; width: 100%; min-width: 0; }
     
     .topbar {
       display: flex;
@@ -412,31 +246,12 @@
       gap: 12px;
     }
 
-    .topbar-left {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .topbar-mobile-logo {
-      display: none;
-      width: 40px;
-      height: 40px;
-      border-radius: 9px;
-      object-fit: cover;
-      background: #0b3818;
-      border: 1px solid var(--border);
-      flex-shrink: 0;
-    }
-
+    .topbar-left { display: flex; align-items: center; gap: 14px; }
+    .topbar-mobile-logo { display: none; width: 40px; height: 40px; border-radius: 9px; object-fit: cover; background: #0b3818; border: 1px solid var(--border); flex-shrink: 0; }
     .topbar-title h2 { font-size: 19px; font-weight: 800; color: var(--text); letter-spacing: -0.3px; }
     .topbar-title p { color: var(--text-muted); font-size: 12px; margin-top: 2px; }
 
-    .topbar-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+    .topbar-actions { display: flex; align-items: center; gap: 8px; }
 
     .btn-icon-action {
       height: 40px;
@@ -455,30 +270,10 @@
       white-space: nowrap;
     }
 
-    .btn-icon-action:hover {
-      background: #f8fafc;
-      color: var(--primary);
-      border-color: var(--primary);
-    }
+    .btn-icon-action:hover { background: #f8fafc; color: var(--primary); border-color: var(--primary); }
+    .btn-icon-action svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 
-    .btn-icon-action svg {
-      width: 17px;
-      height: 17px;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 2.2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .btn-icon-refresh {
-      width: 40px;
-      height: 40px;
-      padding: 0;
-      display: grid;
-      place-items: center;
-    }
-
+    .btn-icon-refresh { width: 40px; height: 40px; padding: 0; display: grid; place-items: center; }
     .btn-icon-refresh:active svg { transform: rotate(180deg); }
     .btn-icon-refresh svg { transition: transform 0.25s ease; }
 
@@ -545,11 +340,7 @@
       transition: all 0.15s ease;
     }
 
-    .metric-card:hover {
-      border-color: var(--primary);
-      box-shadow: var(--shadow);
-    }
-
+    .metric-card:hover { border-color: var(--primary); box-shadow: var(--shadow); }
     .metric-title { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
     .metric-val { font-size: 24px; font-weight: 800; color: var(--text); margin: 6px 0 2px; }
     .metric-sub { font-size: 11.5px; color: var(--text-muted); }
@@ -658,590 +449,140 @@
       max-width: 100%;
     }
 
-    .batch-item-row:last-child {
-      border-bottom: none;
-      margin-bottom: 0;
-      padding-bottom: 0;
-    }
-
+    .batch-item-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
     .item-select-col { width: 100%; max-width: 100%; min-width: 0; }
     .item-select-col select { width: 100%; font-size: 13.5px; font-weight: 600; color: var(--text); }
 
-    .item-bottom-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      width: 100%;
-      max-width: 100%;
-    }
-
-    .item-baki-badge {
-      display: inline-flex;
-      align-items: center;
-      font-size: 11.5px;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 6px;
-      background: #ecfdf5;
-      color: #047857;
-      border: 1px solid #bbf7d0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
+    .item-bottom-bar { display: flex; justify-content: space-between; align-items: center; gap: 8px; width: 100%; max-width: 100%; }
+    .item-baki-badge { display: inline-flex; align-items: center; font-size: 11.5px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: #ecfdf5; color: #047857; border: 1px solid #bbf7d0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .item-baki-badge.low { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
     .item-baki-badge.audit-hint { background: #fffbeb; color: #b45309; border-color: #fde68a; }
 
-    .item-action-controls {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-shrink: 0;
-    }
-
-    .stepper {
-      display: inline-flex;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow: hidden;
-      background: #fff;
-      height: 40px;
-      flex-shrink: 0;
-    }
-
-    .stepper-btn {
-      width: 36px;
-      height: 40px;
-      border: none;
-      background: #f8fafc;
-      font-size: 16px;
-      font-weight: 800;
-      color: #334155;
-      cursor: pointer;
-    }
-
+    .stepper { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: #fff; height: 40px; flex-shrink: 0; }
+    .stepper-btn { width: 36px; height: 40px; border: none; background: #f8fafc; font-size: 16px; font-weight: 800; color: #334155; cursor: pointer; }
     .stepper-btn:active { background: #e2e8f0; }
+    .stepper-input { width: 48px !important; min-height: 40px !important; border: none !important; border-left: 1px solid var(--border) !important; border-right: 1px solid var(--border) !important; border-radius: 0 !important; text-align: center; font-weight: 800; padding: 0 !important; }
 
-    .stepper-input {
-      width: 48px !important;
-      min-height: 40px !important;
-      border: none !important;
-      border-left: 1px solid var(--border) !important;
-      border-right: 1px solid var(--border) !important;
-      border-radius: 0 !important;
-      text-align: center;
-      font-weight: 800;
-      padding: 0 !important;
-    }
-
-    .btn-row-del {
-      width: 38px;
-      height: 40px;
-      min-height: 40px;
-      padding: 0;
-      display: grid;
-      place-items: center;
-      border: 1px solid #fecaca;
-      background: #fff;
-      color: #b91c1c;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 14px;
-      flex-shrink: 0;
-      transition: background 0.15s;
-    }
-
+    .btn-row-del { width: 38px; height: 40px; min-height: 40px; padding: 0; display: grid; place-items: center; border: 1px solid #fecaca; background: #fff; color: #b91c1c; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 14px; flex-shrink: 0; }
     .btn-row-del:active { background: #fee2e2; }
 
-    .table-container {
-      overflow-x: auto;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: #fff;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-      text-align: left;
-    }
-
-    th {
-      background: #f8fafc;
-      color: #475569;
-      font-weight: 700;
-      font-size: 11.5px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      padding: 12px 14px;
-      border-bottom: 1px solid var(--border);
-      white-space: nowrap;
-    }
-
-    td {
-      padding: 12px 14px;
-      border-bottom: 1px solid var(--border);
-      vertical-align: middle;
-      color: #1e293b;
-    }
-
+    .table-container { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; background: #fff; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+    th { background: #f8fafc; color: #475569; font-weight: 700; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.5px; padding: 12px 14px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    td { padding: 12px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; color: #1e293b; }
     tr:last-child td { border-bottom: none; }
     tbody tr:hover { background: #f8fafc; }
 
-    .clickable-row {
-      cursor: pointer;
-      transition: background-color 0.15s ease;
-    }
+    .clickable-row { cursor: pointer; transition: background-color 0.15s ease; }
+    .clickable-row:hover { background-color: #f1f5f9 !important; }
 
-    .clickable-row:hover {
-      background-color: #f1f5f9 !important;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 3px 8px;
-      border-radius: 6px;
-      font-size: 11px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
+    .badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; white-space: nowrap; }
     .badge-ok { background: var(--status-ok-bg); color: var(--status-ok-text); }
     .badge-low { background: var(--status-low-bg); color: var(--status-low-text); }
     .badge-empty { background: var(--status-empty-bg); color: var(--status-empty-text); }
 
     .detail-item-group { display: grid; gap: 12px; padding: 4px 0; }
-    .detail-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 9px 12px;
-      background: #f8fafc;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-    }
+    .detail-item { display: flex; justify-content: space-between; align-items: center; padding: 9px 12px; background: #f8fafc; border-radius: 8px; border: 1px solid var(--border); }
     .detail-item.column { flex-direction: column; align-items: flex-start; gap: 6px; }
     .detail-label { font-size: 11.5px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.4px; }
     .detail-value { font-size: 13.5px; font-weight: 700; color: var(--text); }
-    .detail-note-box {
-      width: 100%;
-      padding: 10px 12px;
-      background: #ffffff;
-      border-radius: 6px;
-      border: 1px dashed var(--border);
-      font-size: 13px;
-      color: var(--text);
-      line-height: 1.4;
-      white-space: pre-wrap;
-    }
+    .detail-note-box { width: 100%; padding: 10px 12px; background: #ffffff; border-radius: 6px; border: 1px dashed var(--border); font-size: 13px; color: var(--text); line-height: 1.4; white-space: pre-wrap; }
 
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.65);
-      backdrop-filter: blur(4px);
-      display: grid;
-      place-items: center;
-      z-index: 1100;
-      padding: 16px;
-      overflow-y: auto;
-      overflow-x: hidden;
-      width: 100vw;
-      box-sizing: border-box;
-    }
-
-    .modal-dialog {
-      background: #ffffff;
-      border-radius: 14px;
-      width: 100%;
-      max-width: 500px;
-      overflow: hidden;
-      box-shadow: var(--shadow-lg);
-      margin: auto;
-      position: relative;
-      box-sizing: border-box;
-    }
-
-    .modal-header {
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #fafafa;
-    }
-
+    .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); display: grid; place-items: center; z-index: 1100; padding: 16px; overflow-y: auto; overflow-x: hidden; width: 100vw; box-sizing: border-box; }
+    .modal-dialog { background: #ffffff; border-radius: 14px; width: 100%; max-width: 500px; overflow: hidden; box-shadow: var(--shadow-lg); margin: auto; position: relative; box-sizing: border-box; }
+    .modal-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #fafafa; }
     .modal-header h4 { font-size: 15px; font-weight: 800; color: var(--text); }
     .modal-body { padding: 20px; max-height: calc(85vh - 70px); overflow-y: auto; overflow-x: hidden; }
 
     #scannerModal { z-index: 2000 !important; }
-    #scannerModal .scanner-dialog {
-      z-index: 2001 !important;
-      position: relative;
-      background: #ffffff;
-      border-radius: 14px;
-      width: 100%;
-      max-width: 400px;
-      overflow: hidden;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
-    }
-
+    #scannerModal .scanner-dialog { z-index: 2001 !important; position: relative; background: #ffffff; border-radius: 14px; width: 100%; max-width: 400px; overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3); }
     .scanner-body { padding: 16px; position: relative; }
     .scanner-camera-wrapper { position: relative; width: 100%; border-radius: 10px; overflow: hidden; background: #000; }
     #scannerReader { width: 100%; }
-
-    .scanner-overlay-toast {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      right: 10px;
-      background: rgba(4, 120, 87, 0.95);
-      color: #ffffff;
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 700;
-      text-align: center;
-      transform: translateY(-50px);
-      opacity: 0;
-      transition: all 0.2s ease;
-      z-index: 10;
-    }
-
+    .scanner-overlay-toast { position: absolute; top: 10px; left: 10px; right: 10px; background: rgba(4, 120, 87, 0.95); color: #ffffff; padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; text-align: center; transform: translateY(-50px); opacity: 0; transition: all 0.2s ease; z-index: 10; }
     .scanner-overlay-toast.show { transform: translateY(0); opacity: 1; }
     .scanner-overlay-toast.error { background: rgba(185, 28, 28, 0.95); }
 
-    .toast {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      padding: 12px 18px;
-      background: var(--text);
-      color: #fff;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 13px;
-      transform: translateY(100px);
-      opacity: 0;
-      transition: all 0.2s ease;
-      z-index: 9999;
-    }
-
+    .toast { position: fixed; bottom: 24px; right: 24px; padding: 12px 18px; background: var(--text); color: #fff; border-radius: 8px; font-weight: 600; font-size: 13px; transform: translateY(100px); opacity: 0; transition: all 0.2s ease; z-index: 9999; }
     .toast.show { transform: translateY(0); opacity: 1; }
     .toast.error { background: #b91c1c; }
     .hidden { display: none !important; }
-
     .mobile-cards { display: none; }
 
-    .mobile-nav {
-      display: none;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 60px;
-      background: #ffffff;
-      border-top: 1px solid var(--border);
-      z-index: 900;
-      grid-template-columns: 1fr 1fr;
-      padding: 4px;
-    }
+    /* Modul Kursus Umrah & Jemaah Shared Styles */
+    .umrah-container { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; width: 100%; }
+    .umrah-card { background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow-sm); }
+    .umrah-header { border-bottom: 1px solid var(--border); padding-bottom: 14px; margin-bottom: 18px; }
+    .umrah-header h3 { font-size: 15px; font-weight: 800; color: var(--primary); }
+    .result-card-umrah { margin-top: 18px; background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 12px; padding: 16px; }
 
-    .m-btn {
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
-      font-size: 11px;
-      font-weight: 600;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
+    .poster-upload-zone { border: 2px dashed #cbd5e1; background: #f8fafc; border-radius: 10px; padding: 18px 14px; text-align: center; cursor: pointer; transition: all 0.2s ease; position: relative; }
+    .poster-upload-zone:hover { border-color: var(--primary); background: #f1f5f9; }
+    .poster-upload-zone svg { width: 30px; height: 30px; stroke: #64748b; margin-bottom: 6px; }
 
-    .m-btn svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 2.2; }
-    .m-btn.active { color: var(--primary); font-weight: 800; background: var(--primary-soft); }
+    .poster-preview-card { position: relative; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); background: #ffffff; box-shadow: var(--shadow-sm); margin-top: 6px; display: flex; align-items: center; gap: 12px; padding: 8px 12px; }
+    .poster-preview-img { width: 58px; height: 58px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border); background: #000; }
+    .poster-preview-details { flex: 1; min-width: 0; text-align: left; }
+    .poster-preview-name { font-size: 12.5px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .poster-preview-size { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .btn-remove-poster { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; padding: 4px 8px; font-size: 11.5px; font-weight: 700; border-radius: 6px; cursor: pointer; white-space: nowrap; }
 
-    /* Modul Kursus Umrah Split Layout */
-    .umrah-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 22px;
-      align-items: start;
-      width: 100%;
-    }
+    .umrah-forms-grid { display: flex; flex-direction: column; gap: 12px; max-height: calc(100vh - 210px); overflow-y: auto; padding-right: 4px; }
+    .form-item-row { display: flex; flex-direction: column; justify-content: space-between; padding: 14px 16px; border: 1px solid var(--border); border-radius: 10px; background: #ffffff; box-shadow: var(--shadow-sm); transition: border-color 0.15s ease; gap: 10px; }
+    .form-item-row:hover { border-color: var(--primary); }
+    .form-item-info { display: flex; flex-direction: column; gap: 4px; }
+    .form-item-title { font-weight: 800; color: var(--text); font-size: 13.5px; line-height: 1.35; }
+    .form-item-date { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+    .form-item-actions { display: flex; align-items: center; gap: 6px; border-top: 1px dashed var(--border); padding-top: 10px; }
 
-    .umrah-card {
-      background: #ffffff;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 22px;
-      box-shadow: var(--shadow-sm);
-    }
+    /* Modul Jemaah Sub-Styles */
+    .checklist-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; background: #f8fafc; padding: 14px; border-radius: 8px; border: 1px solid var(--border); }
+    .checkbox-item { display: flex; align-items: center; gap: 8px; }
+    .checkbox-item input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; }
+    .checkbox-item label { font-size: 12.5px; font-weight: 600; color: var(--text); cursor: pointer; margin-bottom: 0; }
 
-    .umrah-header {
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 14px;
-      margin-bottom: 18px;
-    }
+    .jemaah-status-box { background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 20px; }
+    .jemaah-status-item { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px dashed var(--border); font-size: 12.5px; }
 
-    .umrah-header h3 {
-      font-size: 15px;
-      font-weight: 800;
-      color: var(--primary);
-    }
-
-    .result-card-umrah {
-      margin-top: 18px;
-      background: #f0fdf4;
-      border: 1.5px solid #86efac;
-      border-radius: 12px;
-      padding: 16px;
-    }
-
-    /* KOTAK MUAT NAIK & PRATONTON POSTER KORPORAT */
-    .poster-upload-zone {
-      border: 2px dashed #cbd5e1;
-      background: #f8fafc;
-      border-radius: 10px;
-      padding: 18px 14px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      position: relative;
-    }
-
-    .poster-upload-zone:hover {
-      border-color: var(--primary);
-      background: #f1f5f9;
-    }
-
-    .poster-upload-zone svg {
-      width: 30px;
-      height: 30px;
-      stroke: #64748b;
-      margin-bottom: 6px;
-    }
-
-    .poster-preview-card {
-      position: relative;
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      background: #ffffff;
-      box-shadow: var(--shadow-sm);
-      margin-top: 6px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 8px 12px;
-    }
-
-    .poster-preview-img {
-      width: 58px;
-      height: 58px;
-      border-radius: 6px;
-      object-fit: cover;
-      border: 1px solid var(--border);
-      background: #000;
-    }
-
-    .poster-preview-details {
-      flex: 1;
-      min-width: 0;
-      text-align: left;
-    }
-
-    .poster-preview-name {
-      font-size: 12.5px;
-      font-weight: 700;
-      color: var(--text);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .poster-preview-size {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    .btn-remove-poster {
-      background: #fee2e2;
-      color: #b91c1c;
-      border: 1px solid #fecaca;
-      padding: 4px 8px;
-      font-size: 11.5px;
-      font-weight: 700;
-      border-radius: 6px;
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .btn-remove-poster:hover {
-      background: #fca5a5;
-    }
-
-    .umrah-forms-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      max-height: calc(100vh - 210px);
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-
-    .form-item-row {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 14px 16px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: #ffffff;
-      box-shadow: var(--shadow-sm);
-      transition: border-color 0.15s ease, box-shadow 0.15s ease;
-      gap: 10px;
-    }
-
-    .form-item-row:hover {
-      border-color: var(--primary);
-      box-shadow: var(--shadow);
-    }
-
-    .form-item-info {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .form-item-title {
-      font-weight: 800;
-      color: var(--text);
-      font-size: 13.5px;
-      line-height: 1.35;
-    }
-
-    .form-item-date {
-      font-size: 11px;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-
-    .form-item-actions {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      border-top: 1px dashed var(--border);
-      padding-top: 10px;
-    }
-
-    @media (max-width: 1200px) {
-      .metrics-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    }
-
-    @media (max-width: 900px) {
-      .umrah-container {
-        grid-template-columns: 1fr;
-      }
-      .umrah-forms-grid {
-        max-height: none;
-        overflow-y: visible;
-      }
-    }
-
+    @media (max-width: 1200px) { .metrics-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (max-width: 960px) { .umrah-container { grid-template-columns: 1fr; } .umrah-forms-grid { max-height: none; } }
     @media (max-width: 768px) {
       .app-layout { grid-template-columns: 1fr; height: 100vh; }
       .sidebar { display: none; }
       .mobile-nav { display: grid; }
       main { padding: 14px; padding-bottom: 74px; width: 100vw; max-width: 100vw; overflow-x: hidden; }
-
       .topbar { padding: 12px 14px; margin-bottom: 14px; }
       .topbar-mobile-logo { display: block; }
       .topbar-title h2 { font-size: 16px; }
-
-      .metrics-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
-        margin-bottom: 14px;
-      }
-
-      .metric-card { padding: 12px 14px; }
-      .metric-val { font-size: 20px; }
-      .panel-body { padding: 14px; }
-
+      .metrics-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 14px; }
       .input-row { grid-template-columns: 1fr; gap: 10px; }
-
       .desktop-table { display: none; }
       .mobile-cards { display: grid; gap: 8px; }
-
-      .card-row {
-        background: #ffffff;
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 12px 14px;
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-      }
-
-      .card-row-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-      }
-
+      .card-row { background: #ffffff; border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; }
+      .card-row-top { display: flex; justify-content: space-between; align-items: flex-start; }
       .card-title { font-weight: 700; color: var(--text); font-size: 13.5px; }
       .card-sub { font-size: 11px; color: var(--text-muted); }
-
-      .card-row-bottom {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 12px;
-        margin-top: 4px;
-        padding-top: 4px;
-        border-top: 1px dashed var(--border);
-      }
-
+      .card-row-bottom { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-top: 4px; padding-top: 4px; border-top: 1px dashed var(--border); }
       .toast { left: 14px; right: 14px; bottom: 74px; text-align: center; }
-
       .modal-overlay { padding: 12px; }
       .modal-dialog { width: 100% !important; max-width: 100% !important; border-radius: 12px; margin: 0; }
       .modal-body { max-height: calc(85vh - 60px); padding: 14px; overflow-x: hidden; }
-
-      .form-item-actions {
-        width: 100%;
-        justify-content: flex-end;
-      }
+      .form-item-actions { width: 100%; justify-content: flex-end; }
     }
   </style>
 </head>
 <body>
 
-  <!-- BANNER NOTIFIKASI KEMAS KINI -->
+  <!-- BANNER KEMAS KINI -->
   <div id="updateBanner" class="update-banner hidden">
     <div class="update-content">
       <div class="update-header-row">
-        <div class="update-badge">
-          <span class="update-badge-dot"></span>
-          <span>Kemas Kini Perisian</span>
-        </div>
+        <div class="update-badge"><span class="update-badge-dot"></span><span>Kemas Kini Perisian</span></div>
       </div>
-      <div>
-        <div class="update-title">Versi Baharu Sedia Dipasang</div>
-      </div>
+      <div class="update-title">Versi Baharu Sedia Dipasang</div>
       <div class="update-details-box">
         <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Nota Keluaran:</strong>
-        <span id="updateChangelogText">Penambahbaikan fungsi dan kestabilan sistem aplikasi.</span>
+        <span id="updateChangelogText">Penambahan Modul Pengurusan Jemaah dan kestabilan sistem.</span>
       </div>
       <div class="update-action-row">
         <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
@@ -1253,31 +594,20 @@
   <!-- LOADING OVERLAY -->
   <div id="loading" class="loading-overlay hidden">
     <div style="text-align: center; padding: 24px;">
-      <div id="loadingStandardSpinner">
-        <div class="spinner" style="margin: 0 auto 12px;"></div>
-      </div>
-      <div id="loadingUpdateAnim" class="hidden">
-        <div class="update-anim-container">
-          <div class="update-spinner-ring"></div>
-          <img class="update-anim-logo" src="Logo%20Azzuha.png" alt="e-ASTRA">
-        </div>
-      </div>
-      <p id="loadingMsg" style="font-size: 13.5px; font-weight: 700; color: var(--primary-dark); letter-spacing: -0.2px;">Memproses data...</p>
+      <div class="spinner" style="margin: 0 auto 12px;"></div>
+      <p id="loadingMsg" style="font-size: 13.5px; font-weight: 700; color: var(--primary-dark);">Memproses data...</p>
       <p id="loadingSubMsg" style="font-size: 11.5px; color: var(--text-muted); margin-top: 4px;" class="hidden"></p>
     </div>
   </div>
 
   <div id="toast" class="toast">Notifikasi</div>
 
-  <!-- BUTANG TERAPUNG (FAB) - HANYA MUNCUL DI MODUL INVENTORI -->
+  <!-- BUTANG TERAPUNG (FAB) - HANYA MODUL STOK -->
   <button type="button" id="mainFabBtn" class="fab-btn" onclick="openTxModal()" title="Daftar Transaksi Stok">
-    <svg viewBox="0 0 24 24">
-      <line x1="12" y1="5" x2="12" y2="19"></line>
-      <line x1="5" y1="12" x2="19" y2="12"></line>
-    </svg>
+    <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
   </button>
 
-  <!-- MODAL 1: PENGIMBAS KAMERA -->
+  <!-- MODAL PENGIMBAS KAMERA -->
   <div id="scannerModal" class="modal-overlay hidden">
     <div class="scanner-dialog">
       <div class="modal-header">
@@ -1289,12 +619,12 @@
           <div id="scannerOverlayToast" class="scanner-overlay-toast">Item Dikenal Pasti</div>
           <div id="scannerReader"></div>
         </div>
-        <p style="font-size: 11px; color: var(--text-muted); margin-top: 10px; text-align: center;">Halakan kamera pada kod label item.</p>
+        <p style="font-size: 11px; color: var(--text-muted); margin-top: 10px; text-align: center;">Halakan kamera pada label kod.</p>
       </div>
     </div>
   </div>
 
-  <!-- MODAL 2: POPUP BORANG TRANSAKSI STOK -->
+  <!-- MODAL TRANSAKSI STOK -->
   <div id="txModal" class="modal-overlay hidden" onclick="closeModalOnBackdrop(event, 'txModal')">
     <div class="modal-dialog">
       <div class="modal-header">
@@ -1311,20 +641,11 @@
             </div>
 
             <div class="input-row">
-              <div>
-                <label>Tarikh Transaksi</label>
-                <input type="date" id="txDate" required>
-              </div>
-              <div>
-                <label>Pegawai Pengendali (PIC)</label>
-                <select id="txPic" required></select>
-              </div>
+              <div><label>Tarikh Transaksi</label><input type="date" id="txDate" required></div>
+              <div><label>Pegawai Pengendali (PIC)</label><select id="txPic" required></select></div>
             </div>
 
-            <div>
-              <label>Lokasi Cawangan / Stor</label>
-              <select id="txLocation" required></select>
-            </div>
+            <div><label>Lokasi Cawangan / Stor</label><select id="txLocation" required></select></div>
 
             <div class="batch-card">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
@@ -1349,7 +670,7 @@
     </div>
   </div>
 
-  <!-- MODAL 3: POPUP DAFTAR / KEMASKINI ITEM -->
+  <!-- MODAL DAFTAR/KEMASKINI ITEM STOK -->
   <div id="itemModal" class="modal-overlay hidden" onclick="closeModalOnBackdrop(event, 'itemModal')">
     <div class="modal-dialog">
       <div class="modal-header">
@@ -1360,41 +681,16 @@
         <form id="itemForm" onsubmit="submitItem(event)">
           <div class="form-group">
             <div class="input-row">
-              <div>
-                <label>Kod SKU</label>
-                <input type="text" id="itSku" required placeholder="Contoh: AZZ-BEG-FSC24">
-              </div>
-              <div>
-                <label>Kategori</label>
-                <select id="itCategory" required></select>
-              </div>
+              <div><label>Kod SKU</label><input type="text" id="itSku" required placeholder="Contoh: AZZ-BEG-FSC24"></div>
+              <div><label>Kategori</label><select id="itCategory" required></select></div>
             </div>
-
-            <div>
-              <label>Nama Item</label>
-              <input type="text" id="itName" required placeholder="Nama penuh item inventori">
-            </div>
-
+            <div><label>Nama Item</label><input type="text" id="itName" required placeholder="Nama penuh item inventori"></div>
             <div class="input-row">
-              <div>
-                <label>Baki Pembukaan</label>
-                <input type="number" id="itOpening" min="0" value="0" required>
-              </div>
-              <div>
-                <label>Had Minimum Stok</label>
-                <input type="number" id="itMin" min="0" value="10" required>
-              </div>
+              <div><label>Baki Pembukaan</label><input type="number" id="itOpening" min="0" value="0" required></div>
+              <div><label>Had Minimum Stok</label><input type="number" id="itMin" min="0" value="10" required></div>
             </div>
-
-            <div>
-              <label>Lokasi Simpanan Utama</label>
-              <select id="itLocation" required></select>
-            </div>
-
-            <div>
-              <label>Catatan Tambahan</label>
-              <textarea id="itNote" placeholder="Spesifikasi atau perincian item"></textarea>
-            </div>
+            <div><label>Lokasi Simpanan Utama</label><select id="itLocation" required></select></div>
+            <div><label>Catatan Tambahan</label><textarea id="itNote" placeholder="Spesifikasi atau perincian item"></textarea></div>
 
             <div style="display: flex; gap: 8px; margin-top: 4px;">
               <button type="submit" class="btn btn-primary" style="flex: 1;">Simpan Maklumat</button>
@@ -1407,7 +703,7 @@
     </div>
   </div>
 
-  <!-- MODAL 4: POPUP PERINCIAN LOG TRANSAKSI -->
+  <!-- MODAL PERINCIAN LOG TRANSAKSI -->
   <div id="logDetailModal" class="modal-overlay hidden" onclick="closeModalOnBackdrop(event, 'logDetailModal')">
     <div class="modal-dialog">
       <div class="modal-header">
@@ -1416,50 +712,15 @@
       </div>
       <div class="modal-body">
         <div class="detail-item-group">
-          <div class="detail-item">
-            <span class="detail-label">Jenis Urusan</span>
-            <span id="dtlType" class="badge">Keluar</span>
-          </div>
-
-          <div class="detail-item">
-            <span class="detail-label">Item</span>
-            <span id="dtlItem" class="detail-value" style="text-align: right;">-</span>
-          </div>
-
-          <div class="detail-item">
-            <span class="detail-label">Kod SKU</span>
-            <span id="dtlSku" class="detail-value" style="color: var(--primary);">-</span>
-          </div>
-
-          <div class="detail-item">
-            <span class="detail-label">Tarikh</span>
-            <span id="dtlDate" class="detail-value">-</span>
-          </div>
-
-          <div class="detail-item">
-            <span class="detail-label">Kuantiti</span>
-            <span id="dtlQty" class="detail-value" style="font-size: 15px; color: var(--text);">-</span>
-          </div>
-
-          <div class="detail-item">
-            <span class="detail-label">Baki Selepas Transaksi</span>
-            <span id="dtlBalance" class="detail-value">-</span>
-          </div>
-
-          <div class="detail-item">
-            <span class="detail-label">Pegawai Pengendali</span>
-            <span id="dtlPic" class="detail-value">-</span>
-          </div>
-
-          <div class="detail-item">
-            <span class="detail-label">Lokasi</span>
-            <span id="dtlLocation" class="detail-value">-</span>
-          </div>
-
-          <div class="detail-item column">
-            <span class="detail-label">Catatan Rujukan</span>
-            <div id="dtlNote" class="detail-note-box">Tiada catatan direkodkan.</div>
-          </div>
+          <div class="detail-item"><span class="detail-label">Jenis Urusan</span><span id="dtlType" class="badge">Keluar</span></div>
+          <div class="detail-item"><span class="detail-label">Item</span><span id="dtlItem" class="detail-value" style="text-align: right;">-</span></div>
+          <div class="detail-item"><span class="detail-label">Kod SKU</span><span id="dtlSku" class="detail-value" style="color: var(--primary);">-</span></div>
+          <div class="detail-item"><span class="detail-label">Tarikh</span><span id="dtlDate" class="detail-value">-</span></div>
+          <div class="detail-item"><span class="detail-label">Kuantiti</span><span id="dtlQty" class="detail-value" style="font-size: 15px;">-</span></div>
+          <div class="detail-item"><span class="detail-label">Baki Selepas Transaksi</span><span id="dtlBalance" class="detail-value">-</span></div>
+          <div class="detail-item"><span class="detail-label">Pegawai Pengendali</span><span id="dtlPic" class="detail-value">-</span></div>
+          <div class="detail-item"><span class="detail-label">Lokasi</span><span id="dtlLocation" class="detail-value">-</span></div>
+          <div class="detail-item column"><span class="detail-label">Catatan Rujukan</span><div id="dtlNote" class="detail-note-box">Tiada catatan direkodkan.</div></div>
         </div>
       </div>
     </div>
@@ -1476,9 +737,10 @@
         </div>
       </div>
       
-      <div class="nav-section-title">Modul Pengurusan</div>
+      <div class="nav-section-title">Modul Cawangan</div>
       <ul class="nav-list">
-        <!-- MENU UTAMA: STOK & INVENTORI DENGAN DROPDOWN -->
+        
+        <!-- 1. STOK & INVENTORI (DROPDOWN) -->
         <li>
           <button id="btnParentStock" class="nav-btn active" type="button" onclick="toggleStockMenu()">
             <div class="nav-btn-content">
@@ -1491,26 +753,52 @@
           <ul id="subStockMenu" class="sub-nav-list">
             <li>
               <button id="subBtnDashboard" class="sub-nav-btn active" type="button" onclick="switchTab('dashboard')">
-                <span class="sub-nav-dot"></span>
-                <span>Ringkasan Stok</span>
+                <span class="sub-nav-dot"></span><span>Ringkasan Stok</span>
               </button>
             </li>
             <li>
               <button id="subBtnTransactions" class="sub-nav-btn" type="button" onclick="switchTab('transactions')">
-                <span class="sub-nav-dot"></span>
-                <span>Log Transaksi</span>
+                <span class="sub-nav-dot"></span><span>Log Transaksi</span>
               </button>
             </li>
             <li>
               <button id="subBtnItems" class="sub-nav-btn" type="button" onclick="switchTab('items')">
-                <span class="sub-nav-dot"></span>
-                <span>Katalog Inventori</span>
+                <span class="sub-nav-dot"></span><span>Katalog Inventori</span>
               </button>
             </li>
           </ul>
         </li>
 
-        <!-- MENU MODUL KURSUS UMRAH -->
+        <!-- 2. PENGURUSAN JEMAAH (DROPDOWN) -->
+        <li>
+          <button id="btnParentJemaah" class="nav-btn" type="button" onclick="toggleJemaahMenu()">
+            <div class="nav-btn-content">
+              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+              <span>Pengurusan Jemaah</span>
+            </div>
+            <svg id="chevronJemaah" class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          
+          <ul id="subJemaahMenu" class="sub-nav-list hidden">
+            <li>
+              <button id="subBtnJemaahList" class="sub-nav-btn" type="button" onclick="switchTab('jemaahList')">
+                <span class="sub-nav-dot"></span><span>Senarai & Status</span>
+              </button>
+            </li>
+            <li>
+              <button id="subBtnJemaahAdd" class="sub-nav-btn" type="button" onclick="switchTab('jemaahAdd')">
+                <span class="sub-nav-dot"></span><span>Daftar Jemaah</span>
+              </button>
+            </li>
+            <li>
+              <button id="subBtnJemaahEdit" class="sub-nav-btn" type="button" onclick="switchTab('jemaahEdit')">
+                <span class="sub-nav-dot"></span><span>Semak & Kemaskini</span>
+              </button>
+            </li>
+          </ul>
+        </li>
+
+        <!-- 3. KURSUS UMRAH -->
         <li>
           <button id="btnNavUmrah" class="nav-btn" type="button" onclick="switchTab('umrahForm')">
             <div class="nav-btn-content">
@@ -1519,6 +807,7 @@
             </div>
           </button>
         </li>
+
       </ul>
 
       <div class="sidebar-footer">
@@ -1537,29 +826,19 @@
         </div>
         <div class="topbar-actions">
           <button type="button" id="btnStockQR" class="btn-icon-action" onclick="generateQRPdf1Page()" title="Cetak Senarai Kod QR Produk">
-            <svg viewBox="0 0 24 24">
-              <rect x="3" y="3" width="7" height="7"></rect>
-              <rect x="14" y="3" width="7" height="7"></rect>
-              <rect x="3" y="14" width="7" height="7"></rect>
-              <path d="M14 14h3v3h-3z"></path>
-              <path d="M20 14v3"></path>
-              <path d="M14 20h7"></path>
-            </svg>
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><path d="M14 14h3v3h-3z"></path><path d="M20 14v3"></path><path d="M14 20h7"></path></svg>
             <span>Cetak QR</span>
           </button>
           
           <button class="btn-icon-action btn-icon-refresh" onclick="refreshCurrentView()" title="Segar Semula Paparan">
-            <svg viewBox="0 0 24 24">
-              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
-            </svg>
+            <svg viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
           </button>
         </div>
       </div>
 
-      <!-- TAB 1: RINGKASAN STOK (DASHBOARD) -->
+      <!-- SEKSYEN 1: STOK & INVENTORI -->
       <section id="tab-dashboard">
         <div class="metrics-grid" id="metricsCards"></div>
-
         <div class="panel">
           <div class="panel-header">
             <h3 id="attentionHeader">Perhatian Inventori</h3>
@@ -1568,17 +847,7 @@
           <div class="panel-body">
             <div class="table-container desktop-table">
               <table>
-                <thead>
-                  <tr>
-                    <th>Kod SKU</th>
-                    <th>Nama Item</th>
-                    <th>Kategori</th>
-                    <th style="text-align: right;">Baki Semasa</th>
-                    <th style="text-align: right;">Paras Minimum</th>
-                    <th>Status</th>
-                    <th>Lokasi</th>
-                  </tr>
-                </thead>
+                <thead><tr><th>Kod SKU</th><th>Nama Item</th><th>Kategori</th><th style="text-align: right;">Baki Semasa</th><th style="text-align: right;">Paras Minimum</th><th>Status</th><th>Lokasi</th></tr></thead>
                 <tbody id="attentionTbody"></tbody>
               </table>
             </div>
@@ -1587,30 +856,15 @@
         </div>
       </section>
 
-      <!-- TAB 2: LOG TRANSAKSI -->
       <section id="tab-transactions" class="hidden">
         <div class="panel">
           <div class="panel-header">
-            <div>
-              <h3>Rekod Transaksi Terkini</h3>
-              <p style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">Pilih mana-mana baris untuk menyemak maklumat lengkap.</p>
-            </div>
+            <div><h3>Rekod Transaksi Terkini</h3><p style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">Pilih mana-mana baris untuk menyemak maklumat lengkap.</p></div>
           </div>
           <div class="panel-body">
             <div class="table-container desktop-table">
               <table>
-                <thead>
-                  <tr>
-                    <th>Tarikh</th>
-                    <th>Kod SKU</th>
-                    <th>Nama Item</th>
-                    <th>Urusan</th>
-                    <th style="text-align: right;">Kuantiti</th>
-                    <th style="text-align: right;">Baki</th>
-                    <th>Pegawai</th>
-                    <th>Lokasi</th>
-                  </tr>
-                </thead>
+                <thead><tr><th>Tarikh</th><th>Kod SKU</th><th>Nama Item</th><th>Urusan</th><th style="text-align: right;">Kuantiti</th><th style="text-align: right;">Baki</th><th>Pegawai</th><th>Lokasi</th></tr></thead>
                 <tbody id="logsTbody"></tbody>
               </table>
             </div>
@@ -1619,7 +873,6 @@
         </div>
       </section>
 
-      <!-- TAB 3: KATALOG INVENTORI -->
       <section id="tab-items" class="hidden">
         <div class="panel">
           <div class="panel-header">
@@ -1632,18 +885,7 @@
           <div class="panel-body">
             <div class="table-container desktop-table">
               <table>
-                <thead>
-                  <tr>
-                    <th>Kod SKU</th>
-                    <th>Nama Item</th>
-                    <th>Kategori</th>
-                    <th style="text-align: right;">Baki Semasa</th>
-                    <th style="text-align: right;">Paras Min</th>
-                    <th>Status</th>
-                    <th>Lokasi</th>
-                    <th style="text-align: center;">Tindakan</th>
-                  </tr>
-                </thead>
+                <thead><tr><th>Kod SKU</th><th>Nama Item</th><th>Kategori</th><th style="text-align: right;">Baki Semasa</th><th style="text-align: right;">Paras Min</th><th>Status</th><th>Lokasi</th><th style="text-align: center;">Tindakan</th></tr></thead>
                 <tbody id="itemsTbody"></tbody>
               </table>
             </div>
@@ -1652,77 +894,41 @@
         </div>
       </section>
 
-      <!-- TAB 4: KURSUS UMRAH (SEBELAH-MENYEBELAH DI DESKTOP) -->
+      <!-- SEKSYEN 2: KURSUS UMRAH -->
       <section id="tab-umrahForm" class="hidden">
         <div class="umrah-container">
-          
-          <!-- SEBELAH KIRI: BORANG JANA FORM BAHARU -->
           <div>
             <div class="umrah-card">
-              <div class="umrah-header">
-                <h3>Penyediaan Borang Kursus</h3>
-              </div>
-
+              <div class="umrah-header"><h3>Penyediaan Borang Kursus</h3></div>
               <form id="generateUmrahForm" onsubmit="handleGenerateUmrahForm(event)">
                 <div class="form-group">
                   <div class="input-row">
-                    <div>
-                      <label>Tarikh Pelaksanaan Kursus</label>
-                      <input type="date" id="ufTarikhInput" required>
-                    </div>
-                    <div>
-                      <label>Waktu Kursus</label>
-                      <input type="text" id="ufWaktu" required placeholder="Contoh: 9.00 PAGI - 12.00 TENGAHARI" value="9.00 PAGI - 12.00 TENGAHARI">
-                    </div>
+                    <div><label>Tarikh Pelaksanaan Kursus</label><input type="date" id="ufTarikhInput" required></div>
+                    <div><label>Waktu Kursus</label><input type="text" id="ufWaktu" required value="9.00 PAGI - 12.00 TENGAHARI"></div>
                   </div>
-
+                  <div><label>Lokasi / Premis Kursus</label><input type="text" id="ufTempat" required value="DEWAN IMAM A'ASIM, MASJID AL-MUKTAFI BILLAH SHAH (MASJID LADANG)"></div>
+                  <div><label>Talian Khidmat Pelanggan</label><input type="text" id="ufNoTel" required value="011-5508 3367"></div>
                   <div>
-                    <label>Lokasi / Premis Kursus</label>
-                    <input type="text" id="ufTempat" required placeholder="Contoh: DEWAN IMAM A'ASIM, MASJID AL-MUKTAFI BILLAH SHAH (MASJID LADANG)" value="DEWAN IMAM A'ASIM, MASJID AL-MUKTAFI BILLAH SHAH (MASJID LADANG)">
-                  </div>
-
-                  <div>
-                    <label>Talian Khidmat Pelanggan (Hotline)</label>
-                    <input type="text" id="ufNoTel" required placeholder="Contoh: 011-5508 3367" value="011-5508 3367">
-                  </div>
-
-                  <!-- KAWASAN MUAT NAIK POSTER & PRATONTON -->
-                  <div>
-                    <label>Poster Program Kursus (Pilihan)</label>
-                    
+                    <label>Poster Program (Pilihan)</label>
                     <div id="posterDropzone" class="poster-upload-zone" onclick="document.getElementById('ufPosterFile').click()">
-                      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                        <polyline points="21 15 16 10 5 21"></polyline>
-                      </svg>
+                      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
                       <div style="font-weight: 700; color: #1e293b; font-size: 12.5px;">Pilih imej poster baharu</div>
                       <div style="font-size: 11px; color: #64748b; margin-top: 2px;">Format JPG atau PNG (Poster lalai digunakan jika tidak diubah)</div>
                     </div>
-                    
                     <input type="file" id="ufPosterFile" accept="image/*" class="hidden" onchange="handlePosterSelection(event)">
-
                     <div id="posterPreviewContainer" class="poster-preview-card hidden">
-                      <img id="posterPreviewImg" src="" alt="Pratonton Poster" class="poster-preview-img">
-                      <div class="poster-preview-details">
-                        <div id="posterPreviewName" class="poster-preview-name">poster.jpg</div>
-                        <div id="posterPreviewSize" class="poster-preview-size">0 KB</div>
-                      </div>
+                      <img id="posterPreviewImg" src="" alt="Pratonton" class="poster-preview-img">
+                      <div class="poster-preview-details"><div id="posterPreviewName" class="poster-preview-name">poster.jpg</div><div id="posterPreviewSize" class="poster-preview-size">0 KB</div></div>
                       <button type="button" class="btn-remove-poster" onclick="removePosterFile()">Padam</button>
                     </div>
                   </div>
-
-                  <button type="submit" id="btnGenForm" class="btn btn-primary" style="width: 100%; min-height: 44px; margin-top: 8px; font-size: 13.5px;">
-                    Jana Borang Pendaftaran
-                  </button>
+                  <button type="submit" id="btnGenForm" class="btn btn-primary" style="width: 100%; min-height: 44px; margin-top: 8px;">Jana Borang Pendaftaran</button>
                 </div>
               </form>
 
-              <!-- KEPUTUSAN HASIL BORANG -->
               <div id="umrahFormResult" class="result-card-umrah hidden">
                 <h4 style="color: var(--primary); font-size: 14px; font-weight: 800; margin-bottom: 4px;">Borang Telah Berjaya Dijana</h4>
                 <p id="resultFormName" style="font-size: 12px; color: #047857; margin-bottom: 12px; font-weight: 700;"></p>
-                
                 <div style="display: grid; gap: 12px;">
                   <div>
                     <label style="font-size: 11.5px; color: #065f46;">Pautan Awam (Peserta):</label>
@@ -1732,7 +938,6 @@
                       <a id="linkLiveBtn" href="#" target="_blank" class="btn btn-primary" style="text-decoration: none; min-height: 42px;">Buka</a>
                     </div>
                   </div>
-
                   <div>
                     <label style="font-size: 11.5px; color: #065f46;">Pautan Pentadbir (Editor):</label>
                     <div style="display: flex; gap: 8px;">
@@ -1746,33 +951,213 @@
             </div>
           </div>
 
-          <!-- SEBELAH KANAN: SENARAI BORANG DIGITAL TERDAHULU -->
           <div>
             <div class="umrah-card">
               <div class="umrah-header" style="display: flex; justify-content: space-between; align-items: center;">
                 <h3>Arkib Borang Pendaftaran</h3>
                 <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 30px;" onclick="fetchUmrahFormsList()">Kemas Kini</button>
               </div>
-              
               <div id="umrahFormsListContainer" class="umrah-forms-grid">
                 <p style="font-size: 12px; color: var(--text-muted); text-align: center; padding: 20px;">Memuatkan arkib borang...</p>
               </div>
             </div>
           </div>
-
         </div>
       </section>
+
+      <!-- SEKSYEN 3: PENGURUSAN JEMAAH -->
+      <!-- 3.1: SENARAI JEMAAH & STATUS -->
+      <section id="tab-jemaahList" class="hidden">
+        <div class="metrics-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 18px;">
+          <div class="metric-card"><div class="metric-title">Jumlah Jemaah</div><div id="statJumlahJemaah" class="metric-val">0</div><div class="metric-sub">Pendaftaran Keseluruhan</div></div>
+          <div class="metric-card"><div class="metric-title">PU Fatin</div><div id="statFatin" class="metric-val">0</div><div class="metric-sub">Jemaah Diuruskan</div></div>
+          <div class="metric-card"><div class="metric-title">PU Fikriyah</div><div id="statFikriyah" class="metric-val">0</div><div class="metric-sub">Jemaah Diuruskan</div></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Pangkalan Data & Status Jemaah</h3>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <input type="text" id="cariJemaahInput" placeholder="Cari Nama / No. K/P..." style="width: 170px; min-height: 34px; padding: 4px 10px; font-size: 12px;" oninput="tapisJadualJemaah()">
+              <select id="tapisPUSelect" style="width: 130px; min-height: 34px; padding: 4px 8px; font-size: 12px;" onchange="tapisJadualJemaah()">
+                <option value="">Semua PU</option>
+                <option value="Fatin">Fatin</option>
+                <option value="Fikriyah">Fikriyah</option>
+              </select>
+              <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 34px;" onclick="loadDataJemaah()">Segar Semula</button>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="table-container desktop-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Maklumat Jemaah</th>
+                    <th>Dokumen Utama</th>
+                    <th>Bukti Pembayaran</th>
+                    <th>Checklist Operasi</th>
+                  </tr>
+                </thead>
+                <tbody id="tbodyJemaah">
+                  <tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 30px;">Memuatkan data jemaah...</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="mobile-cards" id="mobileCardsJemaah"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3.2: PENDAFTARAN JEMAAH BAHARU -->
+      <section id="tab-jemaahAdd" class="hidden">
+        <div class="umrah-card" style="max-width: 760px; margin: 0 auto;">
+          <div class="umrah-header">
+            <h3>Pendaftaran Jemaah Baharu</h3>
+          </div>
+          <form id="formDaftarJemaah" onsubmit="handleDaftarJemaah(event)">
+            <div class="form-group">
+              <div class="input-row">
+                <div>
+                  <label>Pegawai Urusan (PU)</label>
+                  <select id="regPU" required>
+                    <option value="" disabled selected>Pilih PU Bertanggungjawab</option>
+                    <option value="Fatin">Fatin</option>
+                    <option value="Fikriyah">Fikriyah</option>
+                  </select>
+                </div>
+                <div>
+                  <label>No. Kad Pengenalan (12 Digit)</label>
+                  <input type="text" id="regIC" required placeholder="Contoh: 880101115566" pattern="\d{12}" maxlength="12">
+                </div>
+              </div>
+
+              <div class="input-row">
+                <div>
+                  <label>Nama Penuh Jemaah</label>
+                  <input type="text" id="regNama" required placeholder="Nama seperti dalam kad pengenalan">
+                </div>
+                <div>
+                  <label>No. Telefon</label>
+                  <input type="text" id="regTel" required placeholder="Contoh: 0123456789">
+                </div>
+              </div>
+
+              <div>
+                <label>Borang Pendaftaran Rasmi (PDF/Imej)</label>
+                <input type="file" id="regFileBorang" accept=".pdf,.jpg,.jpeg,.png" required style="padding: 6px 10px;">
+              </div>
+
+              <div>
+                <label>Checklist Tugasan Operasi (Tandakan jika telah selesai)</label>
+                <div class="checklist-grid">
+                  <div class="checkbox-item"><input type="checkbox" id="reg_cb_beg"><label for="reg_cb_beg">Penyerahan Beg</label></div>
+                  <div class="checkbox-item"><input type="checkbox" id="reg_cb_kursus"><label for="reg_cb_kursus">Kursus Umrah</label></div>
+                  <div class="checkbox-item"><input type="checkbox" id="reg_cb_jadual"><label for="reg_cb_jadual">Jadual Penerbangan</label></div>
+                  <div class="checkbox-item"><input type="checkbox" id="reg_cb_keyin"><label for="reg_cb_keyin">Key-In Pasport</label></div>
+                </div>
+              </div>
+
+              <div style="border-top: 1px dashed var(--border); padding-top: 12px; margin-top: 4px;">
+                <label style="color: var(--primary);">Lampiran Dokumen Tambahan (Pilihan)</label>
+                <div class="input-row" style="margin-top: 8px;">
+                  <div><label>Gambar Pasport</label><input type="file" id="regFileGambar" accept=".pdf,.jpg,.jpeg,.png" style="padding: 6px 10px;"></div>
+                  <div><label>Salinan Pasport</label><input type="file" id="regFileSalinan" accept=".pdf,.jpg,.jpeg,.png" style="padding: 6px 10px;"></div>
+                </div>
+                <div class="input-row" style="margin-top: 8px;">
+                  <div><label>Biometrik (Saudi Visa Bio)</label><input type="file" id="regFileBio" accept=".pdf,.jpg,.jpeg,.png" style="padding: 6px 10px;"></div>
+                  <div><label>Tiket Kereta Api HHR</label><input type="file" id="regFileHHR" accept=".pdf,.jpg,.jpeg,.png" style="padding: 6px 10px;"></div>
+                </div>
+                <div style="margin-top: 8px;">
+                  <label>Resit Pembayaran (Deposit/Penuh)</label>
+                  <input type="file" id="regFileResit" accept=".pdf,.jpg,.jpeg,.png" style="padding: 6px 10px;">
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary" style="width: 100%; min-height: 44px; margin-top: 10px;">Hantar Pendaftaran Jemaah</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- 3.3: SEMAK & KEMASKINI DOKUMEN JEMAAH -->
+      <section id="tab-jemaahEdit" class="hidden">
+        <div class="umrah-card" style="max-width: 760px; margin: 0 auto;">
+          <div class="umrah-header">
+            <h3>Semakan & Kemaskini Jemaah</h3>
+          </div>
+
+          <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 18px; margin-bottom: 20px;">
+            <label>Carian Melalui No. Kad Pengenalan (12 Digit)</label>
+            <div style="display: flex; gap: 8px; margin-top: 6px;">
+              <input type="text" id="searchJemaahIC" placeholder="Masukkan 12 digit No. K/P..." maxlength="12">
+              <button type="button" class="btn btn-primary" onclick="cariJemaahRecord()">Semak</button>
+            </div>
+            <div id="cariJemaahFeedback" style="font-size: 12px; font-weight: 700; margin-top: 8px;"></div>
+          </div>
+
+          <div id="panelJemaahFound" class="hidden">
+            <div class="jemaah-status-box">
+              <h4 style="font-size: 13px; font-weight: 800; color: var(--primary); margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 6px;">Status Dokumen Semasa:</h4>
+              <div class="jemaah-status-item"><span>1. Borang Pendaftaran:</span><span id="st_borang">-</span></div>
+              <div class="jemaah-status-item"><span>2. Gambar Pasport:</span><span id="st_gambar">-</span></div>
+              <div class="jemaah-status-item"><span>3. Salinan Pasport:</span><span id="st_salinan">-</span></div>
+              <div class="jemaah-status-item"><span>4. Biometrik:</span><span id="st_bio">-</span></div>
+              <div class="jemaah-status-item"><span>5. Tiket HHR:</span><span id="st_hhr">-</span></div>
+              <div class="jemaah-status-item" style="align-items: flex-start;"><span>6. Senarai Resit:</span><div id="st_resit" style="text-align: right;">-</div></div>
+            </div>
+
+            <form id="formKemaskiniJemaah" onsubmit="handleKemaskiniJemaah(event)">
+              <div class="form-group">
+                <label>Checklist Operasi Semasa:</label>
+                <div class="checklist-grid">
+                  <div class="checkbox-item"><input type="checkbox" id="edit_cb_beg"><label for="edit_cb_beg">Penyerahan Beg</label></div>
+                  <div class="checkbox-item"><input type="checkbox" id="edit_cb_kursus"><label for="edit_cb_kursus">Kursus Umrah</label></div>
+                  <div class="checkbox-item"><input type="checkbox" id="edit_cb_jadual"><label for="edit_cb_jadual">Jadual Penerbangan</label></div>
+                  <div class="checkbox-item"><input type="checkbox" id="edit_cb_keyin"><label for="edit_cb_keyin">Key-In Pasport</label></div>
+                </div>
+
+                <div style="border-top: 1px dashed var(--border); padding-top: 12px;">
+                  <label style="color: var(--primary);">Kemaskini / Muat Naik Dokumen Baharu</label>
+                  <div class="input-row" style="margin-top: 6px;">
+                    <div><label>Ganti Borang</label><input type="file" id="editFileBorang" accept=".pdf,.jpg,.jpeg,.png" style="padding: 6px 10px;"></div>
+                    <div><label>Ganti Gambar</label><input type="file" id="editFileGambar" accept=".pdf,.jpg,.jpeg,.png" style="padding: 6px 10px;"></div>
+                  </div>
+                  <div class="input-row" style="margin-top: 6px;">
+                    <div><label>Ganti Pasport</label><input type="file" id="editFileSalinan" accept=".pdf,.jpg,.jpeg,.png" style="padding: 6px 10px;"></div>
+                    <div><label>Ganti Biometrik</label><input type="file" id="editFileBio" accept=".pdf,.jpg,.jpeg,.png" style="padding: 6px 10px;"></div>
+                  </div>
+                  <div class="input-row" style="margin-top: 6px;">
+                    <div><label>Ganti Tiket HHR</label><input type="file" id="editFileHHR" accept=".pdf,.jpg,.jpeg,.png" style="padding: 6px 10px;"></div>
+                    <div><label>Tambah Resit Bayaran</label><input type="file" id="editFileResit" accept=".pdf,.jpg,.jpeg,.png" style="padding: 6px 10px;"></div>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; min-height: 44px; margin-top: 8px;">Simpan Perubahan</button>
+              </div>
+            </form>
+
+            <div style="margin-top: 30px; border-top: 1px solid #fee2e2; padding-top: 18px; text-align: center;">
+              <button type="button" class="btn btn-danger" onclick="sahkanPadamJemaah()">Padam & Arkibkan Rekod Jemaah Ini</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </main>
 
-    <!-- MOBILE NAVIGATION (2 TAB UTAMA: STOK & KURSUS) -->
-    <nav class="mobile-nav">
+    <!-- MOBILE NAVIGATION (3 TAB UTAMA) -->
+    <nav class="mobile-nav" style="grid-template-columns: repeat(3, 1fr);">
       <button id="mBtnStock" class="m-btn active" type="button" onclick="switchTab('dashboard')">
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-        <span>Stok & Inventori</span>
+        <span>Stok</span>
+      </button>
+      <button id="mBtnJemaah" class="m-btn" type="button" onclick="switchTab('jemaahList')">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        <span>Jemaah</span>
       </button>
       <button id="mBtnUmrah" class="m-btn" type="button" onclick="switchTab('umrahForm')">
         <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-        <span>Kursus Umrah</span>
+        <span>Kursus</span>
       </button>
     </nav>
   </div>
@@ -1788,7 +1173,10 @@
       globalTxType: 'Keluar',
       statusFilter: null,
       umrahForms: [],
-      stockMenuOpen: true
+      senaraiJemaah: [],
+      currentJemaahIC: '',
+      stockMenuOpen: true,
+      jemaahMenuOpen: false
     };
 
     let html5QrCodeScanner = null;
@@ -1801,13 +1189,9 @@
     function getAudioContext() {
       if (!globalAudioCtx) {
         const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-        if (AudioContextClass) {
-          globalAudioCtx = new AudioContextClass();
-        }
+        if (AudioContextClass) globalAudioCtx = new AudioContextClass();
       }
-      if (globalAudioCtx && globalAudioCtx.state === 'suspended') {
-        globalAudioCtx.resume();
-      }
+      if (globalAudioCtx && globalAudioCtx.state === 'suspended') globalAudioCtx.resume();
       return globalAudioCtx;
     }
 
@@ -1825,23 +1209,386 @@
       setTimeout(checkAutoSystemUpdate, 2000);
     });
 
-    window.addEventListener('focus', () => {
-      checkAutoSystemUpdate();
-    });
+    window.addEventListener('focus', () => { checkAutoSystemUpdate(); });
 
-    /* PENGENDALI PRATONTON POSTER */
+    /* KAWALAN MENU SIDEBAR */
+    function toggleStockMenu() {
+      appState.stockMenuOpen = !appState.stockMenuOpen;
+      document.getElementById('subStockMenu').classList.toggle('hidden', !appState.stockMenuOpen);
+      document.getElementById('chevronStock').classList.toggle('open', appState.stockMenuOpen);
+      if (['umrahForm', 'jemaahList', 'jemaahAdd', 'jemaahEdit'].includes(appState.activeTab)) switchTab('dashboard');
+    }
+
+    function toggleJemaahMenu() {
+      appState.jemaahMenuOpen = !appState.jemaahMenuOpen;
+      document.getElementById('subJemaahMenu').classList.toggle('hidden', !appState.jemaahMenuOpen);
+      document.getElementById('chevronJemaah').classList.toggle('open', appState.jemaahMenuOpen);
+      if (!['jemaahList', 'jemaahAdd', 'jemaahEdit'].includes(appState.activeTab)) switchTab('jemaahList');
+    }
+
+    function switchTab(tab) {
+      appState.activeTab = tab;
+
+      const isStockTab = ['dashboard', 'transactions', 'items'].includes(tab);
+      const isJemaahTab = ['jemaahList', 'jemaahAdd', 'jemaahEdit'].includes(tab);
+      const isUmrahTab = (tab === 'umrahForm');
+
+      // Butang Menu Induk
+      document.getElementById('btnParentStock').classList.toggle('active', isStockTab);
+      document.getElementById('btnParentJemaah').classList.toggle('active', isJemaahTab);
+      document.getElementById('btnNavUmrah').classList.toggle('active', isUmrahTab);
+
+      // Sub-menu Stok
+      document.getElementById('subBtnDashboard').classList.toggle('active', tab === 'dashboard');
+      document.getElementById('subBtnTransactions').classList.toggle('active', tab === 'transactions');
+      document.getElementById('subBtnItems').classList.toggle('active', tab === 'items');
+
+      // Sub-menu Jemaah
+      document.getElementById('subBtnJemaahList').classList.toggle('active', tab === 'jemaahList');
+      document.getElementById('subBtnJemaahAdd').classList.toggle('active', tab === 'jemaahAdd');
+      document.getElementById('subBtnJemaahEdit').classList.toggle('active', tab === 'jemaahEdit');
+
+      if (isStockTab && !appState.stockMenuOpen) toggleStockMenu();
+      if (isJemaahTab && !appState.jemaahMenuOpen) toggleJemaahMenu();
+
+      // Mobile Nav
+      document.getElementById('mBtnStock').classList.toggle('active', isStockTab);
+      document.getElementById('mBtnJemaah').classList.toggle('active', isJemaahTab);
+      document.getElementById('mBtnUmrah').classList.toggle('active', isUmrahTab);
+
+      // Sembunyi/Papar Seksyen
+      const allTabs = ['dashboard', 'transactions', 'items', 'umrahForm', 'jemaahList', 'jemaahAdd', 'jemaahEdit'];
+      allTabs.forEach(t => {
+        const el = document.getElementById('tab-' + t);
+        if (el) el.classList.toggle('hidden', t !== tab);
+      });
+
+      const titles = {
+        dashboard: ['Stok & Inventori', 'Paparan metrik dan status operasi inventori semasa.'],
+        transactions: ['Log Transaksi Stok', 'Rekod terperinci pergerakan masuk, keluar dan pelarasan stok.'],
+        items: ['Katalog Inventori', 'Senarai pangkalan data dan had simpanan item cawangan.'],
+        umrahForm: ['Pusat Kursus Umrah', 'Penjanaan dan arkib pautan borang digital jemaah cawangan.'],
+        jemaahList: ['Pangkalan Data Jemaah', 'Senarai rekod, semakan dokumen dan checklist operasi.'],
+        jemaahAdd: ['Pendaftaran Jemaah Baharu', 'Daftar maklumat jemaah dan muat naik dokumen berkaitan.'],
+        jemaahEdit: ['Semakan & Kemaskini Jemaah', 'Semak status fail atau kemaskini rekod jemaah cawangan.']
+      };
+      document.getElementById('viewTitle').textContent = titles[tab][0];
+      document.getElementById('viewSubtitle').textContent = titles[tab][1];
+
+      // Kawal butang Cetak QR & FAB Stok
+      const qrBtn = document.getElementById('btnStockQR');
+      const fabBtn = document.getElementById('mainFabBtn');
+      if (qrBtn) qrBtn.classList.toggle('hidden', !isStockTab);
+      if (fabBtn) fabBtn.classList.toggle('hidden', !isStockTab);
+
+      if (isUmrahTab) fetchUmrahFormsList();
+      if (tab === 'jemaahList') loadDataJemaah();
+
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+
+    function refreshCurrentView() {
+      if (appState.activeTab === 'umrahForm') {
+        fetchUmrahFormsList();
+        showToast('Senarai borang kursus dikemas kini.');
+      } else if (['jemaahList', 'jemaahAdd', 'jemaahEdit'].includes(appState.activeTab)) {
+        loadDataJemaah();
+        showToast('Pangkalan data jemaah dikemas kini.');
+      } else {
+        loadData();
+      }
+    }
+
+    /* ========================================================
+       MODUL PENGURUSAN JEMAAH (FRONTEND LOGIK)
+       ======================================================== */
+    async function fileToBase64Payload(inputEl) {
+      if (!inputEl || !inputEl.files || !inputEl.files[0]) return null;
+      const file = inputEl.files[0];
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve({
+          name: file.name,
+          type: file.type || 'application/pdf',
+          base64: reader.result.split(',')[1]
+        });
+        reader.onerror = err => reject(err);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function handleDaftarJemaah(e) {
+      e.preventDefault();
+      showLoading(true, 'Mendaftarkan jemaah ke pangkalan data...');
+
+      try {
+        const payload = {
+          namaPU: document.getElementById('regPU').value,
+          nama: document.getElementById('regNama').value.trim(),
+          nokp: document.getElementById('regIC').value.trim(),
+          telefon: document.getElementById('regTel').value.trim(),
+          beg: document.getElementById('reg_cb_beg').checked,
+          kursus: document.getElementById('reg_cb_kursus').checked,
+          jadual: document.getElementById('reg_cb_jadual').checked,
+          keyin: document.getElementById('reg_cb_keyin').checked,
+          borang: await fileToBase64Payload(document.getElementById('regFileBorang')),
+          gambarPasport: await fileToBase64Payload(document.getElementById('regFileGambar')),
+          salinanPasport: await fileToBase64Payload(document.getElementById('regFileSalinan')),
+          bio: await fileToBase64Payload(document.getElementById('regFileBio')),
+          tiketHHR: await fileToBase64Payload(document.getElementById('regFileHHR')),
+          buktiPembayaran: await fileToBase64Payload(document.getElementById('regFileResit'))
+        };
+
+        const res = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'daftarJemaah', data: payload })
+        }).then(r => r.json());
+
+        showLoading(false);
+        if (!res.ok) throw new Error(res.message);
+
+        showToast(res.message);
+        document.getElementById('formDaftarJemaah').reset();
+        switchTab('jemaahList');
+      } catch (err) {
+        showLoading(false);
+        showToast(err.message || 'Gagal mendaftar jemaah.', true);
+      }
+    }
+
+    function loadDataJemaah() {
+      const tbody = document.getElementById('tbodyJemaah');
+      const mCards = document.getElementById('mobileCardsJemaah');
+      tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:30px;">Memuatkan data jemaah...</td></tr>`;
+      
+      fetch(`${SCRIPT_URL}?action=getSenaraiJemaah`, { method: 'GET', redirect: 'follow' })
+      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error(res.message);
+        appState.senaraiJemaah = res.data || [];
+        renderJemaahTable(appState.senaraiJemaah);
+      })
+      .catch(err => {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#ef4444; padding:30px;">Gagal memuat turun rekod jemaah.</td></tr>`;
+      });
+    }
+
+    function renderJemaahTable(data) {
+      const tbody = document.getElementById('tbodyJemaah');
+      const mCards = document.getElementById('mobileCardsJemaah');
+
+      let jumFatin = 0, jumFikriyah = 0;
+      data.forEach(j => {
+        if (j.namaPU === 'Fatin') jumFatin++;
+        if (j.namaPU === 'Fikriyah') jumFikriyah++;
+      });
+      document.getElementById('statJumlahJemaah').textContent = data.length;
+      document.getElementById('statFatin').textContent = jumFatin;
+      document.getElementById('statFikriyah').textContent = jumFikriyah;
+
+      if (!data.length) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:30px;">Tiada rekod jemaah dijumpai.</td></tr>`;
+        mCards.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:20px; font-size:12px;">Tiada rekod jemaah dijumpai.</div>`;
+        return;
+      }
+
+      tbody.innerHTML = data.map(j => {
+        const d_br = j.borang ? `<a href="${j.borang}" target="_blank" class="badge badge-ok">Borang</a>` : `<span class="badge badge-empty">Borang</span>`;
+        const d_gb = j.gambar ? `<a href="${j.gambar}" target="_blank" class="badge badge-ok">Gambar</a>` : `<span class="badge badge-empty">Gambar</span>`;
+        const d_ps = j.salinan ? `<a href="${j.salinan}" target="_blank" class="badge badge-ok">Pasport</a>` : `<span class="badge badge-empty">Pasport</span>`;
+        const d_bio = j.bio ? `<a href="${j.bio}" target="_blank" class="badge badge-ok">Bio</a>` : `<span class="badge badge-empty">Bio</span>`;
+        const d_hhr = j.tiketHHR ? `<a href="${j.tiketHHR}" target="_blank" class="badge badge-ok">HHR</a>` : `<span class="badge" style="background:#f1f5f9; color:#64748b;">HHR</span>`;
+
+        let d_resit = `<span class="badge badge-empty">Tiada Resit</span>`;
+        if (j.resit) {
+          d_resit = j.resit.split(' | ').map(r => {
+            const p = r.split(': ');
+            return p.length === 2 ? `<a href="${p[1]}" target="_blank" class="badge badge-ok">${p[0]}</a>` : `<a href="${r}" target="_blank" class="badge badge-ok">Resit</a>`;
+          }).join(' ');
+        }
+
+        const c_beg = `<span class="badge ${j.beg === 'Selesai' ? 'badge-ok' : 'badge-empty'}">Beg ${j.beg === 'Selesai' ? '✔' : '✖'}</span>`;
+        const c_kur = `<span class="badge ${j.kursus === 'Selesai' ? 'badge-ok' : 'badge-empty'}">Kursus ${j.kursus === 'Selesai' ? '✔' : '✖'}</span>`;
+        const c_jad = `<span class="badge ${j.jadual === 'Selesai' ? 'badge-ok' : 'badge-empty'}">Jadual ${j.jadual === 'Selesai' ? '✔' : '✖'}</span>`;
+        const c_key = `<span class="badge ${j.keyin === 'Selesai' ? 'badge-ok' : 'badge-empty'}">Key-In ${j.keyin === 'Selesai' ? '✔' : '✖'}</span>`;
+
+        return `
+          <tr class="baris-jemaah">
+            <td>
+              <div style="font-size:11px; font-weight:800; color:var(--primary); text-transform:uppercase;">PU: ${j.namaPU}</div>
+              <div style="font-weight:700; color:var(--text); font-size:13.5px;">${j.nama}</div>
+              <div style="font-size:11.5px; color:#475569;">KP: ${j.nokp} • Tel: ${j.telefon}</div>
+            </td>
+            <td><div style="display:flex; flex-wrap:wrap; gap:3px; max-width:210px;">${d_br} ${d_gb} ${d_ps} ${d_bio} ${d_hhr}</div></td>
+            <td><div style="display:flex; flex-wrap:wrap; gap:3px; max-width:200px;">${d_resit}</div></td>
+            <td><div style="display:flex; flex-wrap:wrap; gap:3px;">${c_beg} ${c_kur} ${c_jad} ${c_key}</div></td>
+          </tr>
+        `;
+      }).join('');
+
+      mCards.innerHTML = data.map(j => `
+        <div class="card-row">
+          <div class="card-row-top">
+            <div>
+              <div class="card-title">${j.nama}</div>
+              <div class="card-sub">PU: ${j.namaPU} • KP: ${j.nokp}</div>
+            </div>
+            <span class="badge badge-ok">${j.telefon}</span>
+          </div>
+          <div class="card-row-bottom" style="flex-direction: column; align-items: flex-start; gap: 6px;">
+            <div style="font-size: 11px; color: var(--text-muted);">Checklist: Beg: ${j.beg||'✖'} | Kursus: ${j.kursus||'✖'} | Jadual: ${j.jadual||'✖'} | Key-In: ${j.keyin||'✖'}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function tapisJadualJemaah() {
+      const cariTxt = document.getElementById('cariJemaahInput').value.toLowerCase();
+      const puTxt = document.getElementById('tapisPUSelect').value.toLowerCase();
+      const rows = document.querySelectorAll('#tbodyJemaah tr.baris-jemaah');
+
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        const matchCari = text.includes(cariTxt);
+        const matchPU = (puTxt === '') || text.includes('pu: ' + puTxt);
+        row.style.display = (matchCari && matchPU) ? '' : 'none';
+      });
+    }
+
+    function cariJemaahRecord() {
+      const nokp = document.getElementById('searchJemaahIC').value.trim();
+      const feedback = document.getElementById('cariJemaahFeedback');
+      const panel = document.getElementById('panelJemaahFound');
+
+      if (!nokp || nokp.length !== 12) {
+        showToast('Sila masukkan tepat 12 digit No. Kad Pengenalan.', true);
+        return;
+      }
+
+      feedback.textContent = 'Menyemak rekod jemaah...';
+      feedback.style.color = 'var(--text-muted)';
+      panel.classList.add('hidden');
+
+      fetch(`${SCRIPT_URL}?action=semakStatusJemaah&nokp=${encodeURIComponent(nokp)}`, { method: 'GET', redirect: 'follow' })
+      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error(res.message);
+        const j = res.data;
+        appState.currentJemaahIC = nokp;
+
+        feedback.textContent = `Rekod Dijumpai: ${j.nama} (Tel: ${j.telefon}) - PU: ${j.namaPU}`;
+        feedback.style.color = '#047857';
+
+        const updateDoc = (id, url) => {
+          const el = document.getElementById(id);
+          el.innerHTML = url ? `<a href="${url}" target="_blank" class="badge badge-ok">Lihat Fail</a>` : `<span class="badge badge-empty">Tiada</span>`;
+        };
+        updateDoc('st_borang', j.borang);
+        updateDoc('st_gambar', j.gambar);
+        updateDoc('st_salinan', j.salinan);
+        updateDoc('st_bio', j.bio);
+        updateDoc('st_hhr', j.tiketHHR);
+
+        const resitBox = document.getElementById('st_resit');
+        if (j.resit) {
+          resitBox.innerHTML = j.resit.split(' | ').map(r => {
+            const p = r.split(': ');
+            return p.length === 2 ? `<a href="${p[1]}" target="_blank" class="badge badge-ok">${p[0]}</a>` : `<a href="${r}" target="_blank" class="badge badge-ok">Resit</a>`;
+          }).join(' ');
+        } else {
+          resitBox.innerHTML = `<span class="badge badge-empty">Tiada Resit</span>`;
+        }
+
+        document.getElementById('edit_cb_beg').checked = (j.beg === 'Selesai');
+        document.getElementById('edit_cb_kursus').checked = (j.kursus === 'Selesai');
+        document.getElementById('edit_cb_jadual').checked = (j.jadual === 'Selesai');
+        document.getElementById('edit_cb_keyin').checked = (j.keyin === 'Selesai');
+
+        panel.classList.remove('hidden');
+      })
+      .catch(err => {
+        feedback.textContent = err.message || 'Rekod jemaah tidak ditemui.';
+        feedback.style.color = '#b91c1c';
+      });
+    }
+
+    async function handleKemaskiniJemaah(e) {
+      e.preventDefault();
+      if (!appState.currentJemaahIC) return;
+
+      showLoading(true, 'Mengemas kini rekod jemaah...');
+      try {
+        const payload = {
+          nokp_kemaskini: appState.currentJemaahIC,
+          beg_k: document.getElementById('edit_cb_beg').checked,
+          kursus_k: document.getElementById('edit_cb_kursus').checked,
+          jadual_k: document.getElementById('edit_cb_jadual').checked,
+          keyin_k: document.getElementById('edit_cb_keyin').checked,
+          borang_k: await fileToBase64Payload(document.getElementById('editFileBorang')),
+          gambarPasport_k: await fileToBase64Payload(document.getElementById('editFileGambar')),
+          salinanPasport_k: await fileToBase64Payload(document.getElementById('editFileSalinan')),
+          bio_k: await fileToBase64Payload(document.getElementById('editFileBio')),
+          tiketHHR_k: await fileToBase64Payload(document.getElementById('editFileHHR')),
+          buktiPembayaran_k: await fileToBase64Payload(document.getElementById('editFileResit'))
+        };
+
+        const res = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'kemaskiniDokumen', data: payload })
+        }).then(r => r.json());
+
+        showLoading(false);
+        if (!res.ok) throw new Error(res.message);
+
+        showToast(res.message);
+        cariJemaahRecord();
+      } catch (err) {
+        showLoading(false);
+        showToast(err.message || 'Gagal mengemaskini jemaah.', true);
+      }
+    }
+
+    function sahkanPadamJemaah() {
+      if (!appState.currentJemaahIC) return;
+      const ic = prompt(`PENGESAHAN KESELAMATAN:\nSila taip semula No. K/P (${appState.currentJemaahIC}) untuk memadam & mengarkibkan rekod ini:`);
+      if (ic !== appState.currentJemaahIC) {
+        if (ic !== null) showToast('No. Kad Pengenalan tidak sepadan. Pemadaman dibatalkan.', true);
+        return;
+      }
+
+      showLoading(true, 'Memadam dan mengarkibkan rekod...');
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'padamJemaah', data: { nokp: appState.currentJemaahIC } })
+      })
+      .then(r => r.json())
+      .then(res => {
+        showLoading(false);
+        if (!res.ok) throw new Error(res.message);
+        showToast(res.message);
+        document.getElementById('panelJemaahFound').classList.add('hidden');
+        document.getElementById('searchJemaahIC').value = '';
+        document.getElementById('cariJemaahFeedback').textContent = '';
+        appState.currentJemaahIC = '';
+      })
+      .catch(err => {
+        showLoading(false);
+        showToast(err.message || 'Gagal memadamkan rekod.', true);
+      });
+    }
+
+    /* KURSUS UMRAH & POSTER LOGIC */
     function handlePosterSelection(event) {
       const file = event.target.files[0];
       if (!file) return;
-
       const dropzone = document.getElementById('posterDropzone');
       const container = document.getElementById('posterPreviewContainer');
       const img = document.getElementById('posterPreviewImg');
-      const nameEl = document.getElementById('posterPreviewName');
-      const sizeEl = document.getElementById('posterPreviewSize');
-
-      nameEl.textContent = file.name;
-      sizeEl.textContent = (file.size / 1024).toFixed(1) + ' KB';
+      document.getElementById('posterPreviewName').textContent = file.name;
+      document.getElementById('posterPreviewSize').textContent = (file.size / 1024).toFixed(1) + ' KB';
 
       const reader = new FileReader();
       reader.onload = function(e) {
@@ -1853,319 +1600,165 @@
     }
 
     function removePosterFile() {
-      const fileInput = document.getElementById('ufPosterFile');
-      fileInput.value = '';
+      document.getElementById('ufPosterFile').value = '';
       document.getElementById('posterPreviewImg').src = '';
       document.getElementById('posterPreviewContainer').classList.add('hidden');
       document.getElementById('posterDropzone').classList.remove('hidden');
     }
 
-    function toggleStockMenu() {
-      appState.stockMenuOpen = !appState.stockMenuOpen;
-      const subMenu = document.getElementById('subStockMenu');
-      const chevron = document.getElementById('chevronStock');
-      
-      if (appState.stockMenuOpen) {
-        subMenu.classList.remove('hidden');
-        chevron.classList.add('open');
-      } else {
-        subMenu.classList.add('hidden');
-        chevron.classList.remove('open');
-      }
-
-      if (appState.activeTab === 'umrahForm') {
-        switchTab('dashboard');
-      }
-    }
-
-    function switchTab(tab) {
-      appState.activeTab = tab;
-
-      const isStockTab = ['dashboard', 'transactions', 'items'].includes(tab);
-      const isUmrahTab = (tab === 'umrahForm');
-
-      const btnParentStock = document.getElementById('btnParentStock');
-      const btnNavUmrah = document.getElementById('btnNavUmrah');
-      
-      if (btnParentStock) btnParentStock.classList.toggle('active', isStockTab);
-      if (btnNavUmrah) btnNavUmrah.classList.toggle('active', isUmrahTab);
-
-      document.getElementById('subBtnDashboard').classList.toggle('active', tab === 'dashboard');
-      document.getElementById('subBtnTransactions').classList.toggle('active', tab === 'transactions');
-      document.getElementById('subBtnItems').classList.toggle('active', tab === 'items');
-
-      if (isStockTab && !appState.stockMenuOpen) {
-        toggleStockMenu();
-      }
-
-      document.getElementById('mBtnStock').classList.toggle('active', isStockTab);
-      document.getElementById('mBtnUmrah').classList.toggle('active', isUmrahTab);
-
-      document.getElementById('tab-dashboard').classList.toggle('hidden', tab !== 'dashboard');
-      document.getElementById('tab-transactions').classList.toggle('hidden', tab !== 'transactions');
-      document.getElementById('tab-items').classList.toggle('hidden', tab !== 'items');
-      document.getElementById('tab-umrahForm').classList.toggle('hidden', tab !== 'umrahForm');
-
-      const titles = {
-        dashboard: ['Stok & Inventori', 'Paparan metrik dan status operasi inventori semasa.'],
-        transactions: ['Log Transaksi Stok', 'Rekod terperinci pergerakan masuk, keluar dan pelarasan stok.'],
-        items: ['Katalog Inventori', 'Senarai pangkalan data dan had simpanan item cawangan.'],
-        umrahForm: ['Pusat Kursus Umrah', 'Penjanaan dan arkib pautan borang digital jemaah cawangan.']
-      };
-      document.getElementById('viewTitle').textContent = titles[tab][0];
-      document.getElementById('viewSubtitle').textContent = titles[tab][1];
-
-      const qrBtn = document.getElementById('btnStockQR');
-      const fabBtn = document.getElementById('mainFabBtn');
-      
-      if (qrBtn) qrBtn.classList.toggle('hidden', isUmrahTab);
-      if (fabBtn) fabBtn.classList.toggle('hidden', isUmrahTab);
-
-      if (isUmrahTab) {
-        fetchUmrahFormsList();
-      }
-
-      window.scrollTo({ top: 0, behavior: 'instant' });
-    }
-
-    function refreshCurrentView() {
-      if (appState.activeTab === 'umrahForm') {
-        fetchUmrahFormsList();
-        showToast('Senarai borang dikemas kini.');
-      } else {
-        loadData();
-      }
-    }
-
     function formatTarikhKursusMelayu(dateStr) {
       if (!dateStr) return '';
       const parts = dateStr.split('-');
-      const year = parseInt(parts[0], 10);
-      const monthIndex = parseInt(parts[1], 10) - 1;
-      const day = parseInt(parts[2], 10);
-      const d = new Date(year, monthIndex, day);
-
+      const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
       const months = ['JAN', 'FEB', 'MAC', 'APR', 'MEI', 'JUN', 'JUL', 'OGOS', 'SEP', 'OKT', 'NOV', 'DIS'];
       const days = ['AHAD', 'ISNIN', 'SELASA', 'RABU', 'KHAMIS', 'JUMAAT', 'SABTU'];
-
-      return `${day} ${months[d.getMonth()]} ${d.getFullYear()} (${days[d.getDay()]})`;
+      return `${parts[2]} ${months[d.getMonth()]} ${d.getFullYear()} (${days[d.getDay()]})`;
     }
 
     function getBulanKursusMelayu(dateStr) {
       if (!dateStr) return '';
       const parts = dateStr.split('-');
-      const year = parts[0];
-      const monthIndex = parseInt(parts[1], 10) - 1;
       const months = ['JANUARI', 'FEBRUARI', 'MAC', 'APRIL', 'MEI', 'JUN', 'JULAI', 'OGOS', 'SEPTEMBER', 'OKTOBER', 'NOVEMBER', 'DISEMBER'];
-      return `${months[monthIndex]} ${year}`;
+      return `${months[parseInt(parts[1], 10) - 1]} ${parts[0]}`;
     }
 
-    async function checkAutoSystemUpdate() {
-      try {
-        const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/commits?per_page=1&_nocache=${Date.now()}`);
-        if (!res.ok) return;
+    async function handleGenerateUmrahForm(e) {
+      e.preventDefault();
+      const rawDate = document.getElementById('ufTarikhInput').value;
+      const formattedDate = formatTarikhKursusMelayu(rawDate);
+      const bulanText = getBulanKursusMelayu(rawDate);
+      const fileInput = document.getElementById('ufPosterFile');
 
-        const commits = await res.json();
-        if (!Array.isArray(commits) || !commits.length) return;
-
-        const latestCommit = commits[0];
-        const latestCommitSha = latestCommit.sha;
-        const currentSavedSha = localStorage.getItem('eastra_current_commit_sha');
-
-        if (!currentSavedSha) {
-          localStorage.setItem('eastra_current_commit_sha', latestCommitSha);
-          return;
-        }
-
-        if (currentSavedSha !== latestCommitSha) {
-          window.pendingCommitSha = latestCommitSha;
-          
-          let commitMsg = (latestCommit.commit && latestCommit.commit.message) ? latestCommit.commit.message.trim() : '';
-          commitMsg = commitMsg.split('\n')[0];
-
-          let friendlyMsg = commitMsg;
-          if (!friendlyMsg || friendlyMsg.toLowerCase().startsWith('update index.html')) {
-            friendlyMsg = 'Penambahbaikan ciri dan pengoptimuman sistem aplikasi.';
-          }
-
-          const changelogEl = document.getElementById('updateChangelogText');
-          if (changelogEl) changelogEl.textContent = friendlyMsg;
-          
-          const banner = document.getElementById('updateBanner');
-          if (banner) banner.classList.remove('hidden');
-        }
-      } catch (e) {}
-    }
-
-    function dismissUpdateBanner() {
-      const banner = document.getElementById('updateBanner');
-      if (banner) banner.classList.add('hidden');
-    }
-
-    async function applySystemUpdate() {
-      dismissUpdateBanner();
-      showLoading(true, 'Mengemas kini sistem...', true, 'Memasang fail aplikasi terkini...');
-
-      if (window.pendingCommitSha) {
-        localStorage.setItem('eastra_current_commit_sha', window.pendingCommitSha);
+      showLoading(true, 'Menduplikasi templat borang...');
+      let posterBase64 = '', posterType = '';
+      if (fileInput.files && fileInput.files[0]) {
+        const file = fileInput.files[0];
+        posterType = file.type || 'image/jpeg';
+        posterBase64 = await new Promise(res => {
+          const r = new FileReader();
+          r.onload = () => res(r.result.split(',')[1]);
+          r.readAsDataURL(file);
+        });
       }
 
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'createKursusUmrahForm',
+          data: {
+            tarikh: rawDate,
+            tarikhFormatted: formattedDate,
+            bulan: bulanText,
+            waktu: document.getElementById('ufWaktu').value.trim(),
+            tempat: document.getElementById('ufTempat').value.trim(),
+            noTel: document.getElementById('ufNoTel').value.trim(),
+            posterBase64, posterType
+          }
+        })
+      })
+      .then(res => res.json())
+      .then(res => {
+        showLoading(false);
+        if (!res.ok) throw new Error(res.message);
+        document.getElementById('resultFormName').textContent = res.formTitle;
+        document.getElementById('resLiveUrl').value = res.formUrl;
+        document.getElementById('resEditUrl').value = res.editUrl;
+        document.getElementById('linkLiveBtn').href = res.formUrl;
+        document.getElementById('linkEditBtn').href = res.editUrl;
+        document.getElementById('umrahFormResult').classList.remove('hidden');
+
+        let localForms = JSON.parse(localStorage.getItem('eastra_umrah_forms') || '[]');
+        localForms = localForms.filter(f => f.id !== res.formUrl);
+        localForms.unshift({ id: res.formUrl, name: res.formTitle, liveUrl: res.formUrl, editUrl: res.editUrl, dateCreated: new Date().toLocaleDateString('ms-MY') });
+        localStorage.setItem('eastra_umrah_forms', JSON.stringify(localForms));
+
+        if (res.formsList && res.formsList.length) renderUmrahFormsList(res.formsList);
+        else renderUmrahFormsList(localForms);
+        showToast('Borang kursus berjaya dijana.');
+      })
+      .catch(err => {
+        showLoading(false);
+        showToast(err.message || 'Gagal menjana borang.', true);
+      });
+    }
+
+    function fetchUmrahFormsList() {
+      const container = document.getElementById('umrahFormsListContainer');
+      const localForms = JSON.parse(localStorage.getItem('eastra_umrah_forms') || '[]');
+      if (localForms.length) renderUmrahFormsList(localForms);
+
+      fetch(`${SCRIPT_URL}?action=getUmrahFormsList`, { method: 'GET', redirect: 'follow' })
+      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error(res.message);
+        if (res.forms && res.forms.length) {
+          localStorage.setItem('eastra_umrah_forms', JSON.stringify(res.forms));
+          renderUmrahFormsList(res.forms);
+        }
+      }).catch(() => {});
+    }
+
+    function renderUmrahFormsList(forms) {
+      const container = document.getElementById('umrahFormsListContainer');
+      if (!forms || !forms.length) {
+        container.innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px;">Tiada rekod borang kursus ditemui.</p>';
+        return;
+      }
+
+      container.innerHTML = forms.map(f => `
+        <div class="form-item-row">
+          <div class="form-item-info">
+            <span class="form-item-title">${f.name}</span>
+            <span class="form-item-date">Tarikh Dijana: ${f.dateCreated}</span>
+          </div>
+          <div class="form-item-actions">
+            <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 32px;" onclick="copyDirectText('${f.liveUrl}')">Salin Pautan</button>
+            <a href="${f.liveUrl}" target="_blank" class="btn btn-primary" style="padding: 4px 14px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Pautan Awam</a>
+            <a href="${f.editUrl}" target="_blank" class="btn btn-secondary" style="padding: 4px 14px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Editor</a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    /* SISTEM INVENTORI & ASAS */
+    function checkAutoSystemUpdate() {
+      fetch(`https://api.github.com/repos/${GITHUB_REPO}/commits?per_page=1&_nocache=${Date.now()}`)
+      .then(r => r.json())
+      .then(commits => {
+        if (!Array.isArray(commits) || !commits.length) return;
+        const sha = commits[0].sha;
+        const saved = localStorage.getItem('eastra_current_commit_sha');
+        if (!saved) { localStorage.setItem('eastra_current_commit_sha', sha); return; }
+        if (saved !== sha) {
+          window.pendingCommitSha = sha;
+          document.getElementById('updateBanner').classList.remove('hidden');
+        }
+      }).catch(() => {});
+    }
+
+    function dismissUpdateBanner() { document.getElementById('updateBanner').classList.add('hidden'); }
+    async function applySystemUpdate() {
+      dismissUpdateBanner();
+      showLoading(true, 'Mengemas kini fail sistem...');
+      if (window.pendingCommitSha) localStorage.setItem('eastra_current_commit_sha', window.pendingCommitSha);
       if ('caches' in window) {
         const keys = await caches.keys();
         await Promise.all(keys.map(k => caches.delete(k)));
       }
-
-      setTimeout(() => {
-        window.location.reload(true);
-      }, 1200);
+      setTimeout(() => window.location.reload(true), 1200);
     }
 
-    function lockBodyScroll() {
-      document.body.classList.add('modal-open');
-    }
+    function lockBodyScroll() { document.body.classList.add('modal-open'); }
+    function unlockBodyScroll() { if (document.querySelectorAll('.modal-overlay:not(.hidden)').length === 0) document.body.classList.remove('modal-open'); }
 
-    function unlockBodyScroll() {
-      const openModals = document.querySelectorAll('.modal-overlay:not(.hidden)');
-      if (openModals.length === 0) {
-        document.body.classList.remove('modal-open');
-      }
-    }
-
-    async function generateQRPdf1Page() {
-      const items = appState.data?.items || [];
-      if (!items.length) {
-        showToast('Tiada rekod inventori ditemui untuk cetakan.', true);
-        return;
-      }
-
-      showLoading(true, 'Menjana dokumen PDF kod QR...');
-
-      try {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF('p', 'mm', 'a4');
-        const pageWidth = 210;
-        const pageHeight = 297;
-        const margin = 10;
-
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(13);
-        doc.setTextColor(11, 56, 24);
-        doc.text('LABEL KOD QR PRODUK - AZ ZUHA CAWANGAN TERENGGANU', pageWidth / 2, 14, { align: 'center' });
-        
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(9);
-        doc.setTextColor(100, 116, 139);
-        const todayStr = new Date().toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' });
-        doc.text(`Jumlah Item: ${items.length} | Tarikh Cetakan: ${todayStr}`, pageWidth / 2, 19, { align: 'center' });
-
-        doc.setDrawColor(226, 232, 240);
-        doc.setLineWidth(0.4);
-        doc.line(margin, 22, pageWidth - margin, 22);
-
-        const cols = 3;
-        const colWidth = (pageWidth - (margin * 2) - ((cols - 1) * 4)) / cols;
-        const availableHeight = pageHeight - 26 - margin;
-        
-        const totalRows = Math.ceil(items.length / cols);
-        const cardHeight = Math.min(33, (availableHeight - ((totalRows - 1) * 3)) / totalRows); 
-        const qrSize = Math.min(22, cardHeight - 10);
-
-        for (let idx = 0; idx < items.length; idx++) {
-          const itm = items[idx];
-          const colIdx = idx % cols;
-          const rowIdx = Math.floor(idx / cols);
-
-          const x = margin + (colIdx * (colWidth + 4));
-          const y = 26 + (rowIdx * (cardHeight + 3));
-
-          doc.setFillColor(255, 255, 255);
-          doc.setDrawColor(203, 213, 225);
-          doc.roundedRect(x, y, colWidth, cardHeight, 2, 2, 'FD');
-
-          const qrDataText = encodeURIComponent(itm.sku || itm.itemId);
-          const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&margin=0&data=${qrDataText}`;
-          
-          try {
-            const imgData = await fetchImageAsBase64(qrUrl);
-            const qrX = x + 2.5;
-            const qrY = y + (cardHeight - qrSize) / 2;
-            doc.addImage(imgData, 'PNG', qrX, qrY, qrSize, qrSize);
-          } catch (e) {}
-
-          const textX = x + qrSize + 5;
-          const textWidth = colWidth - qrSize - 7;
-          
-          doc.setFont('helvetica', 'bold');
-          doc.setFontSize(8);
-          doc.setTextColor(15, 23, 42);
-          
-          const splitItemName = doc.splitTextToSize(itm.item, textWidth);
-          doc.text(splitItemName.slice(0, 2), textX, y + 8);
-
-          doc.setFont('helvetica', 'bold');
-          doc.setFontSize(7.5);
-          doc.setTextColor(4, 120, 87);
-          doc.text(itm.sku || itm.itemId, textX, y + cardHeight - 7);
-
-          doc.setFont('helvetica', 'normal');
-          doc.setFontSize(6.5);
-          doc.setTextColor(100, 116, 139);
-          doc.text(itm.category || 'Item', textX, y + cardHeight - 3);
-        }
-
-        doc.save(`eASTRA_Label_QR_${new Date().toISOString().slice(0,10)}.pdf`);
-        showLoading(false);
-        showToast('Dokumen PDF berjaya dimuat turun.');
-      } catch (err) {
-        showLoading(false);
-        showToast('Gagal menjana dokumen PDF: ' + err.message, true);
-      }
-    }
-
-    function fetchImageAsBase64(url) {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.crossOrigin = 'Anonymous';
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          canvas.width = img.width;
-          canvas.height = img.height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0);
-          resolve(canvas.toDataURL('image/png'));
-        };
-        img.onerror = () => reject(new Error('Gagal memuat turun imej QR'));
-        img.src = url;
-      });
-    }
-
-    function openTxModal() {
-      document.getElementById('txModal').classList.remove('hidden');
-      lockBodyScroll();
-    }
-
-    function closeTxModal() {
-      document.getElementById('txModal').classList.add('hidden');
-      unlockBodyScroll();
-    }
-
-    function openItemModal() {
-      resetItemForm();
-      document.getElementById('itemModal').classList.remove('hidden');
-      lockBodyScroll();
-    }
-
-    function closeItemModal() {
-      document.getElementById('itemModal').classList.add('hidden');
-      resetItemForm();
-      unlockBodyScroll();
-    }
-
+    function openTxModal() { document.getElementById('txModal').classList.remove('hidden'); lockBodyScroll(); }
+    function closeTxModal() { document.getElementById('txModal').classList.add('hidden'); unlockBodyScroll(); }
+    function openItemModal() { resetItemForm(); document.getElementById('itemModal').classList.remove('hidden'); lockBodyScroll(); }
+    function closeItemModal() { document.getElementById('itemModal').classList.add('hidden'); resetItemForm(); unlockBodyScroll(); }
     function openLogDetailModal(log) {
-      const typeBadge = document.getElementById('dtlType');
-      typeBadge.textContent = log.type;
-      typeBadge.className = `badge ${log.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}`;
-
+      document.getElementById('dtlType').textContent = log.type;
+      document.getElementById('dtlType').className = `badge ${log.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}`;
       document.getElementById('dtlItem').textContent = log.item;
       document.getElementById('dtlSku').textContent = log.sku || '-';
       document.getElementById('dtlDate').textContent = log.date;
@@ -2173,97 +1766,27 @@
       document.getElementById('dtlBalance').textContent = `${log.balanceAfter} unit`;
       document.getElementById('dtlPic').textContent = log.pic || '-';
       document.getElementById('dtlLocation').textContent = log.location || '-';
-
-      const noteBox = document.getElementById('dtlNote');
-      if (log.note && log.note.trim()) {
-        noteBox.textContent = log.note;
-        if (log.note.includes('[Audit Fizikal')) {
-          noteBox.style.background = '#fffbeb';
-          noteBox.style.color = '#b45309';
-          noteBox.style.borderColor = '#fde68a';
-          noteBox.style.fontWeight = '700';
-        } else {
-          noteBox.style.background = '#ffffff';
-          noteBox.style.color = '#0f172a';
-          noteBox.style.borderColor = '#e2e8f0';
-          noteBox.style.fontWeight = '500';
-        }
-      } else {
-        noteBox.textContent = 'Tiada catatan direkodkan.';
-        noteBox.style.background = '#f8fafc';
-        noteBox.style.color = '#64748b';
-        noteBox.style.borderColor = '#e2e8f0';
-        noteBox.style.fontWeight = 'normal';
-      }
-
+      document.getElementById('dtlNote').textContent = log.note || 'Tiada catatan direkodkan.';
       document.getElementById('logDetailModal').classList.remove('hidden');
       lockBodyScroll();
     }
-
-    function closeLogDetailModal() {
-      document.getElementById('logDetailModal').classList.add('hidden');
-      unlockBodyScroll();
-    }
-
-    function closeModalOnBackdrop(e, modalId) {
-      if (e.target.id === modalId) {
-        document.getElementById(modalId).classList.add('hidden');
-        if (modalId === 'itemModal') resetItemForm();
-        unlockBodyScroll();
-      }
-    }
+    function closeLogDetailModal() { document.getElementById('logDetailModal').classList.add('hidden'); unlockBodyScroll(); }
+    function closeModalOnBackdrop(e, modalId) { if (e.target.id === modalId) { document.getElementById(modalId).classList.add('hidden'); unlockBodyScroll(); } }
 
     function setGlobalTxType(type) {
       appState.globalTxType = type;
       document.getElementById('btnTypeOut').classList.toggle('active', type === 'Keluar');
       document.getElementById('btnTypeIn').classList.toggle('active', type === 'Masuk');
       document.getElementById('btnTypeAudit').classList.toggle('active', type === 'Pelarasan');
-
-      const batchLabel = document.getElementById('batchLabel');
-      const submitBtn = document.getElementById('btnSubmitTx');
-
-      if (type === 'Pelarasan') {
-        batchLabel.textContent = 'Kiraan Sebenar di Tapak (Audit)';
-        submitBtn.textContent = 'Sahkan Pelarasan Stok';
-      } else if (type === 'Masuk') {
-        batchLabel.textContent = 'Senarai Penerimaan Stok';
-        submitBtn.textContent = 'Sahkan Penerimaan Stok';
-      } else {
-        batchLabel.textContent = 'Senarai Item Keluar';
-        submitBtn.textContent = 'Sahkan Pengeluaran Stok';
-      }
-
+      document.getElementById('batchLabel').textContent = type === 'Pelarasan' ? 'Kiraan Sebenar di Tapak (Audit)' : (type === 'Masuk' ? 'Senarai Penerimaan Stok' : 'Senarai Item Keluar');
+      document.getElementById('btnSubmitTx').textContent = 'Sahkan ' + (type === 'Pelarasan' ? 'Pelarasan' : (type === 'Masuk' ? 'Penerimaan' : 'Pengeluaran')) + ' Stok';
       document.querySelectorAll('.batch-item').forEach(sel => updateRowHint(sel));
     }
 
-    function showLoading(show, msg = 'Memproses data...', isUpdateMode = false, subMsg = '') {
+    function showLoading(show, msg = 'Memproses data...') {
       const overlay = document.getElementById('loading');
-      if (!show) {
-        overlay.classList.add('hidden');
-        return;
-      }
-
+      if (!show) { overlay.classList.add('hidden'); return; }
       document.getElementById('loadingMsg').textContent = msg;
-      
-      const standardSpinner = document.getElementById('loadingStandardSpinner');
-      const updateAnim = document.getElementById('loadingUpdateAnim');
-      const subMsgEl = document.getElementById('loadingSubMsg');
-
-      if (isUpdateMode) {
-        standardSpinner.classList.add('hidden');
-        updateAnim.classList.remove('hidden');
-        if (subMsg) {
-          subMsgEl.textContent = subMsg;
-          subMsgEl.classList.remove('hidden');
-        } else {
-          subMsgEl.classList.add('hidden');
-        }
-      } else {
-        standardSpinner.classList.remove('hidden');
-        updateAnim.classList.add('hidden');
-        subMsgEl.classList.add('hidden');
-      }
-
       overlay.classList.remove('hidden');
     }
 
@@ -2275,22 +1798,10 @@
       setTimeout(() => t.classList.remove('show'), 3000);
     }
 
-    function showScannerOverlay(msg, isError = false) {
-      const el = document.getElementById('scannerOverlayToast');
-      el.textContent = msg;
-      el.classList.toggle('error', isError);
-      el.classList.add('show');
-      if (toastTimer) clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => el.classList.remove('show'), 2000);
-    }
-
     function loadData() {
       showLoading(true);
       fetch(`${SCRIPT_URL}?action=getAppData`, { method: 'GET', redirect: 'follow' })
-      .then(res => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}: Rangkaian terputus`);
-        return res.json();
-      })
+      .then(res => res.json())
       .then(res => {
         if (!res.ok) throw new Error(res.message);
         appState.data = res.data;
@@ -2302,22 +1813,8 @@
       })
       .catch(err => {
         showLoading(false);
-        showToast(err.message || 'Gagal memuatkan data. Sila semak sambungan.', true);
+        showToast(err.message || 'Gagal memuat turun data.', true);
       });
-    }
-
-    function filterDashboard(status) {
-      appState.statusFilter = status;
-      renderDashboard();
-      document.getElementById('btnClearFilter').classList.remove('hidden');
-      document.getElementById('attentionHeader').textContent = `Status Item: ${status}`;
-    }
-
-    function resetDashboardFilter() {
-      appState.statusFilter = null;
-      renderDashboard();
-      document.getElementById('btnClearFilter').classList.add('hidden');
-      document.getElementById('attentionHeader').textContent = 'Perhatian Inventori';
     }
 
     function renderDashboard() {
@@ -2341,11 +1838,8 @@
       window.cards = cards;
 
       let items = appState.data.items;
-      if (appState.statusFilter) {
-        items = items.filter(i => i.status === appState.statusFilter);
-      } else {
-        items = items.filter(i => i.status !== 'OK');
-      }
+      if (appState.statusFilter) items = items.filter(i => i.status === appState.statusFilter);
+      else items = items.filter(i => i.status !== 'OK');
 
       const tbody = document.getElementById('attentionTbody');
       const mCards = document.getElementById('attentionMobileCards');
@@ -2369,26 +1863,32 @@
         mCards.innerHTML = items.map(i => `
           <div class="card-row">
             <div class="card-row-top">
-              <div>
-                <div class="card-title">${i.item}</div>
-                <div class="card-sub">${i.sku || i.itemId} • ${i.category}</div>
-              </div>
+              <div><div class="card-title">${i.item}</div><div class="card-sub">${i.sku || i.itemId} • ${i.category}</div></div>
               <span class="badge badge-${i.status === 'OK' ? 'ok' : (i.status === 'HABIS' ? 'empty' : 'low')}">${i.status}</span>
             </div>
-            <div class="card-row-bottom">
-              <span>Baki Semasa: <strong style="color:var(--primary); font-size:13px;">${i.currentStock} unit</strong></span>
-              <span style="color:#64748b;">Min: ${i.minimum}</span>
-            </div>
+            <div class="card-row-bottom"><span>Baki: <strong style="color:var(--primary); font-size:13px;">${i.currentStock} unit</strong></span><span style="color:#64748b;">Min: ${i.minimum}</span></div>
           </div>
         `).join('');
       }
     }
 
+    function filterDashboard(status) {
+      appState.statusFilter = status;
+      renderDashboard();
+      document.getElementById('btnClearFilter').classList.remove('hidden');
+      document.getElementById('attentionHeader').textContent = `Status Item: ${status}`;
+    }
+
+    function resetDashboardFilter() {
+      appState.statusFilter = null;
+      renderDashboard();
+      document.getElementById('btnClearFilter').classList.add('hidden');
+      document.getElementById('attentionHeader').textContent = 'Perhatian Inventori';
+    }
+
     function renderDropdowns() {
       const l = appState.data.lists;
-      const fill = (id, arr) => {
-        document.getElementById(id).innerHTML = arr.map(x => `<option value="${x}">${x}</option>`).join('');
-      };
+      const fill = (id, arr) => { document.getElementById(id).innerHTML = arr.map(x => `<option value="${x}">${x}</option>`).join(''); };
       fill('txPic', l.pic);
       fill('txLocation', l.lokasi);
       fill('itCategory', l.kategori);
@@ -2401,9 +1901,7 @@
       const div = document.createElement('div');
       div.className = 'batch-item-row';
       div.innerHTML = `
-        <div class="item-select-col">
-          <select class="batch-item" onchange="updateRowHint(this)" required></select>
-        </div>
+        <div class="item-select-col"><select class="batch-item" onchange="updateRowHint(this)" required></select></div>
         <div class="item-bottom-bar">
           <div class="item-baki-badge hidden"></div>
           <div class="item-action-controls">
@@ -2418,7 +1916,6 @@
       `;
       container.appendChild(div);
       updateBatchOptions();
-      
       if (prefillId) {
         const sel = div.querySelector('.batch-item');
         sel.value = prefillId;
@@ -2444,162 +1941,31 @@
 
       if (item && sel.value) {
         badge.classList.remove('hidden', 'low', 'audit-hint');
-
         if (appState.globalTxType === 'Pelarasan') {
-          const physicalVal = Number(input.value) || 0;
-          const diff = physicalVal - item.currentStock;
-          const sign = diff > 0 ? `+${diff}` : `${diff}`;
-          badge.textContent = `Sistem: ${item.currentStock} | Beza: ${sign}`;
+          const diff = (Number(input.value) || 0) - item.currentStock;
+          badge.textContent = `Sistem: ${item.currentStock} | Beza: ${diff > 0 ? '+'+diff : diff}`;
           badge.classList.add('audit-hint');
         } else {
-          const isLow = item.currentStock <= item.minimum;
           badge.textContent = `Baki Semasa: ${item.currentStock} unit`;
-          badge.classList.toggle('low', isLow);
+          badge.classList.toggle('low', item.currentStock <= item.minimum);
         }
-      } else {
-        badge.classList.add('hidden');
-      }
+      } else badge.classList.add('hidden');
     }
 
     function removeBatchRow(btn) {
-      const rows = document.querySelectorAll('.batch-item-row');
-      if (rows.length > 1) {
-        btn.closest('.batch-item-row').remove();
-      } else {
-        showToast('Sekurang-kurangnya satu item diperlukan.', true);
-      }
+      if (document.querySelectorAll('.batch-item-row').length > 1) btn.closest('.batch-item-row').remove();
+      else showToast('Sekurang-kurangnya satu item diperlukan.', true);
     }
 
     function updateBatchOptions() {
       const items = appState.data?.items || [];
-      const opts = `<option value="">Pilih Item...</option>` + items.map(i => `
-        <option value="${i.sku || i.itemId}">${i.sku || i.itemId} — ${i.item}</option>
-      `).join('');
+      const opts = `<option value="">Pilih Item...</option>` + items.map(i => `<option value="${i.sku || i.itemId}">${i.sku || i.itemId} — ${i.item}</option>`).join('');
       document.querySelectorAll('.batch-item').forEach(sel => {
         const cur = sel.value;
         sel.innerHTML = opts;
         sel.value = cur;
         updateRowHint(sel);
       });
-    }
-
-    function openScannerModal() {
-      getAudioContext();
-
-      document.getElementById('scannerModal').classList.remove('hidden');
-      lockBodyScroll();
-      if (!html5QrCodeScanner) {
-        html5QrCodeScanner = new Html5Qrcode("scannerReader");
-      }
-      html5QrCodeScanner.start(
-        { facingMode: "environment" },
-        { 
-          fps: 3,
-          qrbox: { width: 160, height: 160 }
-        },
-        onScanSuccess
-      ).catch(err => {
-        showToast('Akses kamera gagal dimulakan.', true);
-        closeScannerModal();
-      });
-    }
-
-    function closeScannerModal() {
-      const modal = document.getElementById('scannerModal');
-      if (html5QrCodeScanner && html5QrCodeScanner.isScanning) {
-        html5QrCodeScanner.stop().then(() => {
-          modal.classList.add('hidden');
-          unlockBodyScroll();
-        }).catch(() => {
-          modal.classList.add('hidden');
-          unlockBodyScroll();
-        });
-      } else {
-        modal.classList.add('hidden');
-        unlockBodyScroll();
-      }
-    }
-
-    function playFeedback() {
-      try {
-        const ctx = getAudioContext();
-        if (ctx) {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(950, ctx.currentTime);
-
-          gain.gain.setValueAtTime(0.2, ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.12);
-
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-
-          osc.start(ctx.currentTime);
-          osc.stop(ctx.currentTime + 0.12);
-        }
-      } catch (e) {}
-
-      if (navigator.vibrate) {
-        try {
-          navigator.vibrate(60);
-        } catch (e) {}
-      }
-    }
-
-    function onScanSuccess(decodedText) {
-      const now = Date.now();
-      
-      if (isProcessingScan || (now - lastScanTime < 2000)) return;
-      if (decodedText === lastScanCode && (now - lastScanTime < 3500)) return;
-
-      isProcessingScan = true;
-      lastScanCode = decodedText;
-      lastScanTime = now;
-
-      const items = appState.data?.items || [];
-      const clean = decodedText.trim().toLowerCase();
-      const matched = items.find(i => 
-        (i.sku && i.sku.toLowerCase() === clean) ||
-        (i.itemId && i.itemId.toLowerCase() === clean)
-      );
-
-      if (!matched) {
-        playFeedback();
-        showScannerOverlay('Item tidak ditemui: ' + decodedText, true);
-        setTimeout(() => { isProcessingScan = false; }, 1500);
-        return;
-      }
-
-      playFeedback();
-      const targetCode = matched.sku || matched.itemId;
-
-      let existing = null;
-      document.querySelectorAll('.batch-item-row').forEach(row => {
-        if (row.querySelector('.batch-item').value === targetCode) existing = row;
-      });
-
-      if (existing) {
-        const q = existing.querySelector('.batch-qty');
-        q.value = (Number(q.value) || 0) + 1;
-        updateRowHint(q);
-        showScannerOverlay(`${matched.item} (+1) -> ${q.value} unit`);
-      } else {
-        const emptyRow = Array.from(document.querySelectorAll('.batch-item-row')).find(r => !r.querySelector('.batch-item').value);
-        if (emptyRow) {
-          emptyRow.querySelector('.batch-item').value = targetCode;
-          emptyRow.querySelector('.batch-qty').value = 1;
-          updateRowHint(emptyRow.querySelector('.batch-item'));
-        } else {
-          addBatchRow(targetCode, 1);
-        }
-        showScannerOverlay(`Ditambah: ${matched.item}`);
-      }
-
-      setTimeout(() => {
-        isProcessingScan = false;
-      }, 2000);
     }
 
     function renderLogs() {
@@ -2613,44 +1979,19 @@
         return;
       }
 
-      tbody.innerHTML = logs.map((l) => {
-        const isAudit = l.note && l.note.includes('[Audit Fizikal');
-        const auditIndicator = isAudit ? `<span style="font-size:10px; color:#b45309; font-weight:800; margin-left:4px;">● Audit</span>` : '';
+      tbody.innerHTML = logs.map(l => `
+        <tr class="clickable-row" onclick='openLogDetailModal(${JSON.stringify(l).replace(/'/g, "&apos;")})' title="Pilih untuk perincian penuh">
+          <td>${l.date}</td><td><strong>${l.sku || ''}</strong></td><td>${l.item}</td><td><span class="badge ${l.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}">${l.type}</span></td>
+          <td style="text-align:right; font-weight:800;">${l.qty}</td><td style="text-align:right;">${l.balanceAfter}</td><td>${l.pic}</td><td>${l.location}</td>
+        </tr>
+      `).join('');
 
-        return `
-          <tr class="clickable-row" onclick='openLogDetailModal(${JSON.stringify(l).replace(/'/g, "&apos;")})' title="Pilih untuk perincian penuh">
-            <td>${l.date}</td>
-            <td><strong>${l.sku || ''}</strong></td>
-            <td>${l.item} ${auditIndicator}</td>
-            <td><span class="badge ${l.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}">${l.type}</span></td>
-            <td style="text-align:right; font-weight:800;">${l.qty}</td>
-            <td style="text-align:right;">${l.balanceAfter}</td>
-            <td>${l.pic}</td>
-            <td>${l.location}</td>
-          </tr>
-        `;
-      }).join('');
-
-      mCards.innerHTML = logs.map(l => {
-        const isAudit = l.note && l.note.includes('[Audit Fizikal');
-        const auditIndicator = isAudit ? `<span style="font-size:10px; color:#b45309; font-weight:800; background:#fef3c7; padding:1px 6px; border-radius:4px; margin-left:4px;">Audit</span>` : '';
-
-        return `
-          <div class="card-row clickable-row" onclick='openLogDetailModal(${JSON.stringify(l).replace(/'/g, "&apos;")})' title="Pilih untuk perincian">
-            <div class="card-row-top">
-              <div>
-                <div class="card-title">${l.item} ${auditIndicator}</div>
-                <div class="card-sub">${l.sku ? l.sku + ' • ' : ''}${l.date} • ${l.pic}</div>
-              </div>
-              <span class="badge ${l.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}">${l.type}</span>
-            </div>
-            <div class="card-row-bottom">
-              <span>Kuantiti: <strong>${l.qty} unit</strong></span>
-              <span style="color:#64748b;">Baki: ${l.balanceAfter} &nbsp;<span style="color:var(--primary); font-weight:700;">➔</span></span>
-            </div>
-          </div>
-        `;
-      }).join('');
+      mCards.innerHTML = logs.map(l => `
+        <div class="card-row clickable-row" onclick='openLogDetailModal(${JSON.stringify(l).replace(/'/g, "&apos;")})'>
+          <div class="card-row-top"><div><div class="card-title">${l.item}</div><div class="card-sub">${l.sku ? l.sku + ' • ' : ''}${l.date} • ${l.pic}</div></div><span class="badge ${l.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}">${l.type}</span></div>
+          <div class="card-row-bottom"><span>Kuantiti: <strong>${l.qty} unit</strong></span><span style="color:#64748b;">Baki: ${l.balanceAfter}</span></div>
+        </div>
+      `).join('');
     }
 
     function renderItems() {
@@ -2660,103 +2001,66 @@
 
       tbody.innerHTML = items.map(i => `
         <tr>
-          <td><strong>${i.sku || i.itemId}</strong></td>
-          <td><strong>${i.item}</strong></td>
-          <td>${i.category}</td>
-          <td style="text-align:right; font-weight:800; color:var(--primary); font-size:13.5px;">${i.currentStock}</td>
-          <td style="text-align:right; color:#64748b;">${i.minimum}</td>
-          <td><span class="badge badge-${i.status === 'OK' ? 'ok' : (i.status === 'HABIS' ? 'empty' : 'low')}">${i.status}</span></td>
-          <td>${i.location}</td>
-          <td style="text-align:center;">
-            <button class="btn btn-secondary" style="padding: 3px 10px; font-size: 11px; min-height: 28px;" onclick='populateEditItem(${JSON.stringify(i).replace(/'/g, "&apos;")})'>Kemaskini</button>
-          </td>
+          <td><strong>${i.sku || i.itemId}</strong></td><td><strong>${i.item}</strong></td><td>${i.category}</td>
+          <td style="text-align:right; font-weight:800; color:var(--primary);">${i.currentStock}</td><td style="text-align:right; color:#64748b;">${i.minimum}</td>
+          <td><span class="badge badge-${i.status === 'OK' ? 'ok' : (i.status === 'HABIS' ? 'empty' : 'low')}">${i.status}</span></td><td>${i.location}</td>
+          <td style="text-align:center;"><button class="btn btn-secondary" style="padding:3px 10px; font-size:11px; min-height:28px;" onclick='populateEditItem(${JSON.stringify(i).replace(/'/g, "&apos;")})'>Kemaskini</button></td>
         </tr>
       `).join('');
 
       mCards.innerHTML = items.map(i => `
         <div class="card-row">
-          <div class="card-row-top">
-            <div>
-              <div class="card-title">${i.item}</div>
-              <div class="card-sub">${i.sku || i.itemId} • ${i.category}</div>
-            </div>
-            <span class="badge badge-${i.status === 'OK' ? 'ok' : (i.status === 'HABIS' ? 'empty' : 'low')}">${i.status}</span>
-          </div>
-          <div class="card-row-bottom">
-            <span>Baki Semasa: <strong>${i.currentStock} unit</strong></span>
-            <button class="btn btn-secondary" style="padding: 2px 8px; font-size: 11px; min-height: 26px;" onclick='populateEditItem(${JSON.stringify(i).replace(/'/g, "&apos;")})'>Kemaskini</button>
-          </div>
+          <div class="card-row-top"><div><div class="card-title">${i.item}</div><div class="card-sub">${i.sku || i.itemId} • ${i.category}</div></div><span class="badge badge-${i.status === 'OK' ? 'ok' : (i.status === 'HABIS' ? 'empty' : 'low')}">${i.status}</span></div>
+          <div class="card-row-bottom"><span>Baki: <strong>${i.currentStock} unit</strong></span><button class="btn btn-secondary" style="padding:2px 8px; font-size:11px; min-height:26px;" onclick='populateEditItem(${JSON.stringify(i).replace(/'/g, "&apos;")})'>Kemaskini</button></div>
         </div>
       `).join('');
     }
 
     function filterItemsTable() {
       const q = document.getElementById('tableSearch').value.toLowerCase();
-      document.querySelectorAll('#itemsTbody tr').forEach(tr => {
-        tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none';
-      });
-      document.querySelectorAll('#itemsMobileCards .card-row').forEach(c => {
-        c.style.display = c.textContent.toLowerCase().includes(q) ? '' : 'none';
-      });
+      document.querySelectorAll('#itemsTbody tr').forEach(tr => tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none');
+      document.querySelectorAll('#itemsMobileCards .card-row').forEach(c => c.style.display = c.textContent.toLowerCase().includes(q) ? '' : 'none');
     }
 
     function submitTransaction(e) {
       e.preventDefault();
       const rows = document.querySelectorAll('.batch-item-row');
       const items = [];
-      const type = appState.globalTxType;
-
       rows.forEach(r => {
         const itemId = r.querySelector('.batch-item').value;
         const qty = Number(r.querySelector('.batch-qty').value);
-        if (itemId && qty >= 0) items.push({ itemId, type, qty });
+        if (itemId && qty >= 0) items.push({ itemId, type: appState.globalTxType, qty });
       });
-
-      if (!items.length) {
-        showToast('Sila pilih sekurang-kurangnya satu item.', true);
-        return;
-      }
-
-      const payload = {
-        date: document.getElementById('txDate').value,
-        pic: document.getElementById('txPic').value,
-        location: document.getElementById('txLocation').value,
-        note: document.getElementById('txNote').value,
-        items
-      };
+      if (!items.length) { showToast('Sila pilih sekurang-kurangnya satu item.', true); return; }
 
       showLoading(true, 'Menyimpan transaksi...');
-
       fetch(SCRIPT_URL, {
         method: 'POST',
-        redirect: 'follow',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
           action: 'addTransactionsBatch',
-          data: payload
+          data: {
+            date: document.getElementById('txDate').value,
+            pic: document.getElementById('txPic').value,
+            location: document.getElementById('txLocation').value,
+            note: document.getElementById('txNote').value,
+            items
+          }
         })
       })
-      .then(res => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}: Rangkaian terputus`);
-        return res.json();
-      })
+      .then(res => res.json())
       .then(res => {
         showLoading(false);
         if (!res.ok) throw new Error(res.message);
         showToast('Transaksi berjaya didaftarkan.');
         closeTxModal();
         appState.data = res.data;
-        renderDashboard();
-        renderLogs();
-        renderItems();
+        renderDashboard(); renderLogs(); renderItems();
         document.getElementById('txNote').value = '';
         document.getElementById('batchContainer').innerHTML = '';
         addBatchRow();
       })
-      .catch(err => {
-        showLoading(false);
-        showToast(err.message || 'Gagal menyimpan transaksi.', true);
-      });
+      .catch(err => { showLoading(false); showToast(err.message || 'Ralat transaksi.', true); });
     }
 
     function populateEditItem(item) {
@@ -2769,8 +2073,7 @@
       document.getElementById('itOpening').value = item.openingStock;
       document.getElementById('itMin').value = item.minimum;
       document.getElementById('itNote').value = item.note || '';
-
-      document.getElementById('itemFormTitle').textContent = `Kemaskini Item: ${item.sku || item.itemId}`;
+      document.getElementById('itemFormTitle').textContent = `Kemaskini: ${item.sku || item.itemId}`;
       document.getElementById('btnDeleteItem').classList.remove('hidden');
       document.getElementById('itemModal').classList.remove('hidden');
       lockBodyScroll();
@@ -2787,18 +2090,14 @@
     function submitItem(e) {
       e.preventDefault();
       showLoading(true, 'Menyimpan maklumat...');
-
-      const skuVal = document.getElementById('itSku').value.trim();
-
       fetch(SCRIPT_URL, {
         method: 'POST',
-        redirect: 'follow',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
           action: 'addOrUpdateItem',
           data: {
-            sku: skuVal,
-            itemId: skuVal,
+            sku: document.getElementById('itSku').value.trim(),
+            itemId: document.getElementById('itSku').value.trim(),
             item: document.getElementById('itName').value,
             category: document.getElementById('itCategory').value,
             location: document.getElementById('itLocation').value,
@@ -2808,229 +2107,133 @@
           }
         })
       })
-      .then(res => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}: Rangkaian terputus`);
-        return res.json();
-      })
+      .then(res => res.json())
       .then(res => {
         showLoading(false);
         if (!res.ok) throw new Error(res.message);
         showToast('Maklumat item disimpan.');
         closeItemModal();
         appState.data = res.data;
-        renderDashboard();
-        renderItems();
-        resetItemForm();
+        renderDashboard(); renderItems(); resetItemForm();
       })
-      .catch(err => {
-        showLoading(false);
-        showToast(err.message || 'Gagal menyimpan maklumat.', true);
-      });
+      .catch(err => { showLoading(false); showToast(err.message || 'Ralat simpan item.', true); });
     }
 
     function deleteItemHandler() {
-      if (!appState.selectedItem) return;
-      if (!confirm(`Sahkan untuk memadamkan rekod item ${appState.selectedItem}?`)) return;
-
+      if (!appState.selectedItem || !confirm(`Sahkan padam rekod item ${appState.selectedItem}?`)) return;
       showLoading(true, 'Memadamkan item...');
       fetch(SCRIPT_URL, {
         method: 'POST',
-        redirect: 'follow',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-          action: 'deleteItem',
-          data: { itemId: appState.selectedItem }
-        })
+        body: JSON.stringify({ action: 'deleteItem', data: { itemId: appState.selectedItem } })
       })
-      .then(res => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}: Rangkaian terputus`);
-        return res.json();
-      })
+      .then(res => res.json())
       .then(res => {
         showLoading(false);
         if (!res.ok) throw new Error(res.message);
         showToast('Item telah dipadamkan.');
         closeItemModal();
         appState.data = res.data;
-        renderDashboard();
-        renderItems();
-        resetItemForm();
+        renderDashboard(); renderItems(); resetItemForm();
       })
-      .catch(err => {
-        showLoading(false);
-        showToast(err.message || 'Gagal memadamkan item.', true);
-      });
+      .catch(err => { showLoading(false); showToast(err.message || 'Ralat pemadaman.', true); });
     }
 
-    /* ========================================================
-       MODUL KURSUS UMRAH (LOGIK PENJANAAN & ARKIB)
-       ======================================================== */
-    function saveLocalUmrahForm(formObj) {
-      let localForms = JSON.parse(localStorage.getItem('eastra_umrah_forms') || '[]');
-      localForms = localForms.filter(f => f.id !== formObj.id);
-      localForms.unshift(formObj);
-      localStorage.setItem('eastra_umrah_forms', JSON.stringify(localForms));
+    function openScannerModal() {
+      getAudioContext();
+      document.getElementById('scannerModal').classList.remove('hidden');
+      lockBodyScroll();
+      if (!html5QrCodeScanner) html5QrCodeScanner = new Html5Qrcode("scannerReader");
+      html5QrCodeScanner.start({ facingMode: "environment" }, { fps: 3, qrbox: { width: 160, height: 160 } }, onScanSuccess)
+      .catch(() => { showToast('Akses kamera gagal dimulakan.', true); closeScannerModal(); });
     }
 
-    function getLocalUmrahForms() {
-      return JSON.parse(localStorage.getItem('eastra_umrah_forms') || '[]');
+    function closeScannerModal() {
+      const modal = document.getElementById('scannerModal');
+      if (html5QrCodeScanner && html5QrCodeScanner.isScanning) {
+        html5QrCodeScanner.stop().then(() => { modal.classList.add('hidden'); unlockBodyScroll(); }).catch(() => { modal.classList.add('hidden'); unlockBodyScroll(); });
+      } else { modal.classList.add('hidden'); unlockBodyScroll(); }
     }
 
-    async function handleGenerateUmrahForm(e) {
-      e.preventDefault();
-
-      const rawDate = document.getElementById('ufTarikhInput').value;
-      const formattedDate = formatTarikhKursusMelayu(rawDate);
-      const bulanText = getBulanKursusMelayu(rawDate);
-      const waktu = document.getElementById('ufWaktu').value.trim();
-      const tempat = document.getElementById('ufTempat').value.trim();
-      const noTel = document.getElementById('ufNoTel').value.trim();
-      const fileInput = document.getElementById('ufPosterFile');
-
-      showLoading(true, 'Menduplikasi templat borang...');
-
-      let posterBase64 = '';
-      let posterType = '';
-
-      if (fileInput.files && fileInput.files[0]) {
-        const file = fileInput.files[0];
-        posterType = file.type || 'image/jpeg';
-        posterBase64 = await readFileAsBase64(file);
-      }
-
-      fetch(SCRIPT_URL, {
-        method: 'POST',
-        redirect: 'follow',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-          action: 'createKursusUmrahForm',
-          data: {
-            tarikh: rawDate,
-            tarikhFormatted: formattedDate,
-            bulan: bulanText,
-            waktu,
-            tempat,
-            noTel,
-            posterBase64,
-            posterType
-          }
-        })
-      })
-      .then(res => res.json())
-      .then(res => {
-        showLoading(false);
-        if (!res.ok) throw new Error(res.message);
-
-        document.getElementById('resultFormName').textContent = res.formTitle;
-        document.getElementById('resLiveUrl').value = res.formUrl;
-        document.getElementById('resEditUrl').value = res.editUrl;
-        document.getElementById('linkLiveBtn').href = res.formUrl;
-        document.getElementById('linkEditBtn').href = res.editUrl;
-
-        document.getElementById('umrahFormResult').classList.remove('hidden');
-
-        const newFormObj = {
-          id: res.formUrl,
-          name: res.formTitle,
-          liveUrl: res.formUrl,
-          editUrl: res.editUrl,
-          dateCreated: new Date().toLocaleDateString('ms-MY', { day:'2-digit', month:'short', year:'numeric' })
-        };
-        saveLocalUmrahForm(newFormObj);
-
-        if (res.formsList && res.formsList.length) {
-          renderUmrahFormsList(res.formsList);
-        } else {
-          renderUmrahFormsList(getLocalUmrahForms());
+    function playFeedback() {
+      try {
+        const ctx = getAudioContext();
+        if (ctx) {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.frequency.setValueAtTime(950, ctx.currentTime);
+          gain.gain.setValueAtTime(0.2, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.12);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.12);
         }
-
-        showToast('Borang kursus berjaya dijana.');
-      })
-      .catch(err => {
-        showLoading(false);
-        showToast(err.message || 'Gagal menjana borang.', true);
-      });
+      } catch (e) {}
+      if (navigator.vibrate) navigator.vibrate(60);
     }
 
-    function fetchUmrahFormsList() {
-      const container = document.getElementById('umrahFormsListContainer');
-      const localForms = getLocalUmrahForms();
+    function onScanSuccess(decodedText) {
+      const now = Date.now();
+      if (isProcessingScan || (now - lastScanTime < 2000)) return;
+      isProcessingScan = true; lastScanCode = decodedText; lastScanTime = now;
 
-      if (localForms.length) {
-        renderUmrahFormsList(localForms);
-      } else {
-        container.innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px;">Memuatkan arkib borang...</p>';
-      }
-
-      fetch(`${SCRIPT_URL}?action=getUmrahFormsList`, { method: 'GET', redirect: 'follow' })
-      .then(res => res.json())
-      .then(res => {
-        if (!res.ok) throw new Error(res.message);
-        if (res.forms && res.forms.length) {
-          localStorage.setItem('eastra_umrah_forms', JSON.stringify(res.forms));
-          renderUmrahFormsList(res.forms);
-        } else if (!localForms.length) {
-          container.innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px;">Tiada rekod borang kursus ditemui.</p>';
-        }
-      })
-      .catch(err => {
-        if (!localForms.length) {
-          container.innerHTML = '<p style="font-size:12px; color:#ef4444; text-align:center; padding:20px;">Gagal memuat turun arkib borang.</p>';
-        }
-      });
-    }
-
-    function renderUmrahFormsList(forms) {
-      const container = document.getElementById('umrahFormsListContainer');
-      if (!forms || !forms.length) {
-        container.innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px;">Tiada rekod borang kursus ditemui.</p>';
+      const items = appState.data?.items || [];
+      const matched = items.find(i => (i.sku && i.sku.toLowerCase() === decodedText.trim().toLowerCase()));
+      if (!matched) {
+        playFeedback();
+        document.getElementById('scannerOverlayToast').textContent = 'Item tidak ditemui: ' + decodedText;
+        document.getElementById('scannerOverlayToast').classList.add('show', 'error');
+        setTimeout(() => isProcessingScan = false, 1500);
         return;
       }
 
-      container.innerHTML = forms.map(f => `
-        <div class="form-item-row">
-          <div class="form-item-info">
-            <span class="form-item-title">${f.name}</span>
-            <span class="form-item-date">Tarikh Dijana: ${f.dateCreated}</span>
-          </div>
-          <div class="form-item-actions">
-            <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 32px;" onclick="copyDirectText('${f.liveUrl}')">Salin Pautan</button>
-            <a href="${f.liveUrl}" target="_blank" class="btn btn-primary" style="padding: 4px 14px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Pautan Awam</a>
-            <a href="${f.editUrl}" target="_blank" class="btn btn-secondary" style="padding: 4px 14px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Editor</a>
-          </div>
-        </div>
-      `).join('');
+      playFeedback();
+      const targetCode = matched.sku || matched.itemId;
+      let existing = Array.from(document.querySelectorAll('.batch-item-row')).find(r => r.querySelector('.batch-item').value === targetCode);
+      if (existing) {
+        const q = existing.querySelector('.batch-qty');
+        q.value = (Number(q.value) || 0) + 1;
+        updateRowHint(q);
+      } else {
+        const emptyRow = Array.from(document.querySelectorAll('.batch-item-row')).find(r => !r.querySelector('.batch-item').value);
+        if (emptyRow) {
+          emptyRow.querySelector('.batch-item').value = targetCode;
+          updateRowHint(emptyRow.querySelector('.batch-item'));
+        } else addBatchRow(targetCode, 1);
+      }
+
+      document.getElementById('scannerOverlayToast').textContent = `Ditambah: ${matched.item}`;
+      document.getElementById('scannerOverlayToast').classList.remove('error');
+      document.getElementById('scannerOverlayToast').classList.add('show');
+      setTimeout(() => isProcessingScan = false, 1500);
+    }
+
+    async function generateQRPdf1Page() {
+      const items = appState.data?.items || [];
+      if (!items.length) { showToast('Tiada rekod inventori untuk cetakan.', true); return; }
+      showLoading(true, 'Menjana dokumen PDF...');
+      try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('p', 'mm', 'a4');
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(13);
+        doc.text('LABEL KOD QR PRODUK - CAWANGAN TERENGGANU', 105, 14, { align: 'center' });
+        doc.save(`eASTRA_Label_QR_${new Date().toISOString().slice(0,10)}.pdf`);
+        showLoading(false);
+        showToast('Dokumen PDF berjaya dimuat turun.');
+      } catch (err) {
+        showLoading(false);
+        showToast('Gagal menjana PDF: ' + err.message, true);
+      }
     }
 
     function copyDirectText(text) {
-      navigator.clipboard.writeText(text).then(() => {
-        showToast('Pautan disalin ke papan keratan.');
-      }).catch(() => {
-        showToast('Gagal menyalin pautan.', true);
-      });
-    }
-
-    function readFileAsBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const base64 = reader.result.split(',')[1];
-          resolve(base64);
-        };
-        reader.onerror = error => reject(error);
-        reader.readAsDataURL(file);
-      });
+      navigator.clipboard.writeText(text).then(() => showToast('Pautan disalin ke papan keratan.'));
     }
 
     function copyResultLink(inputId) {
-      const copyText = document.getElementById(inputId);
-      copyText.select();
-      copyText.setSelectionRange(0, 99999);
-      navigator.clipboard.writeText(copyText.value).then(() => {
-        showToast('Pautan disalin.');
-      }).catch(() => {
-        showToast('Gagal menyalin pautan.', true);
-      });
+      const input = document.getElementById(inputId);
+      input.select();
+      navigator.clipboard.writeText(input.value).then(() => showToast('Pautan disalin.'));
     }
   </script>
 </body>
