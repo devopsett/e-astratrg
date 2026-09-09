@@ -2222,6 +2222,7 @@
     function loadDataJemaah() {
       const tbody = document.getElementById('tbodyJemaah');
       const mCards = document.getElementById('mobileCardsJemaah');
+      
       tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:30px;">Memuatkan data jemaah...</td></tr>`;
       mCards.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:20px; font-size:12px;">Memuatkan data jemaah...</div>`;
       
@@ -2361,6 +2362,369 @@
     function closeJemaahDetailModal() {
       document.getElementById('jemaahDetailModal').classList.add('hidden');
       unlockBodyScroll();
+    }
+
+    function tapisJadualJemaah() {
+      const cariTxt = document.getElementById('cariJemaahInput').value.toLowerCase();
+      const puTxt = document.getElementById('tapisPUSelect').value.toLowerCase();
+      const rows = document.querySelectorAll('#tbodyJemaah tr.baris-jemaah');
+
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        const matchCari = text.includes(cariTxt);
+        const matchPU = (puTxt === '') || text.includes('pu: ' + puTxt);
+        row.style.display = (matchCari && matchPU) ? '' : 'none';
+      });
+    }
+
+    function cariJemaahRecord() {
+      const nokp = document.getElementById('searchJemaahIC').value.trim();
+      const feedback = document.getElementById('cariJemaahFeedback');
+      const panel = document.getElementById('panelJemaahFound');
+
+      if (!nokp || nokp.length !== 12) {
+        showToast('Sila masukkan tepat 12 digit No. Kad Pengenalan.', true);
+        return;
+      }
+
+      feedback.textContent = 'Menyemak rekod jemaah...';
+      feedback.style.color = 'var(--text-muted)';
+      panel.classList.add('hidden');
+
+      fetch(`${SCRIPT_URL}?action=semakStatusJemaah&nokp=${encodeURIComponent(nokp)}`, { method: 'GET', redirect: 'follow' })
+      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error(res.message);
+        const j = res.data;
+        appState.currentJemaahIC = nokp;
+
+        feedback.textContent = `Rekod: ${j.nama} (${j.telefon}) - PU: ${j.namaPU}`;
+        feedback.style.color = '#047857';
+
+        const updateDoc = (id, url) => {
+          document.getElementById(id).innerHTML = url ? `<a href="${url}" target="_blank" class="badge badge-ok">Lihat Fail</a>` : `<span class="badge badge-empty">Tiada</span>`;
+        };
+        updateDoc('st_borang', j.borang);
+        updateDoc('st_gambar', j.gambar);
+        updateDoc('st_salinan', j.salinan);
+        updateDoc('st_bio', j.bio);
+        updateDoc('st_hhr', j.tiketHHR);
+
+        const resitBox = document.getElementById('st_resit');
+        if (j.resit) {
+          resitBox.innerHTML = j.resit.split(' | ').map(r => {
+            const p = r.split(': ');
+            return p.length === 2 ? `<a href="${p[1]}" target="_blank" class="badge badge-ok">${p[0]}</a>` : `<a href="${r}" target="_blank" class="badge badge-ok">Resit</a>`;
+          }).join(' ');
+        } else resitBox.innerHTML = `<span class="badge badge-empty">Tiada Resit</span>`;
+
+        document.getElementById('edit_cb_beg').checked = (j.beg === 'Selesai');
+        document.getElementById('edit_cb_kursus').checked = (j.kursus === 'Selesai');
+        document.getElementById('edit_cb_jadual').checked = (j.jadual === 'Selesai');
+        document.getElementById('edit_cb_keyin').checked = (j.keyin === 'Selesai');
+
+        panel.classList.remove('hidden');
+      })
+      .catch(err => {
+        feedback.textContent = err.message || 'Rekod jemaah tidak ditemui.';
+        feedback.style.color = '#b91c1c';
+      });
+    }
+
+    async function handleKemaskiniJemaah(e) {
+      e.preventDefault();
+      if (!appState.currentJemaahIC) return;
+
+      showLoading(true, 'Mengemas kini rekod jemaah...');
+      try {
+        const payload = {
+          nokp_kemaskini: appState.currentJemaahIC,
+          beg_k: document.getElementById('edit_cb_beg').checked,
+          kursus_k: document.getElementById('edit_cb_kursus').checked,
+          jadual_k: document.getElementById('edit_cb_jadual').checked,
+          keyin_k: document.getElementById('edit_cb_keyin').checked,
+          borang_k: await fileToBase64Payload(document.getElementById('editFileBorang')),
+          gambarPasport_k: await fileToBase64Payload(document.getElementById('editFileGambar')),
+          salinanPasport_k: await fileToBase64Payload(document.getElementById('editFileSalinan')),
+          bio_k: await fileToBase64Payload(document.getElementById('editFileBio')),
+          tiketHHR_k: await fileToBase64Payload(document.getElementById('editFileHHR')),
+          buktiPembayaran_k: await fileToBase64Payload(document.getElementById('editFileResit'))
+        };
+
+        const res = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'kemaskiniDokumen', data: payload })
+        }).then(r => r.json());
+
+        showLoading(false);
+        if (!res.ok) throw new Error(res.message);
+
+        showToast(res.message);
+        loadDataJemaah();
+        cariJemaahRecord();
+      } catch (err) {
+        showLoading(false);
+        showToast(err.message || 'Gagal mengemaskini jemaah.', true);
+      }
+    }
+
+    function sahkanPadamJemaah() {
+      if (!appState.currentJemaahIC) return;
+      const ic = prompt(`PENGESAHAN KESELAMATAN:\nSila taip semula No. K/P (${appState.currentJemaahIC}) untuk memadam & mengarkibkan rekod ini:`);
+      if (ic !== appState.currentJemaahIC) {
+        if (ic !== null) showToast('No. Kad Pengenalan tidak sepadan. Pemadaman dibatalkan.', true);
+        return;
+      }
+
+      showLoading(true, 'Memadam dan mengarkibkan rekod...');
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'padamJemaah', data: { nokp: appState.currentJemaahIC } })
+      })
+      .then(r => r.json())
+      .then(res => {
+        showLoading(false);
+        if (!res.ok) throw new Error(res.message);
+        showToast(res.message);
+        document.getElementById('panelJemaahFound').classList.add('hidden');
+        document.getElementById('searchJemaahIC').value = '';
+        document.getElementById('cariJemaahFeedback').textContent = '';
+        appState.currentJemaahIC = '';
+        loadDataJemaah();
+      })
+      .catch(err => {
+        showLoading(false);
+        showToast(err.message || 'Gagal memadamkan rekod.', true);
+      });
+    }
+
+    /* KURSUS UMRAH & POSTER LOGIC */
+    function handlePosterSelection(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const dropzone = document.getElementById('posterDropzone');
+      const container = document.getElementById('posterPreviewContainer');
+      const img = document.getElementById('posterPreviewImg');
+      document.getElementById('posterPreviewName').textContent = file.name;
+      document.getElementById('posterPreviewSize').textContent = (file.size / 1024).toFixed(1) + ' KB';
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        img.src = e.target.result;
+        dropzone.classList.add('hidden');
+        container.classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removePosterFile() {
+      document.getElementById('ufPosterFile').value = '';
+      document.getElementById('posterPreviewImg').src = '';
+      document.getElementById('posterPreviewContainer').classList.add('hidden');
+      document.getElementById('posterDropzone').classList.remove('hidden');
+    }
+
+    function formatTarikhKursusMelayu(dateStr) {
+      if (!dateStr) return '';
+      const parts = dateStr.split('-');
+      const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+      const months = ['JAN', 'FEB', 'MAC', 'APR', 'MEI', 'JUN', 'JUL', 'OGOS', 'SEP', 'OKT', 'NOV', 'DIS'];
+      const days = ['AHAD', 'ISNIN', 'SELASA', 'RABU', 'KHAMIS', 'JUMAAT', 'SABTU'];
+      return `${parts[2]} ${months[d.getMonth()]} ${d.getFullYear()} (${days[d.getDay()]})`;
+    }
+
+    function getBulanKursusMelayu(dateStr) {
+      if (!dateStr) return '';
+      const parts = dateStr.split('-');
+      const months = ['JANUARI', 'FEBRUARI', 'MAC', 'APRIL', 'MEI', 'JUN', 'JULAI', 'OGOS', 'SEPTEMBER', 'OKTOBER', 'NOVEMBER', 'DISEMBER'];
+      return `${months[parseInt(parts[1], 10) - 1]} ${parts[0]}`;
+    }
+
+    async function handleGenerateUmrahForm(e) {
+      e.preventDefault();
+      const rawDate = document.getElementById('ufTarikhInput').value;
+      const formattedDate = formatTarikhKursusMelayu(rawDate);
+      const bulanText = getBulanKursusMelayu(rawDate);
+      const fileInput = document.getElementById('ufPosterFile');
+
+      showLoading(true, 'Menduplikasi templat borang...');
+      let posterBase64 = '', posterType = '';
+      if (fileInput.files && fileInput.files[0]) {
+        const file = fileInput.files[0];
+        posterType = file.type || 'image/jpeg';
+        posterBase64 = await new Promise(res => {
+          const r = new FileReader();
+          r.onload = () => res(r.result.split(',')[1]);
+          r.readAsDataURL(file);
+        });
+      }
+
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'createKursusUmrahForm',
+          data: {
+            tarikh: rawDate,
+            tarikhFormatted: formattedDate,
+            bulan: bulanText,
+            waktu: document.getElementById('ufWaktu').value.trim(),
+            tempat: document.getElementById('ufTempat').value.trim(),
+            noTel: document.getElementById('ufNoTel').value.trim(),
+            posterBase64, posterType
+          }
+        })
+      })
+      .then(res => res.json())
+      .then(res => {
+        showLoading(false);
+        if (!res.ok) throw new Error(res.message);
+        document.getElementById('resultFormName').textContent = res.formTitle;
+        document.getElementById('resLiveUrl').value = res.formUrl;
+        document.getElementById('resEditUrl').value = res.editUrl;
+        document.getElementById('linkLiveBtn').href = res.formUrl;
+        document.getElementById('linkEditBtn').href = res.editUrl;
+        document.getElementById('umrahFormResult').classList.remove('hidden');
+
+        let localForms = JSON.parse(localStorage.getItem('eastra_umrah_forms') || '[]');
+        localForms = localForms.filter(f => f.id !== res.formUrl);
+        localForms.unshift({ id: res.formUrl, name: res.formTitle, liveUrl: res.formUrl, editUrl: res.editUrl, dateCreated: new Date().toLocaleDateString('ms-MY') });
+        localStorage.setItem('eastra_umrah_forms', JSON.stringify(localForms));
+
+        if (res.formsList && res.formsList.length) renderUmrahFormsList(res.formsList);
+        else renderUmrahFormsList(localForms);
+        showToast('Borang kursus berjaya dijana.');
+      })
+      .catch(err => {
+        showLoading(false);
+        showToast(err.message || 'Gagal menjana borang.', true);
+      });
+    }
+
+    function fetchUmrahFormsList() {
+      const container = document.getElementById('umrahFormsListContainer');
+      const localForms = JSON.parse(localStorage.getItem('eastra_umrah_forms') || '[]');
+      if (localForms.length) renderUmrahFormsList(localForms);
+
+      fetch(`${SCRIPT_URL}?action=getUmrahFormsList`, { method: 'GET', redirect: 'follow' })
+      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error(res.message);
+        if (res.forms && res.forms.length) {
+          localStorage.setItem('eastra_umrah_forms', JSON.stringify(res.forms));
+          renderUmrahFormsList(res.forms);
+        }
+      }).catch(() => {});
+    }
+
+    function renderUmrahFormsList(forms) {
+      const container = document.getElementById('umrahFormsListContainer');
+      if (!forms || !forms.length) {
+        container.innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px;">Tiada rekod borang kursus ditemui.</p>';
+        return;
+      }
+
+      container.innerHTML = forms.map(f => `
+        <div class="form-item-row">
+          <div class="form-item-info">
+            <span class="form-item-title">${f.name}</span>
+            <span class="form-item-date">Tarikh Dijana: ${f.dateCreated}</span>
+          </div>
+          <div class="form-item-actions">
+            <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 32px;" onclick="copyDirectText('${f.liveUrl}')">Salin Pautan</button>
+            <a href="${f.liveUrl}" target="_blank" class="btn btn-primary" style="padding: 4px 14px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Pautan Awam</a>
+            <a href="${f.editUrl}" target="_blank" class="btn btn-secondary" style="padding: 4px 14px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Editor</a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function checkAutoSystemUpdate() {
+      fetch(`https://api.github.com/repos/${GITHUB_REPO}/commits?per_page=1&_nocache=${Date.now()}`)
+      .then(r => r.json())
+      .then(commits => {
+        if (!Array.isArray(commits) || !commits.length) return;
+        const sha = commits[0].sha;
+        const saved = localStorage.getItem('eastra_current_commit_sha');
+        if (!saved) { localStorage.setItem('eastra_current_commit_sha', sha); return; }
+        if (saved !== sha) {
+          window.pendingCommitSha = sha;
+          document.getElementById('updateBanner').classList.remove('hidden');
+        }
+      }).catch(() => {});
+    }
+
+    function dismissUpdateBanner() { document.getElementById('updateBanner').classList.add('hidden'); }
+    async function applySystemUpdate() {
+      dismissUpdateBanner();
+      showLoading(true, 'Mengemas kini fail sistem...');
+      if (window.pendingCommitSha) localStorage.setItem('eastra_current_commit_sha', window.pendingCommitSha);
+      if ('caches' in window) {
+        const keys = await caches.keys();
+        await Promise.all(keys.map(k => caches.delete(k)));
+      }
+      setTimeout(() => window.location.reload(true), 1200);
+    }
+
+    function lockBodyScroll() { document.body.classList.add('modal-open'); }
+    function unlockBodyScroll() { if (document.querySelectorAll('.modal-overlay:not(.hidden)').length === 0) document.body.classList.remove('modal-open'); }
+
+    function openTxModal() { document.getElementById('txModal').classList.remove('hidden'); lockBodyScroll(); }
+    function closeTxModal() { document.getElementById('txModal').classList.add('hidden'); unlockBodyScroll(); }
+    function openItemModal() { resetItemForm(); document.getElementById('itemModal').classList.remove('hidden'); lockBodyScroll(); }
+    function closeItemModal() { document.getElementById('itemModal').classList.add('hidden'); resetItemForm(); unlockBodyScroll(); }
+    function openLogDetailModal(log) {
+      document.getElementById('dtlType').textContent = log.type;
+      document.getElementById('dtlType').className = `badge ${log.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}`;
+      document.getElementById('dtlItem').textContent = log.item;
+      document.getElementById('dtlSku').textContent = log.sku || '-';
+      document.getElementById('dtlDate').textContent = log.date;
+      document.getElementById('dtlQty').textContent = `${log.qty} unit`;
+      document.getElementById('dtlBalance').textContent = `${log.balanceAfter} unit`;
+      document.getElementById('dtlPic').textContent = log.pic || '-';
+      document.getElementById('dtlLocation').textContent = log.location || '-';
+      document.getElementById('dtlNote').textContent = log.note || 'Tiada catatan direkodkan.';
+      document.getElementById('logDetailModal').classList.remove('hidden');
+      lockBodyScroll();
+    }
+    function closeLogDetailModal() { document.getElementById('logDetailModal').classList.add('hidden'); unlockBodyScroll(); }
+    function closeModalOnBackdrop(e, modalId) { if (e.target.id === modalId) { document.getElementById(modalId).classList.add('hidden'); unlockBodyScroll(); } }
+
+    function setGlobalTxType(type) {
+      appState.globalTxType = type;
+      document.getElementById('btnTypeOut').classList.toggle('active', type === 'Keluar');
+      document.getElementById('btnTypeIn').classList.toggle('active', type === 'Masuk');
+      document.getElementById('btnTypeAudit').classList.toggle('active', type === 'Pelarasan');
+      document.getElementById('batchLabel').textContent = type === 'Pelarasan' ? 'Kiraan Sebenar di Tapak (Audit)' : (type === 'Masuk' ? 'Senarai Penerimaan Stok' : 'Senarai Item Keluar');
+      document.getElementById('btnSubmitTx').textContent = 'Sahkan ' + (type === 'Pelarasan' ? 'Pelarasan' : (type === 'Masuk' ? 'Penerimaan' : 'Pengeluaran')) + ' Stok';
+      document.querySelectorAll('.batch-item').forEach(sel => updateRowHint(sel));
+    }
+
+    function showLoading(show, msg = 'Memuatkan data...') {
+      const overlay = document.getElementById('loading');
+      if (!show) { overlay.classList.add('hidden'); return; }
+      document.getElementById('loadingMsg').textContent = msg;
+      overlay.classList.remove('hidden');
+    }
+
+    function showToast(msg, isError = false) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.toggle('error', isError);
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    function copyDirectText(text) {
+      navigator.clipboard.writeText(text).then(() => showToast('Pautan disalin ke papan keratan.'));
+    }
+
+    function copyResultLink(inputId) {
+      const input = document.getElementById(inputId);
+      input.select();
+      navigator.clipboard.writeText(input.value).then(() => showToast('Pautan disalin.'));
     }
   </script>
 </body>
