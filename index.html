@@ -6,17 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>e-ASTRA</title>
   
-  <!-- PWA Manifest Statik -->
   <link rel="manifest" href="manifest.json">
-
-  <!-- PWA Meta Tags iOS & Android -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="e-ASTRA">
   <meta name="theme-color" content="#0b3818">
 
-  <!-- Ikon Rasmi iOS & Browser -->
   <link rel="icon" type="image/png" href="Logo%20Azzuha.png">
   <link rel="apple-touch-icon" href="Logo%20Azzuha.png">
   <link rel="apple-touch-icon" sizes="192x192" href="Logo%20Azzuha.png">
@@ -28,6 +24,8 @@
   
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
   <style>
     :root {
@@ -80,177 +78,13 @@
       touch-action: none !important;
     }
 
-    .update-banner {
-      position: fixed;
-      top: 16px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: calc(100% - 32px);
-      max-width: 460px;
-      background: #0b3818;
-      color: #ffffff;
-      padding: 14px 18px;
-      border-radius: 14px;
-      box-shadow: 0 14px 30px -5px rgba(0, 0, 0, 0.45);
-      z-index: 99999;
-      border: 1px solid rgba(255, 255, 255, 0.22);
-      animation: slideDown 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    @keyframes slideDown {
-      from { transform: translate(-50%, -70px); opacity: 0; }
-      to { transform: translate(-50%, 0); opacity: 1; }
-    }
-
-    .update-content {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .update-header-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .update-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 11px;
-      font-weight: 800;
-      color: #a7f3d0;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-    }
-
-    .update-badge-dot {
-      width: 7px;
-      height: 7px;
-      background: #10b981;
-      border-radius: 50%;
-      box-shadow: 0 0 8px #10b981;
-    }
-
-    .update-title {
-      font-size: 14px;
-      font-weight: 800;
-      color: #ffffff;
-      margin-top: 2px;
-    }
-
-    .update-details-box {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 12px;
-      line-height: 1.45;
-      color: #ecfdf5;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      max-height: 75px;
-      overflow-y: auto;
-    }
-
-    .update-action-row {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      gap: 8px;
-      margin-top: 2px;
-    }
-
-    .btn-update-later {
-      background: transparent;
-      color: #a7f3d0;
-      border: none;
-      font-family: inherit;
-      font-size: 12px;
-      font-weight: 600;
-      padding: 7px 12px;
-      cursor: pointer;
-    }
-
-    .btn-update-confirm {
-      background: #ffffff;
-      color: #0b3818;
-      border: none;
-      font-family: inherit;
-      font-size: 12px;
-      font-weight: 800;
-      padding: 8px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      transition: transform 0.15s ease;
-    }
-
-    .btn-update-confirm:active {
-      transform: scale(0.96);
-    }
-
-    .loading-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(8px);
-      display: grid;
-      place-items: center;
-      z-index: 999999 !important;
-    }
-
-    .update-anim-container {
-      position: relative;
-      width: 86px;
-      height: 86px;
-      margin: 0 auto 18px;
-      display: grid;
-      place-items: center;
-    }
-
-    .update-anim-logo {
-      width: 60px;
-      height: 60px;
-      border-radius: 14px;
-      object-fit: cover;
-      box-shadow: 0 8px 20px rgba(11, 56, 24, 0.25);
-      animation: pulseLogo 1.6s ease-in-out infinite;
-      z-index: 2;
-    }
-
-    .update-spinner-ring {
-      position: absolute;
-      inset: 0;
-      border: 3px solid rgba(11, 56, 24, 0.15);
-      border-top-color: var(--primary);
-      border-radius: 50%;
-      animation: spin 0.9s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
-      z-index: 1;
-    }
-
-    @keyframes pulseLogo {
-      0%, 100% { transform: scale(1); filter: drop-shadow(0 4px 6px rgba(11, 56, 24, 0.2)); }
-      50% { transform: scale(1.08); filter: drop-shadow(0 10px 15px rgba(11, 56, 24, 0.35)); }
-    }
-
-    .spinner {
-      width: 38px;
-      height: 38px;
-      border: 3px solid var(--border);
-      border-top-color: var(--primary);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-
     .app-layout {
       display: grid;
       grid-template-columns: 250px minmax(0, 1fr);
-      height: 100vh; /* Tukar dari min-height: 100vh kepada height: 100vh */
+      height: 100vh;
       width: 100%;
       max-width: 100vw;
-      overflow: hidden; /* Halang skrin luar tatal ke bawah */
+      overflow: hidden;
     }
 
     .sidebar {
@@ -259,9 +93,8 @@
       padding: 24px 16px;
       display: flex;
       flex-direction: column;
-      position: sticky;
-      top: 0;
       height: 100vh;
+      overflow-y: auto;
       z-index: 20;
     }
 
@@ -307,7 +140,7 @@
       transition: all 0.18s;
     }
 
-    .nav-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.2; }
+    .nav-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.2; flex-shrink: 0; }
     .nav-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
     .nav-btn.active {
       background: #ffffff;
@@ -325,7 +158,13 @@
       padding-top: 16px;
     }
 
-    main { padding: 26px 32px; overflow-y: auto; width: 100%; min-width: 0; }
+    main {
+      padding: 26px 32px;
+      height: 100vh;
+      overflow-y: auto;
+      width: 100%;
+      min-width: 0;
+    }
     
     .topbar {
       display: flex;
@@ -876,7 +715,7 @@
       background: #ffffff;
       border-top: 1px solid var(--border);
       z-index: 900;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       padding: 4px;
     }
 
@@ -884,7 +723,7 @@
       border: none;
       background: transparent;
       color: var(--text-muted);
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 600;
       display: flex;
       flex-direction: column;
@@ -898,31 +737,69 @@
     .m-btn svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 2.2; }
     .m-btn.active { color: var(--primary); font-weight: 800; background: var(--primary-soft); }
 
+    /* Modul Penjana Borang Kursus */
+    .kursus-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      transition: all 0.15s ease;
+    }
+    .kursus-card:hover { border-color: var(--primary); box-shadow: var(--shadow-sm); }
+    .kursus-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .kursus-btn-action {
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      text-decoration: none;
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+    .kursus-btn-copy { background: #f1f5f9; color: #334155; border-color: #cbd5e1; }
+    .kursus-btn-view { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
+    .kursus-btn-resp { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+    .kursus-btn-edit { background: #f8fafc; color: #475569; border-color: #e2e8f0; }
+
+    .upload-box {
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      background: #f8fafc;
+      transition: border 0.15s;
+    }
+    .upload-box:hover { border-color: var(--primary); background: #f0fdf4; }
+
     @media (max-width: 1200px) {
       .metrics-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
 
     @media (max-width: 768px) {
-      .app-layout { grid-template-columns: 1fr; padding-bottom: 68px; }
+      .app-layout { grid-template-columns: 1fr; height: auto; min-height: 100vh; overflow-y: auto; padding-bottom: 68px; }
       .sidebar { display: none; }
       .mobile-nav { display: grid; }
-      main { padding: 14px; width: 100vw; max-width: 100vw; overflow-x: hidden; }
+      main { padding: 14px; height: auto; overflow-y: visible; width: 100vw; max-width: 100vw; }
 
       .topbar { padding: 12px 14px; margin-bottom: 14px; }
       .topbar-mobile-logo { display: block; }
       .topbar-title h2 { font-size: 16px; }
 
-      .metrics-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
-        margin-bottom: 14px;
-      }
-
+      .metrics-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 14px; }
       .metric-card { padding: 12px 14px; }
       .metric-val { font-size: 20px; }
       .panel-body { padding: 14px; }
 
-      .input-row { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .input-row { grid-template-columns: 1fr; gap: 10px; }
 
       .desktop-table { display: none; }
       .mobile-cards { display: grid; gap: 8px; }
@@ -937,12 +814,7 @@
         gap: 4px;
       }
 
-      .card-row-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-      }
-
+      .card-row-top { display: flex; justify-content: space-between; align-items: flex-start; }
       .card-title { font-weight: 700; color: var(--text); font-size: 13.5px; }
       .card-sub { font-size: 11px; color: var(--text-muted); }
 
@@ -956,8 +828,10 @@
         border-top: 1px dashed var(--border);
       }
 
-      .toast { left: 14px; right: 14px; bottom: 74px; text-align: center; }
+      .kursus-card { flex-direction: column; align-items: flex-start; }
+      .kursus-actions { width: 100%; flex-wrap: wrap; }
 
+      .toast { left: 14px; right: 14px; bottom: 74px; text-align: center; }
       .modal-overlay { padding: 12px; }
       .modal-dialog { width: 100% !important; max-width: 100% !important; border-radius: 12px; margin: 0; }
       .modal-body { max-height: calc(85vh - 60px); padding: 14px; overflow-x: hidden; }
@@ -966,30 +840,7 @@
 </head>
 <body>
 
-  <!-- BANNER NOTIFIKASI KEMAS KINI VERSI -->
-  <div id="updateBanner" class="update-banner hidden">
-    <div class="update-content">
-      <div class="update-header-row">
-        <div class="update-badge">
-          <span class="update-badge-dot"></span>
-          <span>Kemas Kini Tersedia</span>
-        </div>
-      </div>
-      <div>
-        <div class="update-title">Versi Baharu e-ASTRA Sedia Dipasang</div>
-      </div>
-      <div class="update-details-box">
-        <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Apa yang baharu:</strong>
-        <span id="updateChangelogText">Penambahbaikan sistem dan kestabilan aplikasi.</span>
-      </div>
-      <div class="update-action-row">
-        <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
-        <button type="button" class="btn-update-confirm" onclick="applySystemUpdate()">Kemas Kini Sekarang</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- LOADING OVERLAY -->
+  <!-- Loading Overlay -->
   <div id="loading" class="loading-overlay hidden">
     <div style="text-align: center; padding: 24px;">
       <div id="loadingStandardSpinner">
@@ -1009,14 +860,11 @@
   <div id="toast" class="toast">Notifikasi</div>
 
   <!-- BUTANG BULAT TERAPUNG (FAB) -->
-  <button type="button" class="fab-btn" onclick="openTxModal()" title="Rekod Transaksi">
-    <svg viewBox="0 0 24 24">
-      <line x1="12" y1="5" x2="12" y2="19"></line>
-      <line x1="5" y1="12" x2="19" y2="12"></line>
-    </svg>
+  <button type="button" id="mainFabBtn" class="fab-btn" onclick="openTxModal()" title="Rekod Transaksi">
+    <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
   </button>
 
-  <!-- MODAL 1: PENGIMBAS KAMERA -->
+  <!-- MODAL PENGIMBAS -->
   <div id="scannerModal" class="modal-overlay hidden">
     <div class="scanner-dialog">
       <div class="modal-header">
@@ -1033,7 +881,7 @@
     </div>
   </div>
 
-  <!-- MODAL 2: POPUP BORANG TRANSAKSI STOK -->
+  <!-- MODAL TRANSAKSI STOK -->
   <div id="txModal" class="modal-overlay hidden" onclick="closeModalOnBackdrop(event, 'txModal')">
     <div class="modal-dialog">
       <div class="modal-header">
@@ -1088,7 +936,7 @@
     </div>
   </div>
 
-  <!-- MODAL 3: POPUP DAFTAR / KEMASKINI ITEM -->
+  <!-- MODAL DAFTAR/KEMASKINI ITEM -->
   <div id="itemModal" class="modal-overlay hidden" onclick="closeModalOnBackdrop(event, 'itemModal')">
     <div class="modal-dialog">
       <div class="modal-header">
@@ -1146,7 +994,7 @@
     </div>
   </div>
 
-  <!-- MODAL 4: POPUP PERINCIAN LOG TRANSAKSI -->
+  <!-- MODAL DETAIL TRANSAKSI -->
   <div id="logDetailModal" class="modal-overlay hidden" onclick="closeModalOnBackdrop(event, 'logDetailModal')">
     <div class="modal-dialog">
       <div class="modal-header">
@@ -1159,42 +1007,34 @@
             <span class="detail-label">Jenis Transaksi</span>
             <span id="dtlType" class="badge">Keluar</span>
           </div>
-
           <div class="detail-item">
             <span class="detail-label">Nama Item</span>
             <span id="dtlItem" class="detail-value" style="text-align: right;">-</span>
           </div>
-
           <div class="detail-item">
             <span class="detail-label">Kod SKU</span>
             <span id="dtlSku" class="detail-value" style="color: var(--primary);">-</span>
           </div>
-
           <div class="detail-item">
             <span class="detail-label">Tarikh</span>
             <span id="dtlDate" class="detail-value">-</span>
           </div>
-
           <div class="detail-item">
             <span class="detail-label">Kuantiti</span>
             <span id="dtlQty" class="detail-value" style="font-size: 15px; color: var(--text);">-</span>
           </div>
-
           <div class="detail-item">
             <span class="detail-label">Baki Selepas</span>
             <span id="dtlBalance" class="detail-value">-</span>
           </div>
-
           <div class="detail-item">
             <span class="detail-label">PIC Bertanggungjawab</span>
             <span id="dtlPic" class="detail-value">-</span>
           </div>
-
           <div class="detail-item">
             <span class="detail-label">Lokasi</span>
             <span id="dtlLocation" class="detail-value">-</span>
           </div>
-
           <div class="detail-item column">
             <span class="detail-label">Catatan / Nota Pelarasan</span>
             <div id="dtlNote" class="detail-note-box">Tiada catatan</div>
@@ -1204,14 +1044,33 @@
     </div>
   </div>
 
-  <!-- APP LAYOUT -->
+  <!-- MODAL STATUS JANA BORANG KURSUS -->
+  <div id="kursusSuccessModal" class="modal-overlay hidden">
+    <div class="modal-dialog" style="max-width: 440px;">
+      <div class="modal-header">
+        <h4>Borang Berjaya Dijana!</h4>
+        <button type="button" class="btn btn-secondary" style="padding: 4px 10px; min-height: 28px; font-size: 12px;" onclick="closeKursusSuccessModal()">Tutup</button>
+      </div>
+      <div class="modal-body">
+        <p id="kursusSuccessTitle" style="font-size: 13.5px; font-weight: 700; color: var(--primary); margin-bottom: 12px;"></p>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Pautan borang Google Form sedia digunakan:</p>
+        <div style="display: grid; gap: 8px;">
+          <a id="kursusLinkView" href="#" target="_blank" class="btn btn-primary" style="text-decoration: none;">Buka Borang Pendaftaran (Papar)</a>
+          <a id="kursusLinkEdit" href="#" target="_blank" class="btn btn-secondary" style="text-decoration: none;">Sunting Borang (Edit)</a>
+          <a id="kursusLinkResp" href="#" target="_blank" class="btn btn-secondary" style="text-decoration: none;">Papan Respon Peserta</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APP LAYOUT UTAMA -->
   <div class="app-layout">
     <aside class="sidebar">
       <div class="brand-box">
         <img class="brand-logo-img" src="Logo%20Azzuha.png" alt="Logo e-ASTRA">
         <div>
           <div class="brand-title">e-ASTRA</div>
-          <div class="brand-sub">Sistem Stok TRG</div>
+          <div class="brand-sub">Sistem Pengurusan TRG</div>
         </div>
       </div>
       
@@ -1234,10 +1093,16 @@
             Data Induk Item
           </button>
         </li>
+        <li>
+          <button class="nav-btn" onclick="switchTab('kursus')">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+            Borang Kursus
+          </button>
+        </li>
       </ul>
 
       <div class="sidebar-footer">
-        © 2026 e-ASTRA TRG
+        © 2026 e-ASTRA Azzuha TRG
       </div>
     </aside>
 
@@ -1251,22 +1116,13 @@
           </div>
         </div>
         <div class="topbar-actions">
-          <button type="button" class="btn-icon-action" onclick="generateQRPdf1Page()" title="Jana Kod QR Semua Produk (PDF 1 Muka Surat)">
-            <svg viewBox="0 0 24 24">
-              <rect x="3" y="3" width="7" height="7"></rect>
-              <rect x="14" y="3" width="7" height="7"></rect>
-              <rect x="3" y="14" width="7" height="7"></rect>
-              <path d="M14 14h3v3h-3z"></path>
-              <path d="M20 14v3"></path>
-              <path d="M14 20h7"></path>
-            </svg>
+          <button type="button" id="topbarQrBtn" class="btn-icon-action" onclick="generateQRPdf1Page()" title="Jana Kod QR Semua Produk">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><path d="M14 14h3v3h-3z"></path><path d="M20 14v3"></path><path d="M14 20h7"></path></svg>
             <span>Cetak QR</span>
           </button>
           
-          <button class="btn-icon-action btn-icon-refresh" onclick="loadData()" title="Segar Semula">
-            <svg viewBox="0 0 24 24">
-              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
-            </svg>
+          <button class="btn-icon-action btn-icon-refresh" onclick="refreshCurrentTab()" title="Segar Semula Data">
+            <svg viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
           </button>
         </div>
       </div>
@@ -1274,7 +1130,6 @@
       <!-- TAB 1: DASHBOARD -->
       <section id="tab-dashboard">
         <div class="metrics-grid" id="metricsCards"></div>
-
         <div class="panel">
           <div class="panel-header">
             <h3 id="attentionHeader">Item Perlu Perhatian</h3>
@@ -1366,8 +1221,81 @@
           </div>
         </div>
       </section>
+
+      <!-- TAB 4: PENJANA BORANG KURSUS UMRAH -->
+      <section id="tab-kursus" class="hidden">
+        <!-- Borang Input Generator -->
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Jana Google Form Kursus Baharu</h3>
+          </div>
+          <div class="panel-body">
+            <form id="kursusForm" onsubmit="submitKursusForm(event)">
+              <div class="form-group">
+                <div>
+                  <label>Tajuk Program</label>
+                  <input type="text" id="kTajuk" required value="KURSUS UMRAH TERBUKA CAWANGAN TERENGGANU">
+                </div>
+
+                <div class="input-row">
+                  <div>
+                    <label>Tarikh Program</label>
+                    <input type="text" id="kTarikhPicker" required placeholder="Pilih Tarikh">
+                  </div>
+                  <div>
+                    <label>Masa</label>
+                    <input type="text" id="kMasa" required value="9.00 PAGI - 12.00 TENGAHARI">
+                  </div>
+                </div>
+
+                <div>
+                  <label>Lokasi / Tempat Kursus</label>
+                  <input type="text" id="kTempat" required value="DEWAN IMAM A'ASIM, MASJID AL-MUKTAFI BILLAH SHAH (MASJID LADANG)">
+                </div>
+
+                <div>
+                  <label>Talian Khidmat Pelanggan</label>
+                  <input type="text" id="kNoTel" required value="011-5508 3367">
+                </div>
+
+                <div>
+                  <label>Muat Naik Poster Program (Pilihan)</label>
+                  <div class="upload-box" onclick="document.getElementById('kPosterInput').click()">
+                    <input type="file" id="kPosterInput" accept="image/*" class="hidden" onchange="previewKursusPoster(event)">
+                    <div id="kUploadPrompt">
+                      <p style="font-weight: 700; color: var(--primary);">Pilih fail poster (PNG / JPG / WebP)</p>
+                      <p style="font-size: 11.5px; color: var(--text-muted); margin-top: 3px;">Poster akan dimasukkan secara automatik di bahagian atas borang.</p>
+                    </div>
+                    <div id="kPreviewArea" class="hidden" style="text-align: center;">
+                      <img id="kPosterPreview" src="#" alt="Poster" style="max-height: 140px; border-radius: 8px; margin: 0 auto 6px; display: block; border: 1px solid var(--border);">
+                      <span id="kPosterName" style="font-size: 11px; font-weight: 700; color: var(--primary);"></span>
+                      <span style="font-size: 10px; color: #64748b; display: block; text-decoration: underline;">Klik untuk tukar fail</span>
+                    </div>
+                  </div>
+                </div>
+
+                <button type="submit" id="btnJanaKursus" class="btn btn-primary" style="width: 100%; min-height: 44px;">Jana Borang Pendaftaran Google Form</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Senarai Borang Yang Telah Dijana -->
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Senarai Borang Rasmi Kursus</h3>
+            <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 28px;" onclick="loadKursusFormsList()">Kemas Kini Senarai</button>
+          </div>
+          <div class="panel-body">
+            <div id="kursusListLoading" class="hidden" style="text-align: center; padding: 20px; color: var(--text-muted);">Memuatkan senarai borang...</div>
+            <div id="kursusListEmpty" class="hidden" style="text-align: center; padding: 20px; color: var(--text-muted); font-size: 12px;">Tiada rekod borang ditemui.</div>
+            <div id="kursusListContainer"></div>
+          </div>
+        </div>
+      </section>
     </main>
 
+    <!-- NAVIGASI BAWAH UNTUK TELEFON (4 MENU) -->
     <nav class="mobile-nav">
       <button class="m-btn active" type="button" onclick="switchTab('dashboard')">
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
@@ -1379,21 +1307,25 @@
       </button>
       <button class="m-btn" type="button" onclick="switchTab('items')">
         <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
-        <span>Data Induk</span>
+        <span>Stok Item</span>
+      </button>
+      <button class="m-btn" type="button" onclick="switchTab('kursus')">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+        <span>Borang Kursus</span>
       </button>
     </nav>
   </div>
 
   <script>
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwHtqRN_4axCBvxe_2juwBxoIrLZVRz5nWPp8eq1E81SxdnPOFsnUYAInXhKlZW-fkfqA/exec';
-    const GITHUB_REPO = 'devopsett/e-astratrg'; 
 
     let appState = {
       data: null,
       activeTab: 'dashboard',
       selectedItem: null,
       globalTxType: 'Keluar',
-      statusFilter: null
+      statusFilter: null,
+      kursusForms: []
     };
 
     let html5QrCodeScanner = null;
@@ -1403,12 +1335,15 @@
     let toastTimer = null;
     let globalAudioCtx = null;
 
+    let kUploadedBase64 = null;
+    let kUploadedFileName = "";
+    let kUploadedFileType = "";
+    const hariList = ["AHAD", "ISNIN", "SELASA", "RABU", "KHAMIS", "JUMAAT", "SABTU"];
+
     function getAudioContext() {
       if (!globalAudioCtx) {
         const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-        if (AudioContextClass) {
-          globalAudioCtx = new AudioContextClass();
-        }
+        if (AudioContextClass) globalAudioCtx = new AudioContextClass();
       }
       if (globalAudioCtx && globalAudioCtx.state === 'suspended') {
         globalAudioCtx.resume();
@@ -1420,71 +1355,68 @@
       document.getElementById('txDate').valueAsDate = new Date();
       addBatchRow();
       loadData();
-      setTimeout(checkAutoSystemUpdate, 2000);
-    });
 
-    window.addEventListener('focus', () => {
-      checkAutoSystemUpdate();
-    });
-
-    async function checkAutoSystemUpdate() {
-      try {
-        const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/commits?per_page=1&_nocache=${Date.now()}`);
-        if (!res.ok) return;
-
-        const commits = await res.json();
-        if (!Array.isArray(commits) || !commits.length) return;
-
-        const latestCommit = commits[0];
-        const latestCommitSha = latestCommit.sha;
-        const currentSavedSha = localStorage.getItem('eastra_current_commit_sha');
-
-        if (!currentSavedSha) {
-          localStorage.setItem('eastra_current_commit_sha', latestCommitSha);
-          return;
-        }
-
-        if (currentSavedSha !== latestCommitSha) {
-          window.pendingCommitSha = latestCommitSha;
-          
-          let commitMsg = (latestCommit.commit && latestCommit.commit.message) ? latestCommit.commit.message.trim() : '';
-          commitMsg = commitMsg.split('\n')[0];
-
-          let friendlyMsg = commitMsg;
-          if (!friendlyMsg || friendlyMsg.toLowerCase().startsWith('update index.html')) {
-            friendlyMsg = 'Penambahbaikan ciri perisian dan kestabilan sistem inventori.';
+      // Init Flatpickr untuk Borang Kursus
+      flatpickr("#kTarikhPicker", {
+        dateFormat: "d/m/Y",
+        disableMobile: true,
+        onChange: function(selectedDates, dateStr, instance) {
+          if (selectedDates.length > 0) {
+            const dateObj = selectedDates[0];
+            const hariText = hariList[dateObj.getDay()];
+            const dd = String(dateObj.getDate()).padStart(2, '0');
+            const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const yyyy = dateObj.getFullYear();
+            instance.input.value = `${dd}/${mm}/${yyyy} (${hariText})`;
           }
-
-          const changelogEl = document.getElementById('updateChangelogText');
-          if (changelogEl) changelogEl.textContent = friendlyMsg;
-          
-          const banner = document.getElementById('updateBanner');
-          if (banner) banner.classList.remove('hidden');
         }
-      } catch (e) {}
+      });
+    });
+
+    function refreshCurrentTab() {
+      if (appState.activeTab === 'kursus') {
+        loadKursusFormsList();
+      } else {
+        loadData();
+      }
     }
 
-    function dismissUpdateBanner() {
-      const banner = document.getElementById('updateBanner');
-      if (banner) banner.classList.add('hidden');
-    }
+    function switchTab(tab) {
+      if (appState.activeTab === tab) return;
+      appState.activeTab = tab;
+      
+      const tabs = ['dashboard', 'transactions', 'items', 'kursus'];
+      document.querySelectorAll('.nav-btn').forEach((b, idx) => b.classList.toggle('active', tabs[idx] === tab));
+      document.querySelectorAll('.m-btn').forEach((b, idx) => b.classList.toggle('active', tabs[idx] === tab));
 
-    async function applySystemUpdate() {
-      dismissUpdateBanner();
-      showLoading(true, 'Mengemaskini aplikasi e-ASTRA...', true, 'Memuat turun fail sistem terkini...');
+      document.getElementById('tab-dashboard').classList.toggle('hidden', tab !== 'dashboard');
+      document.getElementById('tab-transactions').classList.toggle('hidden', tab !== 'transactions');
+      document.getElementById('tab-items').classList.toggle('hidden', tab !== 'items');
+      document.getElementById('tab-kursus').classList.toggle('hidden', tab !== 'kursus');
 
-      if (window.pendingCommitSha) {
-        localStorage.setItem('eastra_current_commit_sha', window.pendingCommitSha);
+      // Kawalan butang terapung FAB dan Butang Cetak QR
+      const fab = document.getElementById('mainFabBtn');
+      const topbarQr = document.getElementById('topbarQrBtn');
+
+      if (tab === 'kursus') {
+        fab.classList.add('hidden');
+        topbarQr.classList.add('hidden');
+        loadKursusFormsList();
+      } else {
+        fab.classList.remove('hidden');
+        topbarQr.classList.remove('hidden');
       }
 
-      if ('caches' in window) {
-        const keys = await caches.keys();
-        await Promise.all(keys.map(k => caches.delete(k)));
-      }
+      const titles = {
+        dashboard: ['Dashboard e-ASTRA', 'Sistem Pengurusan Stok Cawangan Terengganu.'],
+        transactions: ['Transaksi Stok', 'Rekod log keluar, masuk dan pelarasan.'],
+        items: ['Data Induk Item', 'Katalog pengurusan item stok.'],
+        kursus: ['Penjana Borang Kursus', 'Jana & pantau borang pendaftaran rasmi Google Form.']
+      };
+      document.getElementById('viewTitle').textContent = titles[tab][0];
+      document.getElementById('viewSubtitle').textContent = titles[tab][1];
 
-      setTimeout(() => {
-        window.location.reload(true);
-      }, 1200);
+      window.scrollTo({ top: 0, behavior: 'instant' });
     }
 
     function lockBodyScroll() {
@@ -1498,259 +1430,13 @@
       }
     }
 
-    async function generateQRPdf1Page() {
-      const items = appState.data?.items || [];
-      if (!items.length) {
-        showToast('Tiada item inventori ditemui untuk dijana.', true);
-        return;
-      }
-
-      showLoading(true, 'Menjana PDF Kod QR...');
-
-      try {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF('p', 'mm', 'a4');
-        const pageWidth = 210;
-        const pageHeight = 297;
-        const margin = 10;
-
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(14);
-        doc.setTextColor(11, 56, 24);
-        doc.text('LABEL KOD QR PRODUK - e-ASTRA AZ ZUHA TRG', pageWidth / 2, 14, { align: 'center' });
-        
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(9);
-        doc.setTextColor(100, 116, 139);
-        const todayStr = new Date().toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' });
-        doc.text(`Jumlah Item: ${items.length} | Tarikh Cetakan: ${todayStr}`, pageWidth / 2, 19, { align: 'center' });
-
-        doc.setDrawColor(226, 232, 240);
-        doc.setLineWidth(0.4);
-        doc.line(margin, 22, pageWidth - margin, 22);
-
-        const cols = 3;
-        const colWidth = (pageWidth - (margin * 2) - ((cols - 1) * 4)) / cols;
-        const availableHeight = pageHeight - 26 - margin;
-        
-        const totalRows = Math.ceil(items.length / cols);
-        const cardHeight = Math.min(33, (availableHeight - ((totalRows - 1) * 3)) / totalRows); 
-        const qrSize = Math.min(22, cardHeight - 10);
-
-        for (let idx = 0; idx < items.length; idx++) {
-          const itm = items[idx];
-          const colIdx = idx % cols;
-          const rowIdx = Math.floor(idx / cols);
-
-          const x = margin + (colIdx * (colWidth + 4));
-          const y = 26 + (rowIdx * (cardHeight + 3));
-
-          doc.setFillColor(255, 255, 255);
-          doc.setDrawColor(203, 213, 225);
-          doc.roundedRect(x, y, colWidth, cardHeight, 2, 2, 'FD');
-
-          const qrDataText = encodeURIComponent(itm.sku || itm.itemId);
-          const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&margin=0&data=${qrDataText}`;
-          
-          try {
-            const imgData = await fetchImageAsBase64(qrUrl);
-            const qrX = x + 2.5;
-            const qrY = y + (cardHeight - qrSize) / 2;
-            doc.addImage(imgData, 'PNG', qrX, qrY, qrSize, qrSize);
-          } catch (e) {}
-
-          const textX = x + qrSize + 5;
-          const textWidth = colWidth - qrSize - 7;
-          
-          doc.setFont('helvetica', 'bold');
-          doc.setFontSize(8);
-          doc.setTextColor(15, 23, 42);
-          
-          const splitItemName = doc.splitTextToSize(itm.item, textWidth);
-          doc.text(splitItemName.slice(0, 2), textX, y + 8);
-
-          doc.setFont('helvetica', 'bold');
-          doc.setFontSize(7.5);
-          doc.setTextColor(4, 120, 87);
-          doc.text(itm.sku || itm.itemId, textX, y + cardHeight - 7);
-
-          doc.setFont('helvetica', 'normal');
-          doc.setFontSize(6.5);
-          doc.setTextColor(100, 116, 139);
-          doc.text(itm.category || 'Item', textX, y + cardHeight - 3);
-        }
-
-        doc.save(`eASTRA_QR_Labels_${new Date().toISOString().slice(0,10)}.pdf`);
-        showLoading(false);
-        showToast('PDF Kod QR 1 muka surat berjaya dimuat turun!');
-      } catch (err) {
-        showLoading(false);
-        showToast('Gagal menjana PDF: ' + err.message, true);
-      }
-    }
-
-    function fetchImageAsBase64(url) {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.crossOrigin = 'Anonymous';
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          canvas.width = img.width;
-          canvas.height = img.height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0);
-          resolve(canvas.toDataURL('image/png'));
-        };
-        img.onerror = () => reject(new Error('Gagal memuat turun imej QR'));
-        img.src = url;
-      });
-    }
-
-    function openTxModal() {
-      document.getElementById('txModal').classList.remove('hidden');
-      lockBodyScroll();
-    }
-
-    function closeTxModal() {
-      document.getElementById('txModal').classList.add('hidden');
-      unlockBodyScroll();
-    }
-
-    function openItemModal() {
-      resetItemForm();
-      document.getElementById('itemModal').classList.remove('hidden');
-      lockBodyScroll();
-    }
-
-    function closeItemModal() {
-      document.getElementById('itemModal').classList.add('hidden');
-      resetItemForm();
-      unlockBodyScroll();
-    }
-
-    function openLogDetailModal(log) {
-      const typeBadge = document.getElementById('dtlType');
-      typeBadge.textContent = log.type;
-      typeBadge.className = `badge ${log.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}`;
-
-      document.getElementById('dtlItem').textContent = log.item;
-      document.getElementById('dtlSku').textContent = log.sku || '-';
-      document.getElementById('dtlDate').textContent = log.date;
-      document.getElementById('dtlQty').textContent = `${log.qty} unit`;
-      document.getElementById('dtlBalance').textContent = `${log.balanceAfter} unit`;
-      document.getElementById('dtlPic').textContent = log.pic || '-';
-      document.getElementById('dtlLocation').textContent = log.location || '-';
-
-      const noteBox = document.getElementById('dtlNote');
-      if (log.note && log.note.trim()) {
-        noteBox.textContent = log.note;
-        if (log.note.includes('[Audit Fizikal')) {
-          noteBox.style.background = '#fffbeb';
-          noteBox.style.color = '#b45309';
-          noteBox.style.borderColor = '#fde68a';
-          noteBox.style.fontWeight = '700';
-        } else {
-          noteBox.style.background = '#ffffff';
-          noteBox.style.color = '#0f172a';
-          noteBox.style.borderColor = '#e2e8f0';
-          noteBox.style.fontWeight = '500';
-        }
-      } else {
-        noteBox.textContent = 'Tiada catatan.';
-        noteBox.style.background = '#f8fafc';
-        noteBox.style.color = '#64748b';
-        noteBox.style.borderColor = '#e2e8f0';
-        noteBox.style.fontWeight = 'normal';
-      }
-
-      document.getElementById('logDetailModal').classList.remove('hidden');
-      lockBodyScroll();
-    }
-
-    function closeLogDetailModal() {
-      document.getElementById('logDetailModal').classList.add('hidden');
-      unlockBodyScroll();
-    }
-
-    function closeModalOnBackdrop(e, modalId) {
-      if (e.target.id === modalId) {
-        document.getElementById(modalId).classList.add('hidden');
-        if (modalId === 'itemModal') resetItemForm();
-        unlockBodyScroll();
-      }
-    }
-
-    function setGlobalTxType(type) {
-      appState.globalTxType = type;
-      document.getElementById('btnTypeOut').classList.toggle('active', type === 'Keluar');
-      document.getElementById('btnTypeIn').classList.toggle('active', type === 'Masuk');
-      document.getElementById('btnTypeAudit').classList.toggle('active', type === 'Pelarasan');
-
-      const batchLabel = document.getElementById('batchLabel');
-      const submitBtn = document.getElementById('btnSubmitTx');
-
-      if (type === 'Pelarasan') {
-        batchLabel.textContent = 'Kiraan Fizikal Sebenar (Audit)';
-        submitBtn.textContent = 'Simpan Pelarasan Stok';
-      } else {
-        batchLabel.textContent = `Senarai Item ${type}`;
-        submitBtn.textContent = `Simpan Transaksi (${type})`;
-      }
-
-      document.querySelectorAll('.batch-item').forEach(sel => updateRowHint(sel));
-    }
-
-    function switchTab(tab) {
-      if (appState.activeTab === tab) return;
-      appState.activeTab = tab;
-      
-      const tabs = ['dashboard', 'transactions', 'items'];
-      document.querySelectorAll('.nav-btn').forEach((b, idx) => b.classList.toggle('active', tabs[idx] === tab));
-      document.querySelectorAll('.m-btn').forEach((b, idx) => b.classList.toggle('active', tabs[idx] === tab));
-
-      document.getElementById('tab-dashboard').classList.toggle('hidden', tab !== 'dashboard');
-      document.getElementById('tab-transactions').classList.toggle('hidden', tab !== 'transactions');
-      document.getElementById('tab-items').classList.toggle('hidden', tab !== 'items');
-
-      const titles = {
-        dashboard: ['Dashboard e-ASTRA', 'Sistem Pengurusan Stok Cawangan Terengganu.'],
-        transactions: ['Transaksi Stok', 'Rekod log keluar, masuk dan pelarasan.'],
-        items: ['Data Induk Item', 'Katalog pengurusan item stok.']
-      };
-      document.getElementById('viewTitle').textContent = titles[tab][0];
-      document.getElementById('viewSubtitle').textContent = titles[tab][1];
-
-      window.scrollTo({ top: 0, behavior: 'instant' });
-    }
-
-    function showLoading(show, msg = 'Memuatkan data...', isUpdateMode = false, subMsg = '') {
+    function showLoading(show, msg = 'Memuatkan data...') {
       const overlay = document.getElementById('loading');
       if (!show) {
         overlay.classList.add('hidden');
         return;
       }
-
       document.getElementById('loadingMsg').textContent = msg;
-      
-      const standardSpinner = document.getElementById('loadingStandardSpinner');
-      const updateAnim = document.getElementById('loadingUpdateAnim');
-      const subMsgEl = document.getElementById('loadingSubMsg');
-
-      if (isUpdateMode) {
-        standardSpinner.classList.add('hidden');
-        updateAnim.classList.remove('hidden');
-        if (subMsg) {
-          subMsgEl.textContent = subMsg;
-          subMsgEl.classList.remove('hidden');
-        } else {
-          subMsgEl.classList.add('hidden');
-        }
-      } else {
-        standardSpinner.classList.remove('hidden');
-        updateAnim.classList.add('hidden');
-        subMsgEl.classList.add('hidden');
-      }
-
       overlay.classList.remove('hidden');
     }
 
@@ -1762,15 +1448,138 @@
       setTimeout(() => t.classList.remove('show'), 3000);
     }
 
-    function showScannerOverlay(msg, isError = false) {
-      const el = document.getElementById('scannerOverlayToast');
-      el.textContent = msg;
-      el.classList.toggle('error', isError);
-      el.classList.add('show');
-      if (toastTimer) clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => el.classList.remove('show'), 2000);
+    /* ========================================================
+       LOGIK MODUL BORANG KURSUS UMRAH
+       ======================================================== */
+    function previewKursusPoster(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      kUploadedFileName = file.name;
+      kUploadedFileType = file.type;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        kUploadedBase64 = e.target.result;
+        document.getElementById('kPosterPreview').src = kUploadedBase64;
+        document.getElementById('kPosterName').innerText = kUploadedFileName;
+        document.getElementById('kUploadPrompt').classList.add('hidden');
+        document.getElementById('kPreviewArea').classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
     }
 
+    function submitKursusForm(e) {
+      e.preventDefault();
+      const tarikhVal = document.getElementById('kTarikhPicker').value;
+      if (!tarikhVal) {
+        showToast('Sila pilih tarikh program terlebih dahulu.', true);
+        return;
+      }
+
+      showLoading(true, 'Sedang menjana borang Google Form...');
+
+      const payload = {
+        tajuk: document.getElementById('kTajuk').value,
+        tarikh: tarikhVal,
+        masa: document.getElementById('kMasa').value,
+        tempat: document.getElementById('kTempat').value,
+        noTel: document.getElementById('kNoTel').value,
+        imageData: kUploadedBase64,
+        imageName: kUploadedFileName,
+        imageType: kUploadedFileType
+      };
+
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        redirect: 'follow',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'createKursusForm',
+          data: payload
+        })
+      })
+      .then(res => res.json())
+      .then(res => {
+        showLoading(false);
+        if (!res.success) throw new Error(res.error || res.message);
+        
+        document.getElementById('kursusSuccessTitle').textContent = res.title;
+        document.getElementById('kursusLinkView').href = res.formUrl;
+        document.getElementById('kursusLinkEdit').href = res.editUrl;
+        document.getElementById('kursusLinkResp').href = res.responsesUrl;
+
+        document.getElementById('kursusSuccessModal').classList.remove('hidden');
+        lockBodyScroll();
+
+        loadKursusFormsList();
+      })
+      .catch(err => {
+        showLoading(false);
+        showToast('Gagal menjana borang: ' + err.message, true);
+      });
+    }
+
+    function closeKursusSuccessModal() {
+      document.getElementById('kursusSuccessModal').classList.add('hidden');
+      unlockBodyScroll();
+    }
+
+    function loadKursusFormsList() {
+      const loading = document.getElementById('kursusListLoading');
+      const empty = document.getElementById('kursusListEmpty');
+      const container = document.getElementById('kursusListContainer');
+
+      loading.classList.remove('hidden');
+      empty.classList.add('hidden');
+      container.innerHTML = "";
+
+      fetch(`${SCRIPT_URL}?action=getGeneratedFormsList`, { method: 'GET', redirect: 'follow' })
+      .then(res => res.json())
+      .then(res => {
+        loading.classList.add('hidden');
+        if (!res.success) throw new Error(res.error || res.message);
+
+        if (!res.forms || res.forms.length === 0) {
+          empty.classList.remove('hidden');
+          return;
+        }
+
+        renderKursusForms(res.forms);
+      })
+      .catch(err => {
+        loading.classList.add('hidden');
+        container.innerHTML = `<div style="padding: 12px; font-size: 12px; color: #b91c1c; background: #fee2e2; border-radius: 8px;">Ralat memuatkan senarai: ${err.message}</div>`;
+      });
+    }
+
+    function renderKursusForms(forms) {
+      const container = document.getElementById('kursusListContainer');
+      container.innerHTML = forms.map(item => `
+        <div class="kursus-card">
+          <div>
+            <h4 style="font-size: 13.5px; font-weight: 700; color: var(--text);">${item.name}</h4>
+            <p style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Dicipta: ${item.dateCreated}</p>
+          </div>
+          <div class="kursus-actions">
+            <button type="button" class="kursus-btn-action kursus-btn-copy" onclick="copyLink('${item.formUrl}')">Salin</button>
+            <a href="${item.formUrl}" target="_blank" class="kursus-btn-action kursus-btn-view">Papar</a>
+            <a href="${item.responsesUrl}" target="_blank" class="kursus-btn-action kursus-btn-resp">Respon</a>
+            <a href="${item.editUrl}" target="_blank" class="kursus-btn-action kursus-btn-edit">Edit</a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function copyLink(url) {
+      navigator.clipboard.writeText(url).then(() => {
+        showToast('Pautan borang berjaya disalin!');
+      }).catch(() => {
+        prompt('Salin pautan:', url);
+      });
+    }
+
+    /* ========================================================
+       LOGIK ASAL SISTEM PENGURUSAN STOK
+       ======================================================== */
     function loadData() {
       showLoading(true);
       fetch(`${SCRIPT_URL}?action=getAppData`, { method: 'GET', redirect: 'follow' })
@@ -1789,7 +1598,7 @@
       })
       .catch(err => {
         showLoading(false);
-        showToast(err.message || 'Ralat memuatkan data. Sila semak sambungan.', true);
+        showToast(err.message || 'Ralat memuatkan data.', true);
       });
     }
 
@@ -1931,7 +1740,6 @@
 
       if (item && sel.value) {
         badge.classList.remove('hidden', 'low', 'audit-hint');
-
         if (appState.globalTxType === 'Pelarasan') {
           const physicalVal = Number(input.value) || 0;
           const diff = physicalVal - item.currentStock;
@@ -1972,7 +1780,6 @@
 
     function openScannerModal() {
       getAudioContext();
-
       document.getElementById('scannerModal').classList.remove('hidden');
       lockBodyScroll();
       if (!html5QrCodeScanner) {
@@ -1980,10 +1787,7 @@
       }
       html5QrCodeScanner.start(
         { facingMode: "environment" },
-        { 
-          fps: 3,
-          qrbox: { width: 160, height: 160 }
-        },
+        { fps: 3, qrbox: { width: 160, height: 160 } },
         onScanSuccess
       ).catch(err => {
         showToast('Kamera gagal dimulakan: ' + (err.message || err), true);
@@ -2013,31 +1817,24 @@
         if (ctx) {
           const osc = ctx.createOscillator();
           const gain = ctx.createGain();
-
           osc.type = 'sine';
           osc.frequency.setValueAtTime(950, ctx.currentTime);
-
           gain.gain.setValueAtTime(0.2, ctx.currentTime);
           gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.12);
-
           osc.connect(gain);
           gain.connect(ctx.destination);
-
           osc.start(ctx.currentTime);
           osc.stop(ctx.currentTime + 0.12);
         }
       } catch (e) {}
 
       if (navigator.vibrate) {
-        try {
-          navigator.vibrate(60);
-        } catch (e) {}
+        try { navigator.vibrate(60); } catch (e) {}
       }
     }
 
     function onScanSuccess(decodedText) {
       const now = Date.now();
-      
       if (isProcessingScan || (now - lastScanTime < 2000)) return;
       if (decodedText === lastScanCode && (now - lastScanTime < 3500)) return;
 
@@ -2084,9 +1881,7 @@
         showScannerOverlay(`Ditambah: ${matched.item}`);
       }
 
-      setTimeout(() => {
-        isProcessingScan = false;
-      }, 2000);
+      setTimeout(() => { isProcessingScan = false; }, 2000);
     }
 
     function renderLogs() {
@@ -2100,12 +1895,11 @@
         return;
       }
 
-      tbody.innerHTML = logs.map((l, index) => {
+      tbody.innerHTML = logs.map(l => {
         const isAudit = l.note && l.note.includes('[Audit Fizikal');
         const auditIndicator = isAudit ? `<span style="font-size:10px; color:#b45309; font-weight:800; margin-left:4px;">● Audit</span>` : '';
-
         return `
-          <tr class="clickable-row" onclick='openLogDetailModal(${JSON.stringify(l).replace(/'/g, "&apos;")})' title="Tekan untuk lihat perincian penuh">
+          <tr class="clickable-row" onclick='openLogDetailModal(${JSON.stringify(l).replace(/'/g, "&apos;")})'>
             <td>${l.date}</td>
             <td><strong>${l.sku || ''}</strong></td>
             <td>${l.item} ${auditIndicator}</td>
@@ -2121,9 +1915,8 @@
       mCards.innerHTML = logs.map(l => {
         const isAudit = l.note && l.note.includes('[Audit Fizikal');
         const auditIndicator = isAudit ? `<span style="font-size:10px; color:#b45309; font-weight:800; background:#fef3c7; padding:1px 6px; border-radius:4px; margin-left:4px;">Audit</span>` : '';
-
         return `
-          <div class="card-row clickable-row" onclick='openLogDetailModal(${JSON.stringify(l).replace(/'/g, "&apos;")})' title="Tekan untuk perincian">
+          <div class="card-row clickable-row" onclick='openLogDetailModal(${JSON.stringify(l).replace(/'/g, "&apos;")})'>
             <div class="card-row-top">
               <div>
                 <div class="card-title">${l.item} ${auditIndicator}</div>
@@ -2218,10 +2011,7 @@
         method: 'POST',
         redirect: 'follow',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-          action: 'addTransactionsBatch',
-          data: payload
-        })
+        body: JSON.stringify({ action: 'addTransactionsBatch', data: payload })
       })
       .then(res => {
         if (!res.ok) throw new Error(`HTTP ${res.status}: Gagal menyambung ke Apps Script`);
@@ -2324,10 +2114,7 @@
         method: 'POST',
         redirect: 'follow',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-          action: 'deleteItem',
-          data: { itemId: appState.selectedItem }
-        })
+        body: JSON.stringify({ action: 'deleteItem', data: { itemId: appState.selectedItem } })
       })
       .then(res => {
         if (!res.ok) throw new Error(`HTTP ${res.status}: Gagal menyambung ke Apps Script`);
@@ -2347,6 +2134,200 @@
         showLoading(false);
         showToast(err.message || 'Gagal memadam item.', true);
       });
+    }
+
+    async function generateQRPdf1Page() {
+      const items = appState.data?.items || [];
+      if (!items.length) {
+        showToast('Tiada item inventori ditemui untuk dijana.', true);
+        return;
+      }
+
+      showLoading(true, 'Menjana PDF Kod QR...');
+
+      try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('p', 'mm', 'a4');
+        const pageWidth = 210;
+        const pageHeight = 297;
+        const margin = 10;
+
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(14);
+        doc.setTextColor(11, 56, 24);
+        doc.text('LABEL KOD QR PRODUK - e-ASTRA AZ ZUHA TRG', pageWidth / 2, 14, { align: 'center' });
+        
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
+        doc.setTextColor(100, 116, 139);
+        const todayStr = new Date().toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' });
+        doc.text(`Jumlah Item: ${items.length} | Tarikh Cetakan: ${todayStr}`, pageWidth / 2, 19, { align: 'center' });
+
+        doc.setDrawColor(226, 232, 240);
+        doc.setLineWidth(0.4);
+        doc.line(margin, 22, pageWidth - margin, 22);
+
+        const cols = 3;
+        const colWidth = (pageWidth - (margin * 2) - ((cols - 1) * 4)) / cols;
+        const availableHeight = pageHeight - 26 - margin;
+        
+        const totalRows = Math.ceil(items.length / cols);
+        const cardHeight = Math.min(33, (availableHeight - ((totalRows - 1) * 3)) / totalRows); 
+        const qrSize = Math.min(22, cardHeight - 10);
+
+        for (let idx = 0; idx < items.length; idx++) {
+          const itm = items[idx];
+          const colIdx = idx % cols;
+          const rowIdx = Math.floor(idx / cols);
+
+          const x = margin + (colIdx * (colWidth + 4));
+          const y = 26 + (rowIdx * (cardHeight + 3));
+
+          doc.setFillColor(255, 255, 255);
+          doc.setDrawColor(203, 213, 225);
+          doc.roundedRect(x, y, colWidth, cardHeight, 2, 2, 'FD');
+
+          const qrDataText = encodeURIComponent(itm.sku || itm.itemId);
+          const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&margin=0&data=${qrDataText}`;
+          
+          try {
+            const imgData = await fetchImageAsBase64(qrUrl);
+            const qrX = x + 2.5;
+            const qrY = y + (cardHeight - qrSize) / 2;
+            doc.addImage(imgData, 'PNG', qrX, qrY, qrSize, qrSize);
+          } catch (e) {}
+
+          const textX = x + qrSize + 5;
+          const textWidth = colWidth - qrSize - 7;
+          
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(8);
+          doc.setTextColor(15, 23, 42);
+          
+          const splitItemName = doc.splitTextToSize(itm.item, textWidth);
+          doc.text(splitItemName.slice(0, 2), textX, y + 8);
+
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(7.5);
+          doc.setTextColor(4, 120, 87);
+          doc.text(itm.sku || itm.itemId, textX, y + cardHeight - 7);
+
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(6.5);
+          doc.setTextColor(100, 116, 139);
+          doc.text(itm.category || 'Item', textX, y + cardHeight - 3);
+        }
+
+        doc.save(`eASTRA_QR_Labels_${new Date().toISOString().slice(0,10)}.pdf`);
+        showLoading(false);
+        showToast('PDF Kod QR 1 muka surat berjaya dimuat turun!');
+      } catch (err) {
+        showLoading(false);
+        showToast('Gagal menjana PDF: ' + err.message, true);
+      }
+    }
+
+    function fetchImageAsBase64(url) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'Anonymous';
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+          resolve(canvas.toDataURL('image/png'));
+        };
+        img.onerror = () => reject(new Error('Gagal memuat turun imej QR'));
+        img.src = url;
+      });
+    }
+
+    function openTxModal() {
+      document.getElementById('txModal').classList.remove('hidden');
+      lockBodyScroll();
+    }
+    function closeTxModal() {
+      document.getElementById('txModal').classList.add('hidden');
+      unlockBodyScroll();
+    }
+    function openItemModal() {
+      resetItemForm();
+      document.getElementById('itemModal').classList.remove('hidden');
+      lockBodyScroll();
+    }
+    function closeItemModal() {
+      document.getElementById('itemModal').classList.add('hidden');
+      resetItemForm();
+      unlockBodyScroll();
+    }
+    function openLogDetailModal(log) {
+      const typeBadge = document.getElementById('dtlType');
+      typeBadge.textContent = log.type;
+      typeBadge.className = `badge ${log.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}`;
+      document.getElementById('dtlItem').textContent = log.item;
+      document.getElementById('dtlSku').textContent = log.sku || '-';
+      document.getElementById('dtlDate').textContent = log.date;
+      document.getElementById('dtlQty').textContent = `${log.qty} unit`;
+      document.getElementById('dtlBalance').textContent = `${log.balanceAfter} unit`;
+      document.getElementById('dtlPic').textContent = log.pic || '-';
+      document.getElementById('dtlLocation').textContent = log.location || '-';
+
+      const noteBox = document.getElementById('dtlNote');
+      if (log.note && log.note.trim()) {
+        noteBox.textContent = log.note;
+        if (log.note.includes('[Audit Fizikal')) {
+          noteBox.style.background = '#fffbeb';
+          noteBox.style.color = '#b45309';
+          noteBox.style.borderColor = '#fde68a';
+          noteBox.style.fontWeight = '700';
+        } else {
+          noteBox.style.background = '#ffffff';
+          noteBox.style.color = '#0f172a';
+          noteBox.style.borderColor = '#e2e8f0';
+          noteBox.style.fontWeight = '500';
+        }
+      } else {
+        noteBox.textContent = 'Tiada catatan.';
+        noteBox.style.background = '#f8fafc';
+        noteBox.style.color = '#64748b';
+        noteBox.style.borderColor = '#e2e8f0';
+        noteBox.style.fontWeight = 'normal';
+      }
+
+      document.getElementById('logDetailModal').classList.remove('hidden');
+      lockBodyScroll();
+    }
+    function closeLogDetailModal() {
+      document.getElementById('logDetailModal').classList.add('hidden');
+      unlockBodyScroll();
+    }
+    function closeModalOnBackdrop(e, modalId) {
+      if (e.target.id === modalId) {
+        document.getElementById(modalId).classList.add('hidden');
+        if (modalId === 'itemModal') resetItemForm();
+        unlockBodyScroll();
+      }
+    }
+    function setGlobalTxType(type) {
+      appState.globalTxType = type;
+      document.getElementById('btnTypeOut').classList.toggle('active', type === 'Keluar');
+      document.getElementById('btnTypeIn').classList.toggle('active', type === 'Masuk');
+      document.getElementById('btnTypeAudit').classList.toggle('active', type === 'Pelarasan');
+
+      const batchLabel = document.getElementById('batchLabel');
+      const submitBtn = document.getElementById('btnSubmitTx');
+
+      if (type === 'Pelarasan') {
+        batchLabel.textContent = 'Kiraan Fizikal Sebenar (Audit)';
+        submitBtn.textContent = 'Simpan Pelarasan Stok';
+      } else {
+        batchLabel.textContent = `Senarai Item ${type}`;
+        submitBtn.textContent = `Simpan Transaksi (${type})`;
+      }
+
+      document.querySelectorAll('.batch-item').forEach(sel => updateRowHint(sel));
     }
   </script>
 </body>
