@@ -1597,7 +1597,7 @@
 
       addBatchRow();
       
-      // Muat data secara berasingan untuk mengelak race condition
+      // Pemuatan data berperingkat untuk kestabilan pelayan
       loadData();
       setTimeout(fetchUmrahFormsList, 800);
       setTimeout(loadDataJemaah, 1500);
@@ -1726,7 +1726,7 @@
       }
     }
 
-    /* PENGENDALIAN DATA STOK (ROBUST & RESILIENT) */
+    /* PENGENDALIAN DATA STOK */
     function loadData() {
       showLoading(true, 'Memuatkan data stok...');
       
@@ -1758,7 +1758,6 @@
         console.error('Gagal loadData:', err);
         showToast(err.message || 'Gagal memuat turun data stok.', true);
         
-        // Pastikan placeholder 'Memuatkan...' digantikan dengan ralat jika gagal
         document.getElementById('attentionTbody').innerHTML = `<tr><td colspan="7" style="text-align:center; padding:24px; color:#ef4444;">Gagal memuatkan rekod: ${err.message}</td></tr>`;
         document.getElementById('logsTbody').innerHTML = `<tr><td colspan="8" style="text-align:center; padding:24px; color:#ef4444;">Gagal memuatkan log transaksi.</td></tr>`;
         document.getElementById('itemsTbody').innerHTML = `<tr><td colspan="8" style="text-align:center; padding:24px; color:#ef4444;">Gagal memuatkan katalog item.</td></tr>`;
@@ -1949,29 +1948,63 @@
     }
 
     function renderLogs() {
-      const logs = (appState.data?.logs || []).slice(0, 10);
+      const logs = appState.data?.logs || [];
       const tbody = document.getElementById('logsTbody');
       const mCards = document.getElementById('logsMobileCards');
 
       if (!logs.length) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:18px; color:#64748b;">Tiada rekod transaksi direkodkan.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:24px; color:#64748b;">Tiada rekod transaksi direkodkan.</td></tr>`;
         mCards.innerHTML = `<div style="text-align:center; padding:16px; color:#64748b; font-size:12px;">Tiada rekod transaksi direkodkan.</div>`;
         return;
       }
 
-      tbody.innerHTML = logs.map(l => `
-        <tr class="clickable-row" onclick='openLogDetailModal(${JSON.stringify(l).replace(/'/g, "&apos;")})' title="Pilih untuk perincian penuh">
-          <td>${l.date}</td><td><strong>${l.sku || ''}</strong></td><td>${l.item}</td><td><span class="badge ${l.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}">${l.type}</span></td>
-          <td style="text-align:right; font-weight:800;">${l.qty}</td><td style="text-align:right;">${l.balanceAfter}</td><td>${l.pic}</td><td>${l.location}</td>
+      tbody.innerHTML = logs.map((l, idx) => `
+        <tr class="clickable-row" onclick="openLogDetailModalByIndex(${idx})" title="Pilih untuk perincian penuh">
+          <td>${l.date || '-'}</td>
+          <td><strong>${l.sku || '-'}</strong></td>
+          <td>${l.item || '-'}</td>
+          <td><span class="badge ${l.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}">${l.type}</span></td>
+          <td style="text-align:right; font-weight:800;">${l.qty}</td>
+          <td style="text-align:right;">${l.balanceAfter}</td>
+          <td>${l.pic || '-'}</td>
+          <td>${l.location || '-'}</td>
         </tr>
       `).join('');
 
-      mCards.innerHTML = logs.map(l => `
-        <div class="card-row clickable-row" onclick='openLogDetailModal(${JSON.stringify(l).replace(/'/g, "&apos;")})'>
-          <div class="card-row-top"><div><div class="card-title">${l.item}</div><div class="card-sub">${l.sku ? l.sku + ' • ' : ''}${l.date} • ${l.pic}</div></div><span class="badge ${l.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}">${l.type}</span></div>
-          <div class="card-row-bottom"><span>Kuantiti: <strong>${l.qty} unit</strong></span><span style="color:#64748b;">Baki: ${l.balanceAfter}</span></div>
+      mCards.innerHTML = logs.map((l, idx) => `
+        <div class="card-row clickable-row" onclick="openLogDetailModalByIndex(${idx})">
+          <div class="card-row-top">
+            <div>
+              <div class="card-title">${l.item || 'Item'}</div>
+              <div class="card-sub">${l.sku ? l.sku + ' • ' : ''}${l.date} • ${l.pic || 'Tiada PIC'}</div>
+            </div>
+            <span class="badge ${l.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}">${l.type}</span>
+          </div>
+          <div class="card-row-bottom">
+            <span>Kuantiti: <strong>${l.qty} unit</strong></span>
+            <span style="color:#64748b;">Baki: ${l.balanceAfter}</span>
+          </div>
         </div>
       `).join('');
+    }
+
+    function openLogDetailModalByIndex(index) {
+      const log = (appState.data?.logs || [])[index];
+      if (!log) return;
+      
+      document.getElementById('dtlType').textContent = log.type;
+      document.getElementById('dtlType').className = `badge ${log.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}`;
+      document.getElementById('dtlItem').textContent = log.item || '-';
+      document.getElementById('dtlSku').textContent = log.sku || '-';
+      document.getElementById('dtlDate').textContent = log.date || '-';
+      document.getElementById('dtlQty').textContent = `${log.qty} unit`;
+      document.getElementById('dtlBalance').textContent = `${log.balanceAfter} unit`;
+      document.getElementById('dtlPic').textContent = log.pic || '-';
+      document.getElementById('dtlLocation').textContent = log.location || '-';
+      document.getElementById('dtlNote').textContent = log.note || 'Tiada catatan direkodkan.';
+      
+      document.getElementById('logDetailModal').classList.remove('hidden');
+      lockBodyScroll();
     }
 
     function renderItems() {
@@ -2230,7 +2263,7 @@
 
     async function handleDaftarJemaah(e) {
       e.preventDefault();
-      showLoading(true, 'Mendaftarkan jemaah ke pangkalan data...');
+      showLoading(true, 'Mendaftarkan jemaah...');
 
       try {
         const payload = {
