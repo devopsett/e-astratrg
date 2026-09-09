@@ -898,7 +898,7 @@
       display: grid;
       grid-template-columns: minmax(0, 1fr);
       gap: 22px;
-      max-width: 860px;
+      max-width: 100%;
     }
 
     .umrah-card {
@@ -921,18 +921,6 @@
       color: var(--primary);
     }
 
-    .preview-tarikh-badge {
-      display: inline-block;
-      margin-top: 6px;
-      font-size: 11.5px;
-      font-weight: 700;
-      color: #047857;
-      background: #ecfdf5;
-      padding: 3px 8px;
-      border-radius: 6px;
-      border: 1px solid #a7f3d0;
-    }
-
     .result-card-umrah {
       margin-top: 18px;
       background: #f0fdf4;
@@ -941,41 +929,58 @@
       padding: 16px;
     }
 
+    /* Susun atur Grid Desktop: Borang Duduk Sebelah-Menyebelah (2 Kolum) */
+    .umrah-forms-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      width: 100%;
+    }
+
     .form-item-row {
       display: flex;
+      flex-direction: column;
       justify-content: space-between;
-      align-items: center;
-      padding: 12px 14px;
+      padding: 14px 16px;
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 10px;
       background: #ffffff;
-      margin-bottom: 10px;
+      box-shadow: var(--shadow-sm);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
       gap: 12px;
-      flex-wrap: wrap;
+    }
+
+    .form-item-row:hover {
+      border-color: var(--primary);
+      box-shadow: var(--shadow);
     }
 
     .form-item-info {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 4px;
     }
 
     .form-item-title {
-      font-weight: 700;
+      font-weight: 800;
       color: var(--text);
-      font-size: 13px;
+      font-size: 13.5px;
+      line-height: 1.35;
     }
 
     .form-item-date {
       font-size: 11px;
       color: var(--text-muted);
+      font-weight: 600;
     }
 
     .form-item-actions {
       display: flex;
       align-items: center;
       gap: 6px;
-      flex-wrap: nowrap;
+      border-top: 1px dashed var(--border);
+      padding-top: 10px;
+      margin-top: 2px;
     }
 
     @media (max-width: 1200px) {
@@ -1042,8 +1047,16 @@
       .modal-dialog { width: 100% !important; max-width: 100% !important; border-radius: 12px; margin: 0; }
       .modal-body { max-height: calc(85vh - 60px); padding: 14px; overflow-x: hidden; }
 
-      .form-item-row { flex-direction: column; align-items: flex-start; }
-      .form-item-actions { width: 100%; justify-content: flex-end; margin-top: 6px; }
+      /* Di telefon bimbit kembali kepada 1 kolum */
+      .umrah-forms-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      
+      .form-item-actions {
+        width: 100%;
+        justify-content: flex-end;
+      }
     }
   </style>
 </head>
@@ -1471,8 +1484,7 @@
                 <div class="input-row">
                   <div>
                     <label>Pilih Tarikh Kursus</label>
-                    <input type="date" id="ufTarikhInput" required onchange="updateFormattedDatePreview()">
-                    <div id="previewTarikhBadge" class="preview-tarikh-badge hidden"></div>
+                    <input type="date" id="ufTarikhInput" required>
                   </div>
                   <div>
                     <label>Waktu Kursus</label>
@@ -1528,7 +1540,7 @@
             </div>
           </div>
 
-          <!-- SENARAI BORANG YANG PERNAH DIJANA -->
+          <!-- SENARAI BORANG YANG PERNAH DIJANA (SEBELAH-MENYEBELAH DI DESKTOP) -->
           <div class="umrah-card">
             <div class="umrah-header" style="display: flex; justify-content: space-between; align-items: center;">
               <h3>Senarai Borang Kursus Umrah</h3>
@@ -1604,7 +1616,6 @@
       defaultDate.setDate(defaultDate.getDate() + ((6 - defaultDate.getDay() + 7) % 7 || 7));
       const dateInput = document.getElementById('ufTarikhInput');
       dateInput.value = defaultDate.toISOString().split('T')[0];
-      updateFormattedDatePreview();
 
       addBatchRow();
       loadData();
@@ -1637,17 +1648,6 @@
       const monthIndex = parseInt(parts[1], 10) - 1;
       const months = ['JANUARI', 'FEBRUARI', 'MAC', 'APRIL', 'MEI', 'JUN', 'JULAI', 'OGOS', 'SEPTEMBER', 'OKTOBER', 'NOVEMBER', 'DISEMBER'];
       return `${months[monthIndex]} ${year}`;
-    }
-
-    function updateFormattedDatePreview() {
-      const val = document.getElementById('ufTarikhInput').value;
-      const badge = document.getElementById('previewTarikhBadge');
-      if (val) {
-        badge.textContent = 'Format Tarikh: ' + formatTarikhKursusMelayu(val) + ' | Nama Fail (Bulan): ' + getBulanKursusMelayu(val);
-        badge.classList.remove('hidden');
-      } else {
-        badge.classList.add('hidden');
-      }
     }
 
     async function checkAutoSystemUpdate() {
@@ -2581,6 +2581,17 @@
     /* ========================================================
        MODUL KURSUS UMRAH UI & LOGIK
        ======================================================== */
+    function saveLocalUmrahForm(formObj) {
+      let localForms = JSON.parse(localStorage.getItem('eastra_umrah_forms') || '[]');
+      localForms = localForms.filter(f => f.id !== formObj.id);
+      localForms.unshift(formObj);
+      localStorage.setItem('eastra_umrah_forms', JSON.stringify(localForms));
+    }
+
+    function getLocalUmrahForms() {
+      return JSON.parse(localStorage.getItem('eastra_umrah_forms') || '[]');
+    }
+
     async function handleGenerateUmrahForm(e) {
       e.preventDefault();
 
@@ -2633,13 +2644,23 @@
         document.getElementById('linkEditBtn').href = res.editUrl;
 
         document.getElementById('umrahFormResult').classList.remove('hidden');
-        showToast('Borang kursus umrah berjaya dijana!');
+
+        const newFormObj = {
+          id: res.formUrl,
+          name: res.formTitle,
+          liveUrl: res.formUrl,
+          editUrl: res.editUrl,
+          dateCreated: new Date().toLocaleDateString('ms-MY', { day:'2-digit', month:'short', year:'numeric' })
+        };
+        saveLocalUmrahForm(newFormObj);
 
         if (res.formsList && res.formsList.length) {
           renderUmrahFormsList(res.formsList);
         } else {
-          fetchUmrahFormsList();
+          renderUmrahFormsList(getLocalUmrahForms());
         }
+
+        showToast('Borang kursus umrah berjaya dijana!');
       })
       .catch(err => {
         showLoading(false);
@@ -2649,39 +2670,56 @@
 
     function fetchUmrahFormsList() {
       const container = document.getElementById('umrahFormsListContainer');
-      container.innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center; padding:16px;">Memuatkan senarai borang...</p>';
+      const localForms = getLocalUmrahForms();
+
+      if (localForms.length) {
+        renderUmrahFormsList(localForms);
+      } else {
+        container.innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center; padding:16px;">Memuatkan senarai borang...</p>';
+      }
 
       fetch(`${SCRIPT_URL}?action=getUmrahFormsList`, { method: 'GET', redirect: 'follow' })
       .then(res => res.json())
       .then(res => {
         if (!res.ok) throw new Error(res.message);
-        renderUmrahFormsList(res.forms || []);
+        if (res.forms && res.forms.length) {
+          localStorage.setItem('eastra_umrah_forms', JSON.stringify(res.forms));
+          renderUmrahFormsList(res.forms);
+        } else if (!localForms.length) {
+          container.innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center; padding:16px;">Tiada borang kursus umrah dijumpai dalam folder Drive.</p>';
+        }
       })
       .catch(err => {
-        container.innerHTML = '<p style="font-size:12px; color:#ef4444; text-align:center; padding:16px;">Gagal memuatkan senarai borang.</p>';
+        if (!localForms.length) {
+          container.innerHTML = '<p style="font-size:12px; color:#ef4444; text-align:center; padding:16px;">Gagal memuatkan senarai dari Drive.</p>';
+        }
       });
     }
 
     function renderUmrahFormsList(forms) {
       const container = document.getElementById('umrahFormsListContainer');
       if (!forms || !forms.length) {
-        container.innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center; padding:16px;">Tiada borang kursus umrah dijumpai dalam folder.</p>';
+        container.innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center; padding:16px;">Tiada borang kursus umrah dijumpai.</p>';
         return;
       }
 
-      container.innerHTML = forms.map(f => `
-        <div class="form-item-row">
-          <div class="form-item-info">
-            <span class="form-item-title">${f.name}</span>
-            <span class="form-item-date">Dijana pada: ${f.dateCreated}</span>
-          </div>
-          <div class="form-item-actions">
-            <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 32px;" onclick="copyDirectText('${f.liveUrl}')">Salin Link</button>
-            <a href="${f.liveUrl}" target="_blank" class="btn btn-primary" style="padding: 4px 12px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Live</a>
-            <a href="${f.editUrl}" target="_blank" class="btn btn-secondary" style="padding: 4px 12px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Edit</a>
-          </div>
+      container.innerHTML = `
+        <div class="umrah-forms-grid">
+          ${forms.map(f => `
+            <div class="form-item-row">
+              <div class="form-item-info">
+                <span class="form-item-title">${f.name}</span>
+                <span class="form-item-date">Dijana pada: ${f.dateCreated}</span>
+              </div>
+              <div class="form-item-actions">
+                <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 32px;" onclick="copyDirectText('${f.liveUrl}')">Salin Link</button>
+                <a href="${f.liveUrl}" target="_blank" class="btn btn-primary" style="padding: 4px 12px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Live</a>
+                <a href="${f.editUrl}" target="_blank" class="btn btn-secondary" style="padding: 4px 12px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Edit</a>
+              </div>
+            </div>
+          `).join('')}
         </div>
-      `).join('');
+      `;
     }
 
     function copyDirectText(text) {
