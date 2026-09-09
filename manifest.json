@@ -1,24 +1,2607 @@
-{
-  "name": "e-ASTRA",
-  "short_name": "e-ASTRA",
-  "start_url": "./index.html",
-  "scope": "./",
-  "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#0b3818",
-  "theme_color": "#0b3818",
-  "icons": [
-    {
-      "src": "Logo%20Azzuha.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "Logo%20Azzuha.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>e-ASTRA</title>
+  
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="e-ASTRA">
+  <meta name="theme-color" content="#0b3818">
+
+  <link rel="icon" type="image/png" href="Logo%20Azzuha.png">
+  <link rel="apple-touch-icon" href="Logo%20Azzuha.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #0b3818;
+      --primary-hover: #082911;
+      --primary-dark: #051a0b;
+      --primary-soft: #ecfdf5;
+
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --border-light: #f1f5f9;
+      --radius: 12px;
+
+      --status-ok-bg: #ecfdf5;
+      --status-ok-text: #047857;
+      --status-low-bg: #fffbeb;
+      --status-low-text: #b45309;
+      --status-empty-bg: #fef2f2;
+      --status-empty-text: #b91c1c;
+
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.08);
     }
-  ]
-}
+
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 13.5px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    body.modal-open {
+      overflow: hidden !important;
+      height: 100vh !important;
+      touch-action: none !important;
+    }
+
+    .update-banner {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 32px);
+      max-width: 460px;
+      background: #0b3818;
+      color: #ffffff;
+      padding: 14px 18px;
+      border-radius: 14px;
+      box-shadow: 0 14px 30px -5px rgba(0, 0, 0, 0.45);
+      z-index: 99999;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      animation: slideDown 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideDown {
+      from { transform: translate(-50%, -70px); opacity: 0; }
+      to { transform: translate(-50%, 0); opacity: 1; }
+    }
+
+    .update-content {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .update-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .update-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 800;
+      color: #a7f3d0;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .update-badge-dot {
+      width: 7px;
+      height: 7px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #10b981;
+    }
+
+    .update-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-top: 2px;
+    }
+
+    .update-details-box {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 12px;
+      line-height: 1.45;
+      color: #ecfdf5;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      max-height: 75px;
+      overflow-y: auto;
+    }
+
+    .update-action-row {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+      margin-top: 2px;
+    }
+
+    .btn-update-later {
+      background: transparent;
+      color: #a7f3d0;
+      border: none;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 7px 12px;
+      cursor: pointer;
+    }
+
+    .btn-update-confirm {
+      background: #ffffff;
+      color: #0b3818;
+      border: none;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      transition: transform 0.15s ease;
+    }
+
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      display: grid;
+      place-items: center;
+      z-index: 999999 !important;
+    }
+
+    .update-anim-container {
+      position: relative;
+      width: 86px;
+      height: 86px;
+      margin: 0 auto 18px;
+      display: grid;
+      place-items: center;
+    }
+
+    .update-anim-logo {
+      width: 60px;
+      height: 60px;
+      border-radius: 14px;
+      object-fit: cover;
+      box-shadow: 0 8px 20px rgba(11, 56, 24, 0.25);
+      animation: pulseLogo 1.6s ease-in-out infinite;
+      z-index: 2;
+    }
+
+    .update-spinner-ring {
+      position: absolute;
+      inset: 0;
+      border: 3px solid rgba(11, 56, 24, 0.15);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.9s cubic-bezier(0.55, 0.15, 0.45, 0.85) infinite;
+      z-index: 1;
+    }
+
+    @keyframes pulseLogo {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 4px 6px rgba(11, 56, 24, 0.2)); }
+      50% { transform: scale(1.08); filter: drop-shadow(0 10px 15px rgba(11, 56, 24, 0.35)); }
+    }
+
+    .spinner {
+      width: 38px;
+      height: 38px;
+      border: 3px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .app-layout {
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      height: 100vh;
+      width: 100%;
+      max-width: 100vw;
+      overflow: hidden;
+    }
+
+    .sidebar {
+      background: linear-gradient(180deg, #0b3818, #051a0b);
+      color: white;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow-y: auto;
+      z-index: 20;
+    }
+
+    .brand-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      margin-bottom: 24px;
+    }
+
+    .brand-logo-img {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      object-fit: cover;
+      background: #0b3818;
+      border: 1.5px solid rgba(255,255,255,0.25);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      flex-shrink: 0;
+    }
+
+    .brand-title { font-size: 16px; font-weight: 800; line-height: 1.2; letter-spacing: -0.2px; }
+    .brand-sub { font-size: 11px; color: #a7f3d0; font-weight: 500; }
+
+    .nav-list { display: grid; gap: 6px; list-style: none; }
+    .nav-btn {
+      width: 100%;
+      border: none;
+      background: transparent;
+      color: rgba(255,255,255,0.85);
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.18s;
+    }
+
+    .nav-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.2; }
+    .nav-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    .nav-btn.active {
+      background: #ffffff;
+      color: var(--primary);
+      font-weight: 700;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      font-size: 11px;
+      opacity: 0.7;
+      line-height: 1.4;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      padding-top: 16px;
+    }
+
+    main { 
+      padding: 26px 32px; 
+      height: 100vh;
+      overflow-y: auto; 
+      width: 100%; 
+      min-width: 0; 
+    }
+    
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+      background: var(--surface);
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .topbar-mobile-logo {
+      display: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 9px;
+      object-fit: cover;
+      background: #0b3818;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .topbar-title h2 { font-size: 19px; font-weight: 800; color: var(--text); letter-spacing: -0.3px; }
+    .topbar-title p { color: var(--text-muted); font-size: 12px; margin-top: 2px; }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-icon-action {
+      height: 40px;
+      padding: 0 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.18s ease;
+      white-space: nowrap;
+    }
+
+    .btn-icon-action:hover {
+      background: #f8fafc;
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .btn-icon-action svg {
+      width: 17px;
+      height: 17px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .btn-icon-refresh {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      display: grid;
+      place-items: center;
+    }
+
+    .btn-icon-refresh:active svg { transform: rotate(180deg); }
+    .btn-icon-refresh svg { transition: transform 0.25s ease; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 9px 16px;
+      min-height: 40px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-secondary { background: white; border-color: var(--border); color: var(--text); }
+    .btn-secondary:hover { background: #f8fafc; }
+    .btn-danger { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .fab-btn {
+      position: fixed;
+      bottom: 78px;
+      right: 20px;
+      width: 56px;
+      height: 56px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      border: none;
+      box-shadow: 0 4px 14px rgba(11, 56, 24, 0.4);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      z-index: 950;
+      transition: transform 0.2s ease, background 0.15s ease;
+    }
+
+    .fab-btn:active { transform: scale(0.92); background: var(--primary-hover); }
+    .fab-btn svg { width: 26px; height: 26px; stroke: #ffffff; stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round; }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .metric-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.15s ease;
+    }
+
+    .metric-card:hover {
+      border-color: var(--primary);
+      box-shadow: var(--shadow);
+    }
+
+    .metric-title { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .metric-val { font-size: 24px; font-weight: 800; color: var(--text); margin: 6px 0 2px; }
+    .metric-sub { font-size: 11.5px; color: var(--text-muted); }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 22px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .panel-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fafafa;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .panel-header h3 { font-size: 15px; font-weight: 800; color: var(--text); }
+    .panel-body { padding: 20px; }
+
+    .form-group { display: grid; gap: 14px; width: 100%; max-width: 100%; }
+    .input-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; width: 100%; }
+    label { font-size: 11.5px; font-weight: 700; color: #475569; display: block; margin-bottom: 5px; }
+    
+    input, select, textarea {
+      width: 100%;
+      max-width: 100%;
+      min-height: 42px;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 13.5px;
+      background: #fff;
+      outline: none;
+      color: var(--text);
+      transition: border 0.15s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(11, 56, 24, 0.15);
+    }
+
+    textarea { resize: vertical; min-height: 70px; }
+
+    .type-switcher {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1.3fr;
+      background: #e2e8f0;
+      padding: 3px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      gap: 2px;
+    }
+
+    .type-btn {
+      border: none;
+      padding: 8px 6px;
+      min-height: 38px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      background: transparent;
+      color: #64748b;
+      text-align: center;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .type-btn.active {
+      background: #ffffff;
+      color: var(--primary);
+      font-weight: 800;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .batch-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      background: #fafafa;
+      margin-bottom: 10px;
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    .batch-item-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .batch-item-row:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .item-select-col { width: 100%; max-width: 100%; min-width: 0; }
+    .item-select-col select { width: 100%; font-size: 13.5px; font-weight: 600; color: var(--text); }
+
+    .item-bottom-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .item-baki-badge {
+      display: inline-flex;
+      align-items: center;
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: #ecfdf5;
+      color: #047857;
+      border: 1px solid #bbf7d0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .item-baki-badge.low { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+    .item-baki-badge.audit-hint { background: #fffbeb; color: #b45309; border-color: #fde68a; }
+
+    .item-action-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .stepper {
+      display: inline-flex;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+      height: 40px;
+      flex-shrink: 0;
+    }
+
+    .stepper-btn {
+      width: 36px;
+      height: 40px;
+      border: none;
+      background: #f8fafc;
+      font-size: 16px;
+      font-weight: 800;
+      color: #334155;
+      cursor: pointer;
+    }
+
+    .stepper-btn:active { background: #e2e8f0; }
+
+    .stepper-input {
+      width: 48px !important;
+      min-height: 40px !important;
+      border: none !important;
+      border-left: 1px solid var(--border) !important;
+      border-right: 1px solid var(--border) !important;
+      border-radius: 0 !important;
+      text-align: center;
+      font-weight: 800;
+      padding: 0 !important;
+    }
+
+    .btn-row-del {
+      width: 38px;
+      height: 40px;
+      min-height: 40px;
+      padding: 0;
+      display: grid;
+      place-items: center;
+      border: 1px solid #fecaca;
+      background: #fff;
+      color: #b91c1c;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+      transition: background 0.15s;
+    }
+
+    .btn-row-del:active { background: #fee2e2; }
+
+    .table-container {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      text-align: left;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #475569;
+      font-weight: 700;
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+      color: #1e293b;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: #f8fafc; }
+
+    .clickable-row {
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    .clickable-row:hover {
+      background-color: #f1f5f9 !important;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .badge-ok { background: var(--status-ok-bg); color: var(--status-ok-text); }
+    .badge-low { background: var(--status-low-bg); color: var(--status-low-text); }
+    .badge-empty { background: var(--status-empty-bg); color: var(--status-empty-text); }
+
+    .detail-item-group { display: grid; gap: 12px; padding: 4px 0; }
+    .detail-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 9px 12px;
+      background: #f8fafc;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .detail-item.column { flex-direction: column; align-items: flex-start; gap: 6px; }
+    .detail-label { font-size: 11.5px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.4px; }
+    .detail-value { font-size: 13.5px; font-weight: 700; color: var(--text); }
+    .detail-note-box {
+      width: 100%;
+      padding: 10px 12px;
+      background: #ffffff;
+      border-radius: 6px;
+      border: 1px dashed var(--border);
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.4;
+      white-space: pre-wrap;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      display: grid;
+      place-items: center;
+      z-index: 1100;
+      padding: 16px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      width: 100vw;
+      box-sizing: border-box;
+    }
+
+    .modal-dialog {
+      background: #ffffff;
+      border-radius: 14px;
+      width: 100%;
+      max-width: 500px;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      margin: auto;
+      position: relative;
+      box-sizing: border-box;
+    }
+
+    .modal-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fafafa;
+    }
+
+    .modal-header h4 { font-size: 15px; font-weight: 800; color: var(--text); }
+    .modal-body { padding: 20px; max-height: calc(85vh - 70px); overflow-y: auto; overflow-x: hidden; }
+
+    #scannerModal { z-index: 2000 !important; }
+    #scannerModal .scanner-dialog {
+      z-index: 2001 !important;
+      position: relative;
+      background: #ffffff;
+      border-radius: 14px;
+      width: 100%;
+      max-width: 400px;
+      overflow: hidden;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    .scanner-body { padding: 16px; position: relative; }
+    .scanner-camera-wrapper { position: relative; width: 100%; border-radius: 10px; overflow: hidden; background: #000; }
+    #scannerReader { width: 100%; }
+
+    .scanner-overlay-toast {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      background: rgba(4, 120, 87, 0.95);
+      color: #ffffff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+      transform: translateY(-50px);
+      opacity: 0;
+      transition: all 0.2s ease;
+      z-index: 10;
+    }
+
+    .scanner-overlay-toast.show { transform: translateY(0); opacity: 1; }
+    .scanner-overlay-toast.error { background: rgba(185, 28, 28, 0.95); }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 12px 18px;
+      background: var(--text);
+      color: #fff;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.2s ease;
+      z-index: 9999;
+    }
+
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.error { background: #b91c1c; }
+    .hidden { display: none !important; }
+
+    .mobile-cards { display: none; }
+
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: #ffffff;
+      border-top: 1px solid var(--border);
+      z-index: 900;
+      grid-template-columns: repeat(4, 1fr);
+      padding: 4px;
+    }
+
+    .m-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .m-btn svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 2.2; }
+    .m-btn.active { color: var(--primary); font-weight: 800; background: var(--primary-soft); }
+
+    /* Reka Bentuk Kemas: Modul Kursus Umrah */
+    .umrah-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+      max-width: 740px;
+    }
+
+    .umrah-header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+    }
+
+    .umrah-header h3 {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -0.2px;
+    }
+
+    .umrah-header p {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .preview-tarikh-badge {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #047857;
+      background: #ecfdf5;
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid #a7f3d0;
+    }
+
+    .result-card-umrah {
+      margin-top: 22px;
+      background: #f0fdf4;
+      border: 1.5px solid #86efac;
+      border-radius: 12px;
+      padding: 18px;
+    }
+
+    @media (max-width: 1200px) {
+      .metrics-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 768px) {
+      .app-layout { grid-template-columns: 1fr; height: 100vh; }
+      .sidebar { display: none; }
+      .mobile-nav { display: grid; }
+      main { padding: 14px; padding-bottom: 74px; width: 100vw; max-width: 100vw; overflow-x: hidden; }
+
+      .topbar { padding: 12px 14px; margin-bottom: 14px; }
+      .topbar-mobile-logo { display: block; }
+      .topbar-title h2 { font-size: 16px; }
+
+      .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+
+      .metric-card { padding: 12px 14px; }
+      .metric-val { font-size: 20px; }
+      .panel-body { padding: 14px; }
+
+      .input-row { grid-template-columns: 1fr; gap: 10px; }
+
+      .desktop-table { display: none; }
+      .mobile-cards { display: grid; gap: 8px; }
+
+      .card-row {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 12px 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .card-row-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+
+      .card-title { font-weight: 700; color: var(--text); font-size: 13.5px; }
+      .card-sub { font-size: 11px; color: var(--text-muted); }
+
+      .card-row-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+        margin-top: 4px;
+        padding-top: 4px;
+        border-top: 1px dashed var(--border);
+      }
+
+      .toast { left: 14px; right: 14px; bottom: 74px; text-align: center; }
+
+      .modal-overlay { padding: 12px; }
+      .modal-dialog { width: 100% !important; max-width: 100% !important; border-radius: 12px; margin: 0; }
+      .modal-body { max-height: calc(85vh - 60px); padding: 14px; overflow-x: hidden; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BANNER NOTIFIKASI KEMAS KINI VERSI -->
+  <div id="updateBanner" class="update-banner hidden">
+    <div class="update-content">
+      <div class="update-header-row">
+        <div class="update-badge">
+          <span class="update-badge-dot"></span>
+          <span>Kemas Kini Tersedia</span>
+        </div>
+      </div>
+      <div>
+        <div class="update-title">Versi Baharu e-ASTRA Sedia Dipasang</div>
+      </div>
+      <div class="update-details-box">
+        <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Apa yang baharu:</strong>
+        <span id="updateChangelogText">Penambahbaikan sistem dan kestabilan aplikasi.</span>
+      </div>
+      <div class="update-action-row">
+        <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
+        <button type="button" class="btn-update-confirm" onclick="applySystemUpdate()">Kemas Kini Sekarang</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOADING OVERLAY -->
+  <div id="loading" class="loading-overlay hidden">
+    <div style="text-align: center; padding: 24px;">
+      <div id="loadingStandardSpinner">
+        <div class="spinner" style="margin: 0 auto 12px;"></div>
+      </div>
+      <div id="loadingUpdateAnim" class="hidden">
+        <div class="update-anim-container">
+          <div class="update-spinner-ring"></div>
+          <img class="update-anim-logo" src="Logo%20Azzuha.png" alt="e-ASTRA">
+        </div>
+      </div>
+      <p id="loadingMsg" style="font-size: 13.5px; font-weight: 700; color: var(--primary-dark); letter-spacing: -0.2px;">Memuatkan data...</p>
+      <p id="loadingSubMsg" style="font-size: 11.5px; color: var(--text-muted); margin-top: 4px;" class="hidden"></p>
+    </div>
+  </div>
+
+  <div id="toast" class="toast">Notifikasi</div>
+
+  <!-- BUTANG BULAT TERAPUNG (FAB) -->
+  <button type="button" class="fab-btn" onclick="openTxModal()" title="Rekod Transaksi">
+    <svg viewBox="0 0 24 24">
+      <line x1="12" y1="5" x2="12" y2="19"></line>
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+    </svg>
+  </button>
+
+  <!-- MODAL 1: PENGIMBAS KAMERA -->
+  <div id="scannerModal" class="modal-overlay hidden">
+    <div class="scanner-dialog">
+      <div class="modal-header">
+        <h4 style="font-size: 13px; font-weight: 700;">Imbas Kod Bar / QR</h4>
+        <button type="button" class="btn btn-secondary" style="padding: 4px 10px; min-height: 28px; font-size: 12px;" onclick="closeScannerModal()">Tutup</button>
+      </div>
+      <div class="scanner-body">
+        <div class="scanner-camera-wrapper">
+          <div id="scannerOverlayToast" class="scanner-overlay-toast">Item Berjaya Diimbas</div>
+          <div id="scannerReader"></div>
+        </div>
+        <p style="font-size: 11px; color: var(--text-muted); margin-top: 10px; text-align: center;">Halakan kamera ke arah label kod item.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: POPUP BORANG TRANSAKSI STOK -->
+  <div id="txModal" class="modal-overlay hidden" onclick="closeModalOnBackdrop(event, 'txModal')">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h4 id="txModalTitle">Rekod Transaksi Stok</h4>
+        <button type="button" class="btn btn-secondary" style="padding: 4px 10px; min-height: 28px; font-size: 12px;" onclick="closeTxModal()">Tutup</button>
+      </div>
+      <div class="modal-body">
+        <form id="txForm" onsubmit="submitTransaction(event)">
+          <div class="form-group">
+            <div class="type-switcher">
+              <button type="button" id="btnTypeOut" class="type-btn active" onclick="setGlobalTxType('Keluar')">Stok Keluar</button>
+              <button type="button" id="btnTypeIn" class="type-btn" onclick="setGlobalTxType('Masuk')">Stok Masuk</button>
+              <button type="button" id="btnTypeAudit" class="type-btn" onclick="setGlobalTxType('Pelarasan')">Pelarasan / Audit</button>
+            </div>
+
+            <div class="input-row">
+              <div>
+                <label>Tarikh</label>
+                <input type="date" id="txDate" required>
+              </div>
+              <div>
+                <label>PIC Bertanggungjawab</label>
+                <select id="txPic" required></select>
+              </div>
+            </div>
+
+            <div>
+              <label>Lokasi Transaksi</label>
+              <select id="txLocation" required></select>
+            </div>
+
+            <div class="batch-card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <span style="font-weight: 700; font-size: 12px;" id="batchLabel">Senarai Item Keluar</span>
+                <div style="display: flex; gap: 6px;">
+                  <button type="button" class="btn btn-primary" style="padding: 4px 10px; font-size: 11.5px; min-height: 32px;" onclick="openScannerModal()">Imbas Kod</button>
+                  <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 32px;" onclick="addBatchRow()">+ Item</button>
+                </div>
+              </div>
+              <div id="batchContainer"></div>
+            </div>
+
+            <div>
+              <label id="txNoteLabel">Catatan / Rujukan</label>
+              <textarea id="txNote" placeholder="Tujuan / No. Resit / Catatan Pelarasan"></textarea>
+            </div>
+
+            <button type="submit" id="btnSubmitTx" class="btn btn-primary" style="width: 100%;">Simpan Transaksi</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: POPUP DAFTAR / KEMASKINI ITEM -->
+  <div id="itemModal" class="modal-overlay hidden" onclick="closeModalOnBackdrop(event, 'itemModal')">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h4 id="itemFormTitle">Daftar / Kemaskini Item</h4>
+        <button type="button" class="btn btn-secondary" style="padding: 4px 10px; min-height: 28px; font-size: 12px;" onclick="closeItemModal()">Tutup</button>
+      </div>
+      <div class="modal-body">
+        <form id="itemForm" onsubmit="submitItem(event)">
+          <div class="form-group">
+            <div class="input-row">
+              <div>
+                <label>SKU / Kod Item</label>
+                <input type="text" id="itSku" required placeholder="Contoh: AZZ-BEG-FSC24">
+              </div>
+              <div>
+                <label>Kategori</label>
+                <select id="itCategory" required></select>
+              </div>
+            </div>
+
+            <div>
+              <label>Nama Penuh Item</label>
+              <input type="text" id="itName" required placeholder="Nama item seperti dalam tracker">
+            </div>
+
+            <div class="input-row">
+              <div>
+                <label>Stok Awal</label>
+                <input type="number" id="itOpening" min="0" value="0" required>
+              </div>
+              <div>
+                <label>Paras Minima</label>
+                <input type="number" id="itMin" min="0" value="10" required>
+              </div>
+            </div>
+
+            <div>
+              <label>Lokasi Simpanan</label>
+              <select id="itLocation" required></select>
+            </div>
+
+            <div>
+              <label>Catatan Tambahan</label>
+              <textarea id="itNote" placeholder="Catatan spesifikasi item"></textarea>
+            </div>
+
+            <div style="display: flex; gap: 8px; margin-top: 4px;">
+              <button type="submit" class="btn btn-primary" style="flex: 1;">Simpan Item</button>
+              <button type="button" class="btn btn-secondary" onclick="resetItemForm()">Reset</button>
+              <button type="button" id="btnDeleteItem" class="btn btn-danger hidden" onclick="deleteItemHandler()">Padam</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: POPUP PERINCIAN LOG TRANSAKSI -->
+  <div id="logDetailModal" class="modal-overlay hidden" onclick="closeModalOnBackdrop(event, 'logDetailModal')">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h4>Perincian Transaksi</h4>
+        <button type="button" class="btn btn-secondary" style="padding: 4px 10px; min-height: 28px; font-size: 12px;" onclick="closeLogDetailModal()">Tutup</button>
+      </div>
+      <div class="modal-body">
+        <div class="detail-item-group">
+          <div class="detail-item">
+            <span class="detail-label">Jenis Transaksi</span>
+            <span id="dtlType" class="badge">Keluar</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Nama Item</span>
+            <span id="dtlItem" class="detail-value" style="text-align: right;">-</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Kod SKU</span>
+            <span id="dtlSku" class="detail-value" style="color: var(--primary);">-</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Tarikh</span>
+            <span id="dtlDate" class="detail-value">-</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Kuantiti</span>
+            <span id="dtlQty" class="detail-value" style="font-size: 15px; color: var(--text);">-</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Baki Selepas</span>
+            <span id="dtlBalance" class="detail-value">-</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">PIC Bertanggungjawab</span>
+            <span id="dtlPic" class="detail-value">-</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Lokasi</span>
+            <span id="dtlLocation" class="detail-value">-</span>
+          </div>
+
+          <div class="detail-item column">
+            <span class="detail-label">Catatan / Nota Pelarasan</span>
+            <div id="dtlNote" class="detail-note-box">Tiada catatan</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APP LAYOUT -->
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="brand-box">
+        <img class="brand-logo-img" src="Logo%20Azzuha.png" alt="Logo e-ASTRA">
+        <div>
+          <div class="brand-title">e-ASTRA</div>
+          <div class="brand-sub">Sistem Stok TRG</div>
+        </div>
+      </div>
+      
+      <ul class="nav-list">
+        <li>
+          <button class="nav-btn active" onclick="switchTab('dashboard')">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            Dashboard
+          </button>
+        </li>
+        <li>
+          <button class="nav-btn" onclick="switchTab('transactions')">
+            <svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+            Transaksi Stok
+          </button>
+        </li>
+        <li>
+          <button class="nav-btn" onclick="switchTab('items')">
+            <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+            Data Induk Item
+          </button>
+        </li>
+        <li>
+          <button class="nav-btn" onclick="switchTab('umrahForm')">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            Kursus Umrah
+          </button>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        © 2026 e-ASTRA TRG
+      </div>
+    </aside>
+
+    <main>
+      <div class="topbar">
+        <div class="topbar-left">
+          <img class="topbar-mobile-logo" src="Logo%20Azzuha.png" alt="Logo e-ASTRA">
+          <div class="topbar-title">
+            <h2 id="viewTitle">Dashboard e-ASTRA</h2>
+            <p id="viewSubtitle">Sistem Pengurusan Stok Cawangan Terengganu.</p>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <button type="button" class="btn-icon-action" onclick="generateQRPdf1Page()" title="Jana Kod QR Semua Produk (PDF 1 Muka Surat)">
+            <svg viewBox="0 0 24 24">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+              <path d="M14 14h3v3h-3z"></path>
+              <path d="M20 14v3"></path>
+              <path d="M14 20h7"></path>
+            </svg>
+            <span>Cetak QR</span>
+          </button>
+          
+          <button class="btn-icon-action btn-icon-refresh" onclick="loadData()" title="Segar Semula">
+            <svg viewBox="0 0 24 24">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB 1: DASHBOARD -->
+      <section id="tab-dashboard">
+        <div class="metrics-grid" id="metricsCards"></div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <h3 id="attentionHeader">Item Perlu Perhatian</h3>
+            <button class="btn btn-secondary hidden" id="btnClearFilter" style="padding: 3px 8px; font-size: 11px; min-height: 26px;" onclick="resetDashboardFilter()">Reset Tapisan</button>
+          </div>
+          <div class="panel-body">
+            <div class="table-container desktop-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>SKU</th>
+                    <th>Item</th>
+                    <th>Kategori</th>
+                    <th style="text-align: right;">Baki Semasa</th>
+                    <th style="text-align: right;">Paras Min</th>
+                    <th>Status</th>
+                    <th>Lokasi</th>
+                  </tr>
+                </thead>
+                <tbody id="attentionTbody"></tbody>
+              </table>
+            </div>
+            <div class="mobile-cards" id="attentionMobileCards"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: TRANSAKSI -->
+      <section id="tab-transactions" class="hidden">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h3>Log 10 Transaksi Terkini</h3>
+              <p style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">Tekan mana-mana baris rekod untuk melihat nota & perincian penuh.</p>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="table-container desktop-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Tarikh</th>
+                    <th>SKU</th>
+                    <th>Item</th>
+                    <th>Jenis</th>
+                    <th style="text-align: right;">Qty</th>
+                    <th style="text-align: right;">Baki Selepas</th>
+                    <th>PIC</th>
+                    <th>Lokasi</th>
+                  </tr>
+                </thead>
+                <tbody id="logsTbody"></tbody>
+              </table>
+            </div>
+            <div class="mobile-cards" id="logsMobileCards"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: DATA INDUK -->
+      <section id="tab-items" class="hidden">
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Senarai Data Induk Item</h3>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <input type="text" id="tableSearch" placeholder="Cari item..." style="width: 140px; min-height: 34px; padding: 4px 8px; font-size: 12px;" oninput="filterItemsTable()">
+              <button class="btn btn-primary" style="padding: 6px 14px; font-size: 12px; min-height: 34px;" onclick="openItemModal()">+ Tambah Item</button>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="table-container desktop-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>SKU</th>
+                    <th>Item</th>
+                    <th>Kategori</th>
+                    <th style="text-align: right;">Baki Semasa</th>
+                    <th style="text-align: right;">Paras Min</th>
+                    <th>Status</th>
+                    <th>Lokasi</th>
+                    <th style="text-align: center;">Tindakan</th>
+                  </tr>
+                </thead>
+                <tbody id="itemsTbody"></tbody>
+              </table>
+            </div>
+            <div class="mobile-cards" id="itemsMobileCards"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: KURSUS UMRAH -->
+      <section id="tab-umrahForm" class="hidden">
+        <div class="umrah-card">
+          <div class="umrah-header">
+            <h3>Pendaftaran Kursus Umrah Terbuka</h3>
+            <p>Salin Master Google Form dan simpan terus ke folder Drive cawangan.</p>
+          </div>
+
+          <form id="generateUmrahForm" onsubmit="handleGenerateUmrahForm(event)">
+            <div class="form-group">
+              <div>
+                <label>Tajuk Kursus</label>
+                <input type="text" id="ufTajuk" required value="KURSUS UMRAH TERBUKA CAWANGAN TERENGGANU">
+              </div>
+
+              <div class="input-row">
+                <div>
+                  <label>Pilih Tarikh Kursus</label>
+                  <input type="date" id="ufTarikhInput" required onchange="updateFormattedDatePreview()">
+                  <div id="previewTarikhBadge" class="preview-tarikh-badge hidden"></div>
+                </div>
+                <div>
+                  <label>Waktu Kursus</label>
+                  <input type="text" id="ufWaktu" required value="9.00 PAGI - 12.00 TENGAHARI">
+                </div>
+              </div>
+
+              <div>
+                <label>Tempat / Lokasi</label>
+                <input type="text" id="ufTempat" required value="DEWAN IMAM A'ASIM, MASJID AL-MUKTAFI BILLAH SHAH (MASJID LADANG)">
+              </div>
+
+              <div>
+                <label>No. Telefon Hotline</label>
+                <input type="text" id="ufNoTel" required value="011-5508 3367">
+              </div>
+
+              <div>
+                <label>Muat Naik Poster Baharu (Pilihan)</label>
+                <input type="file" id="ufPosterFile" accept="image/*" style="padding: 6px 10px;">
+              </div>
+
+              <button type="submit" id="btnGenForm" class="btn btn-primary" style="width: 100%; min-height: 44px; margin-top: 8px; font-size: 13.5px;">
+                Jana Google Form Kursus
+              </button>
+            </div>
+          </form>
+
+          <!-- KEPUTUSAN HASIL BORANG -->
+          <div id="umrahFormResult" class="result-card-umrah hidden">
+            <h4 style="color: var(--primary); font-size: 14px; font-weight: 800; margin-bottom: 4px;">Borang Berjaya Dijana & Disimpan!</h4>
+            <p style="font-size: 11.5px; color: #047857; margin-bottom: 12px;">Fail borang disimpan dalam folder <strong>Borang Kursus Umrah TRG</strong>.</p>
+            
+            <div style="display: grid; gap: 12px;">
+              <div>
+                <label style="font-size: 11.5px; color: #065f46;">Pautan Pendaftaran Jemaah:</label>
+                <div style="display: flex; gap: 8px;">
+                  <input type="text" id="resLiveUrl" readonly style="background: #ffffff; font-size: 12px; color: #047857; font-weight: 700;">
+                  <button type="button" class="btn btn-secondary" style="min-height: 42px;" onclick="copyResultLink('resLiveUrl')">Salin</button>
+                  <a id="linkLiveBtn" href="#" target="_blank" class="btn btn-primary" style="text-decoration: none; min-height: 42px;">Buka</a>
+                </div>
+              </div>
+
+              <div>
+                <label style="font-size: 11.5px; color: #065f46;">Pautan Semakan Admin:</label>
+                <div style="display: flex; gap: 8px;">
+                  <input type="text" id="resEditUrl" readonly style="background: #ffffff; font-size: 12px;">
+                  <button type="button" class="btn btn-secondary" style="min-height: 42px;" onclick="copyResultLink('resEditUrl')">Salin</button>
+                  <a id="linkEditBtn" href="#" target="_blank" class="btn btn-secondary" style="text-decoration: none; min-height: 42px;">Buka</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="mobile-nav">
+      <button class="m-btn active" type="button" onclick="switchTab('dashboard')">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        <span>Dashboard</span>
+      </button>
+      <button class="m-btn" type="button" onclick="switchTab('transactions')">
+        <svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+        <span>Transaksi</span>
+      </button>
+      <button class="m-btn" type="button" onclick="switchTab('items')">
+        <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+        <span>Item</span>
+      </button>
+      <button class="m-btn" type="button" onclick="switchTab('umrahForm')">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+        <span>Kursus Umrah</span>
+      </button>
+    </nav>
+  </div>
+
+  <script>
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwHtqRN_4axCBvxe_2juwBxoIrLZVRz5nWPp8eq1E81SxdnPOFsnUYAInXhKlZW-fkfqA/exec';
+    const GITHUB_REPO = 'devopsett/e-astratrg'; 
+
+    let appState = {
+      data: null,
+      activeTab: 'dashboard',
+      selectedItem: null,
+      globalTxType: 'Keluar',
+      statusFilter: null
+    };
+
+    let html5QrCodeScanner = null;
+    let lastScanCode = '';
+    let lastScanTime = 0;
+    let isProcessingScan = false;
+    let toastTimer = null;
+    let globalAudioCtx = null;
+
+    function getAudioContext() {
+      if (!globalAudioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          globalAudioCtx = new AudioContextClass();
+        }
+      }
+      if (globalAudioCtx && globalAudioCtx.state === 'suspended') {
+        globalAudioCtx.resume();
+      }
+      return globalAudioCtx;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('txDate').valueAsDate = new Date();
+      
+      // Tetapkan tarikh kursus awal: Sabtu minggu hadapan
+      const defaultDate = new Date();
+      defaultDate.setDate(defaultDate.getDate() + ((6 - defaultDate.getDay() + 7) % 7 || 7));
+      const dateInput = document.getElementById('ufTarikhInput');
+      dateInput.value = defaultDate.toISOString().split('T')[0];
+      updateFormattedDatePreview();
+
+      addBatchRow();
+      loadData();
+      setTimeout(checkAutoSystemUpdate, 2000);
+    });
+
+    window.addEventListener('focus', () => {
+      checkAutoSystemUpdate();
+    });
+
+    /* ========================================================
+       PEMFORMAT TARIKH MELAYU (cth: 27 JUN 2026 (SABTU))
+       ======================================================== */
+    function formatTarikhKursusMelayu(dateStr) {
+      if (!dateStr) return '';
+      const parts = dateStr.split('-');
+      const year = parseInt(parts[0], 10);
+      const monthIndex = parseInt(parts[1], 10) - 1;
+      const day = parseInt(parts[2], 10);
+      const d = new Date(year, monthIndex, day);
+
+      const months = ['JAN', 'FEB', 'MAC', 'APR', 'MEI', 'JUN', 'JUL', 'OGOS', 'SEP', 'OKT', 'NOV', 'DIS'];
+      const days = ['AHAD', 'ISNIN', 'SELASA', 'RABU', 'KHAMIS', 'JUMAAT', 'SABTU'];
+
+      return `${day} ${months[d.getMonth()]} ${d.getFullYear()} (${days[d.getDay()]})`;
+    }
+
+    function updateFormattedDatePreview() {
+      const val = document.getElementById('ufTarikhInput').value;
+      const badge = document.getElementById('previewTarikhBadge');
+      if (val) {
+        badge.textContent = 'Format Form: ' + formatTarikhKursusMelayu(val);
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+
+    async function checkAutoSystemUpdate() {
+      try {
+        const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/commits?per_page=1&_nocache=${Date.now()}`);
+        if (!res.ok) return;
+
+        const commits = await res.json();
+        if (!Array.isArray(commits) || !commits.length) return;
+
+        const latestCommit = commits[0];
+        const latestCommitSha = latestCommit.sha;
+        const currentSavedSha = localStorage.getItem('eastra_current_commit_sha');
+
+        if (!currentSavedSha) {
+          localStorage.setItem('eastra_current_commit_sha', latestCommitSha);
+          return;
+        }
+
+        if (currentSavedSha !== latestCommitSha) {
+          window.pendingCommitSha = latestCommitSha;
+          
+          let commitMsg = (latestCommit.commit && latestCommit.commit.message) ? latestCommit.commit.message.trim() : '';
+          commitMsg = commitMsg.split('\n')[0];
+
+          let friendlyMsg = commitMsg;
+          if (!friendlyMsg || friendlyMsg.toLowerCase().startsWith('update index.html')) {
+            friendlyMsg = 'Penambahbaikan ciri perisian dan kestabilan sistem.';
+          }
+
+          const changelogEl = document.getElementById('updateChangelogText');
+          if (changelogEl) changelogEl.textContent = friendlyMsg;
+          
+          const banner = document.getElementById('updateBanner');
+          if (banner) banner.classList.remove('hidden');
+        }
+      } catch (e) {}
+    }
+
+    function dismissUpdateBanner() {
+      const banner = document.getElementById('updateBanner');
+      if (banner) banner.classList.add('hidden');
+    }
+
+    async function applySystemUpdate() {
+      dismissUpdateBanner();
+      showLoading(true, 'Mengemaskini aplikasi e-ASTRA...', true, 'Memuat turun fail sistem terkini...');
+
+      if (window.pendingCommitSha) {
+        localStorage.setItem('eastra_current_commit_sha', window.pendingCommitSha);
+      }
+
+      if ('caches' in window) {
+        const keys = await caches.keys();
+        await Promise.all(keys.map(k => caches.delete(k)));
+      }
+
+      setTimeout(() => {
+        window.location.reload(true);
+      }, 1200);
+    }
+
+    function lockBodyScroll() {
+      document.body.classList.add('modal-open');
+    }
+
+    function unlockBodyScroll() {
+      const openModals = document.querySelectorAll('.modal-overlay:not(.hidden)');
+      if (openModals.length === 0) {
+        document.body.classList.remove('modal-open');
+      }
+    }
+
+    async function generateQRPdf1Page() {
+      const items = appState.data?.items || [];
+      if (!items.length) {
+        showToast('Tiada item inventori ditemui untuk dijana.', true);
+        return;
+      }
+
+      showLoading(true, 'Menjana PDF Kod QR...');
+
+      try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('p', 'mm', 'a4');
+        const pageWidth = 210;
+        const pageHeight = 297;
+        const margin = 10;
+
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(14);
+        doc.setTextColor(11, 56, 24);
+        doc.text('LABEL KOD QR PRODUK - e-ASTRA AZ ZUHA TRG', pageWidth / 2, 14, { align: 'center' });
+        
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
+        doc.setTextColor(100, 116, 139);
+        const todayStr = new Date().toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' });
+        doc.text(`Jumlah Item: ${items.length} | Tarikh Cetakan: ${todayStr}`, pageWidth / 2, 19, { align: 'center' });
+
+        doc.setDrawColor(226, 232, 240);
+        doc.setLineWidth(0.4);
+        doc.line(margin, 22, pageWidth - margin, 22);
+
+        const cols = 3;
+        const colWidth = (pageWidth - (margin * 2) - ((cols - 1) * 4)) / cols;
+        const availableHeight = pageHeight - 26 - margin;
+        
+        const totalRows = Math.ceil(items.length / cols);
+        const cardHeight = Math.min(33, (availableHeight - ((totalRows - 1) * 3)) / totalRows); 
+        const qrSize = Math.min(22, cardHeight - 10);
+
+        for (let idx = 0; idx < items.length; idx++) {
+          const itm = items[idx];
+          const colIdx = idx % cols;
+          const rowIdx = Math.floor(idx / cols);
+
+          const x = margin + (colIdx * (colWidth + 4));
+          const y = 26 + (rowIdx * (cardHeight + 3));
+
+          doc.setFillColor(255, 255, 255);
+          doc.setDrawColor(203, 213, 225);
+          doc.roundedRect(x, y, colWidth, cardHeight, 2, 2, 'FD');
+
+          const qrDataText = encodeURIComponent(itm.sku || itm.itemId);
+          const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&margin=0&data=${qrDataText}`;
+          
+          try {
+            const imgData = await fetchImageAsBase64(qrUrl);
+            const qrX = x + 2.5;
+            const qrY = y + (cardHeight - qrSize) / 2;
+            doc.addImage(imgData, 'PNG', qrX, qrY, qrSize, qrSize);
+          } catch (e) {}
+
+          const textX = x + qrSize + 5;
+          const textWidth = colWidth - qrSize - 7;
+          
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(8);
+          doc.setTextColor(15, 23, 42);
+          
+          const splitItemName = doc.splitTextToSize(itm.item, textWidth);
+          doc.text(splitItemName.slice(0, 2), textX, y + 8);
+
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(7.5);
+          doc.setTextColor(4, 120, 87);
+          doc.text(itm.sku || itm.itemId, textX, y + cardHeight - 7);
+
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(6.5);
+          doc.setTextColor(100, 116, 139);
+          doc.text(itm.category || 'Item', textX, y + cardHeight - 3);
+        }
+
+        doc.save(`eASTRA_QR_Labels_${new Date().toISOString().slice(0,10)}.pdf`);
+        showLoading(false);
+        showToast('PDF Kod QR 1 muka surat berjaya dimuat turun!');
+      } catch (err) {
+        showLoading(false);
+        showToast('Gagal menjana PDF: ' + err.message, true);
+      }
+    }
+
+    function fetchImageAsBase64(url) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'Anonymous';
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+          resolve(canvas.toDataURL('image/png'));
+        };
+        img.onerror = () => reject(new Error('Gagal memuat turun imej QR'));
+        img.src = url;
+      });
+    }
+
+    function openTxModal() {
+      document.getElementById('txModal').classList.remove('hidden');
+      lockBodyScroll();
+    }
+
+    function closeTxModal() {
+      document.getElementById('txModal').classList.add('hidden');
+      unlockBodyScroll();
+    }
+
+    function openItemModal() {
+      resetItemForm();
+      document.getElementById('itemModal').classList.remove('hidden');
+      lockBodyScroll();
+    }
+
+    function closeItemModal() {
+      document.getElementById('itemModal').classList.add('hidden');
+      resetItemForm();
+      unlockBodyScroll();
+    }
+
+    function openLogDetailModal(log) {
+      const typeBadge = document.getElementById('dtlType');
+      typeBadge.textContent = log.type;
+      typeBadge.className = `badge ${log.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}`;
+
+      document.getElementById('dtlItem').textContent = log.item;
+      document.getElementById('dtlSku').textContent = log.sku || '-';
+      document.getElementById('dtlDate').textContent = log.date;
+      document.getElementById('dtlQty').textContent = `${log.qty} unit`;
+      document.getElementById('dtlBalance').textContent = `${log.balanceAfter} unit`;
+      document.getElementById('dtlPic').textContent = log.pic || '-';
+      document.getElementById('dtlLocation').textContent = log.location || '-';
+
+      const noteBox = document.getElementById('dtlNote');
+      if (log.note && log.note.trim()) {
+        noteBox.textContent = log.note;
+        if (log.note.includes('[Audit Fizikal')) {
+          noteBox.style.background = '#fffbeb';
+          noteBox.style.color = '#b45309';
+          noteBox.style.borderColor = '#fde68a';
+          noteBox.style.fontWeight = '700';
+        } else {
+          noteBox.style.background = '#ffffff';
+          noteBox.style.color = '#0f172a';
+          noteBox.style.borderColor = '#e2e8f0';
+          noteBox.style.fontWeight = '500';
+        }
+      } else {
+        noteBox.textContent = 'Tiada catatan.';
+        noteBox.style.background = '#f8fafc';
+        noteBox.style.color = '#64748b';
+        noteBox.style.borderColor = '#e2e8f0';
+        noteBox.style.fontWeight = 'normal';
+      }
+
+      document.getElementById('logDetailModal').classList.remove('hidden');
+      lockBodyScroll();
+    }
+
+    function closeLogDetailModal() {
+      document.getElementById('logDetailModal').classList.add('hidden');
+      unlockBodyScroll();
+    }
+
+    function closeModalOnBackdrop(e, modalId) {
+      if (e.target.id === modalId) {
+        document.getElementById(modalId).classList.add('hidden');
+        if (modalId === 'itemModal') resetItemForm();
+        unlockBodyScroll();
+      }
+    }
+
+    function setGlobalTxType(type) {
+      appState.globalTxType = type;
+      document.getElementById('btnTypeOut').classList.toggle('active', type === 'Keluar');
+      document.getElementById('btnTypeIn').classList.toggle('active', type === 'Masuk');
+      document.getElementById('btnTypeAudit').classList.toggle('active', type === 'Pelarasan');
+
+      const batchLabel = document.getElementById('batchLabel');
+      const submitBtn = document.getElementById('btnSubmitTx');
+
+      if (type === 'Pelarasan') {
+        batchLabel.textContent = 'Kiraan Fizikal Sebenar (Audit)';
+        submitBtn.textContent = 'Simpan Pelarasan Stok';
+      } else {
+        batchLabel.textContent = `Senarai Item ${type}`;
+        submitBtn.textContent = `Simpan Transaksi (${type})`;
+      }
+
+      document.querySelectorAll('.batch-item').forEach(sel => updateRowHint(sel));
+    }
+
+    function switchTab(tab) {
+      if (appState.activeTab === tab) return;
+      appState.activeTab = tab;
+      
+      const tabs = ['dashboard', 'transactions', 'items', 'umrahForm'];
+      document.querySelectorAll('.nav-btn').forEach((b, idx) => b.classList.toggle('active', tabs[idx] === tab));
+      document.querySelectorAll('.m-btn').forEach((b, idx) => b.classList.toggle('active', tabs[idx] === tab));
+
+      document.getElementById('tab-dashboard').classList.toggle('hidden', tab !== 'dashboard');
+      document.getElementById('tab-transactions').classList.toggle('hidden', tab !== 'transactions');
+      document.getElementById('tab-items').classList.toggle('hidden', tab !== 'items');
+      document.getElementById('tab-umrahForm').classList.toggle('hidden', tab !== 'umrahForm');
+
+      const titles = {
+        dashboard: ['Dashboard e-ASTRA', 'Sistem Pengurusan Stok Cawangan Terengganu.'],
+        transactions: ['Transaksi Stok', 'Rekod log keluar, masuk dan pelarasan.'],
+        items: ['Data Induk Item', 'Katalog pengurusan item stok.'],
+        umrahForm: ['Pendaftaran Kursus Umrah', 'Jana pautan borang kursus umrah cawangan.']
+      };
+      document.getElementById('viewTitle').textContent = titles[tab][0];
+      document.getElementById('viewSubtitle').textContent = titles[tab][1];
+
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+
+    function showLoading(show, msg = 'Memuatkan data...', isUpdateMode = false, subMsg = '') {
+      const overlay = document.getElementById('loading');
+      if (!show) {
+        overlay.classList.add('hidden');
+        return;
+      }
+
+      document.getElementById('loadingMsg').textContent = msg;
+      
+      const standardSpinner = document.getElementById('loadingStandardSpinner');
+      const updateAnim = document.getElementById('loadingUpdateAnim');
+      const subMsgEl = document.getElementById('loadingSubMsg');
+
+      if (isUpdateMode) {
+        standardSpinner.classList.add('hidden');
+        updateAnim.classList.remove('hidden');
+        if (subMsg) {
+          subMsgEl.textContent = subMsg;
+          subMsgEl.classList.remove('hidden');
+        } else {
+          subMsgEl.classList.add('hidden');
+        }
+      } else {
+        standardSpinner.classList.remove('hidden');
+        updateAnim.classList.add('hidden');
+        subMsgEl.classList.add('hidden');
+      }
+
+      overlay.classList.remove('hidden');
+    }
+
+    function showToast(msg, isError = false) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.toggle('error', isError);
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    function showScannerOverlay(msg, isError = false) {
+      const el = document.getElementById('scannerOverlayToast');
+      el.textContent = msg;
+      el.classList.toggle('error', isError);
+      el.classList.add('show');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove('show'), 2000);
+    }
+
+    function loadData() {
+      showLoading(true);
+      fetch(`${SCRIPT_URL}?action=getAppData`, { method: 'GET', redirect: 'follow' })
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}: Gagal menyambung ke pelayan`);
+        return res.json();
+      })
+      .then(res => {
+        if (!res.ok) throw new Error(res.message);
+        appState.data = res.data;
+        renderDashboard();
+        renderDropdowns();
+        renderLogs();
+        renderItems();
+        showLoading(false);
+      })
+      .catch(err => {
+        showLoading(false);
+        showToast(err.message || 'Ralat memuatkan data. Sila semak sambungan.', true);
+      });
+    }
+
+    function filterDashboard(status) {
+      appState.statusFilter = status;
+      renderDashboard();
+      document.getElementById('btnClearFilter').classList.remove('hidden');
+      document.getElementById('attentionHeader').textContent = `Status: [${status}]`;
+    }
+
+    function resetDashboardFilter() {
+      appState.statusFilter = null;
+      renderDashboard();
+      document.getElementById('btnClearFilter').classList.add('hidden');
+      document.getElementById('attentionHeader').textContent = 'Item Perlu Perhatian';
+    }
+
+    function renderDashboard() {
+      const d = appState.data.dashboard;
+      const cards = [
+        { label: 'Jumlah Item', val: d.totalItems, sub: 'Katalog Aktif', fn: null },
+        { label: 'Jumlah Unit', val: d.totalStock, sub: 'Baki Keseluruhan', fn: null },
+        { label: 'Stok Sedia', val: d.okStock, sub: 'Status OK', fn: () => filterDashboard('OK') },
+        { label: 'Low Stock', val: d.lowStock, sub: 'Perlu Ditambah', fn: () => filterDashboard('LOW STOCK') },
+        { label: 'Habis', val: d.emptyStock, sub: 'Paras Sifar', fn: () => filterDashboard('HABIS') },
+        { label: 'Hari Ini', val: d.keluarHariIni, sub: `Masuk: ${d.masukHariIni}`, fn: null }
+      ];
+
+      document.getElementById('metricsCards').innerHTML = cards.map((c, i) => `
+        <div class="metric-card" ${c.fn ? `onclick="cards[${i}].fn()"` : ''}>
+          <div class="metric-title">${c.label}</div>
+          <div class="metric-val">${Number(c.val).toLocaleString()}</div>
+          <div class="metric-sub">${c.sub}</div>
+        </div>
+      `).join('');
+      window.cards = cards;
+
+      let items = appState.data.items;
+      if (appState.statusFilter) {
+        items = items.filter(i => i.status === appState.statusFilter);
+      } else {
+        items = items.filter(i => i.status !== 'OK');
+      }
+
+      const tbody = document.getElementById('attentionTbody');
+      const mCards = document.getElementById('attentionMobileCards');
+
+      if (!items.length) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:18px; color:#64748b;">Tiada item ditemui.</td></tr>`;
+        mCards.innerHTML = `<div style="text-align:center; padding:16px; color:#64748b; font-size:12px;">Tiada item ditemui.</div>`;
+      } else {
+        tbody.innerHTML = items.map(i => `
+          <tr>
+            <td><strong>${i.sku || i.itemId}</strong></td>
+            <td><strong>${i.item}</strong></td>
+            <td>${i.category}</td>
+            <td style="text-align:right; font-weight:800; color:var(--primary); font-size:13.5px;">${i.currentStock}</td>
+            <td style="text-align:right; color:#64748b;">${i.minimum}</td>
+            <td><span class="badge badge-${i.status === 'OK' ? 'ok' : (i.status === 'HABIS' ? 'empty' : 'low')}">${i.status}</span></td>
+            <td>${i.location}</td>
+          </tr>
+        `).join('');
+
+        mCards.innerHTML = items.map(i => `
+          <div class="card-row">
+            <div class="card-row-top">
+              <div>
+                <div class="card-title">${i.item}</div>
+                <div class="card-sub">${i.sku || i.itemId} • ${i.category}</div>
+              </div>
+              <span class="badge badge-${i.status === 'OK' ? 'ok' : (i.status === 'HABIS' ? 'empty' : 'low')}">${i.status}</span>
+            </div>
+            <div class="card-row-bottom">
+              <span>Baki: <strong style="color:var(--primary); font-size:13px;">${i.currentStock} unit</strong></span>
+              <span style="color:#64748b;">Min: ${i.minimum}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function renderDropdowns() {
+      const l = appState.data.lists;
+      const fill = (id, arr) => {
+        document.getElementById(id).innerHTML = arr.map(x => `<option value="${x}">${x}</option>`).join('');
+      };
+      fill('txPic', l.pic);
+      fill('txLocation', l.lokasi);
+      fill('itCategory', l.kategori);
+      fill('itLocation', l.lokasi);
+      updateBatchOptions();
+    }
+
+    function addBatchRow(prefillId = '', prefillQty = 1) {
+      const container = document.getElementById('batchContainer');
+      const div = document.createElement('div');
+      div.className = 'batch-item-row';
+      div.innerHTML = `
+        <div class="item-select-col">
+          <select class="batch-item" onchange="updateRowHint(this)" required></select>
+        </div>
+        <div class="item-bottom-bar">
+          <div class="item-baki-badge hidden"></div>
+          <div class="item-action-controls">
+            <div class="stepper">
+              <button type="button" class="stepper-btn" onclick="stepQty(this, -1)">-</button>
+              <input type="number" class="batch-qty stepper-input" min="0" value="${prefillQty}" oninput="updateRowHint(this)" required>
+              <button type="button" class="stepper-btn" onclick="stepQty(this, 1)">+</button>
+            </div>
+            <button type="button" class="btn-row-del" onclick="removeBatchRow(this)">✕</button>
+          </div>
+        </div>
+      `;
+      container.appendChild(div);
+      updateBatchOptions();
+      
+      if (prefillId) {
+        const sel = div.querySelector('.batch-item');
+        sel.value = prefillId;
+        updateRowHint(sel);
+      }
+    }
+
+    function stepQty(btn, change) {
+      const input = btn.closest('.stepper').querySelector('.batch-qty');
+      let val = (Number(input.value) || 0) + change;
+      const minLimit = appState.globalTxType === 'Pelarasan' ? 0 : 1;
+      if (val < minLimit) val = minLimit;
+      input.value = val;
+      updateRowHint(input);
+    }
+
+    function updateRowHint(elem) {
+      const row = elem.closest('.batch-item-row');
+      const sel = row.querySelector('.batch-item');
+      const badge = row.querySelector('.item-baki-badge');
+      const input = row.querySelector('.batch-qty');
+      const item = (appState.data?.items || []).find(i => (i.sku || i.itemId) === sel.value);
+
+      if (item && sel.value) {
+        badge.classList.remove('hidden', 'low', 'audit-hint');
+
+        if (appState.globalTxType === 'Pelarasan') {
+          const physicalVal = Number(input.value) || 0;
+          const diff = physicalVal - item.currentStock;
+          const sign = diff > 0 ? `+${diff}` : `${diff}`;
+          badge.textContent = `Sistem: ${item.currentStock} | Beza: ${sign}`;
+          badge.classList.add('audit-hint');
+        } else {
+          const isLow = item.currentStock <= item.minimum;
+          badge.textContent = `Baki Semasa: ${item.currentStock} unit`;
+          badge.classList.toggle('low', isLow);
+        }
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+
+    function removeBatchRow(btn) {
+      const rows = document.querySelectorAll('.batch-item-row');
+      if (rows.length > 1) {
+        btn.closest('.batch-item-row').remove();
+      } else {
+        showToast('Sekurang-kurangnya satu item diperlukan.', true);
+      }
+    }
+
+    function updateBatchOptions() {
+      const items = appState.data?.items || [];
+      const opts = `<option value="">Pilih Item...</option>` + items.map(i => `
+        <option value="${i.sku || i.itemId}">${i.sku || i.itemId} — ${i.item}</option>
+      `).join('');
+      document.querySelectorAll('.batch-item').forEach(sel => {
+        const cur = sel.value;
+        sel.innerHTML = opts;
+        sel.value = cur;
+        updateRowHint(sel);
+      });
+    }
+
+    function openScannerModal() {
+      getAudioContext();
+
+      document.getElementById('scannerModal').classList.remove('hidden');
+      lockBodyScroll();
+      if (!html5QrCodeScanner) {
+        html5QrCodeScanner = new Html5Qrcode("scannerReader");
+      }
+      html5QrCodeScanner.start(
+        { facingMode: "environment" },
+        { 
+          fps: 3,
+          qrbox: { width: 160, height: 160 }
+        },
+        onScanSuccess
+      ).catch(err => {
+        showToast('Kamera gagal dimulakan: ' + (err.message || err), true);
+        closeScannerModal();
+      });
+    }
+
+    function closeScannerModal() {
+      const modal = document.getElementById('scannerModal');
+      if (html5QrCodeScanner && html5QrCodeScanner.isScanning) {
+        html5QrCodeScanner.stop().then(() => {
+          modal.classList.add('hidden');
+          unlockBodyScroll();
+        }).catch(() => {
+          modal.classList.add('hidden');
+          unlockBodyScroll();
+        });
+      } else {
+        modal.classList.add('hidden');
+        unlockBodyScroll();
+      }
+    }
+
+    function playFeedback() {
+      try {
+        const ctx = getAudioContext();
+        if (ctx) {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(950, ctx.currentTime);
+
+          gain.gain.setValueAtTime(0.2, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.12);
+
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+
+          osc.start(ctx.currentTime);
+          osc.stop(ctx.currentTime + 0.12);
+        }
+      } catch (e) {}
+
+      if (navigator.vibrate) {
+        try {
+          navigator.vibrate(60);
+        } catch (e) {}
+      }
+    }
+
+    function onScanSuccess(decodedText) {
+      const now = Date.now();
+      
+      if (isProcessingScan || (now - lastScanTime < 2000)) return;
+      if (decodedText === lastScanCode && (now - lastScanTime < 3500)) return;
+
+      isProcessingScan = true;
+      lastScanCode = decodedText;
+      lastScanTime = now;
+
+      const items = appState.data?.items || [];
+      const clean = decodedText.trim().toLowerCase();
+      const matched = items.find(i => 
+        (i.sku && i.sku.toLowerCase() === clean) ||
+        (i.itemId && i.itemId.toLowerCase() === clean)
+      );
+
+      if (!matched) {
+        playFeedback();
+        showScannerOverlay('Item tidak dijumpai: ' + decodedText, true);
+        setTimeout(() => { isProcessingScan = false; }, 1500);
+        return;
+      }
+
+      playFeedback();
+      const targetCode = matched.sku || matched.itemId;
+
+      let existing = null;
+      document.querySelectorAll('.batch-item-row').forEach(row => {
+        if (row.querySelector('.batch-item').value === targetCode) existing = row;
+      });
+
+      if (existing) {
+        const q = existing.querySelector('.batch-qty');
+        q.value = (Number(q.value) || 0) + 1;
+        updateRowHint(q);
+        showScannerOverlay(`${matched.item} (+1) -> ${q.value} unit`);
+      } else {
+        const emptyRow = Array.from(document.querySelectorAll('.batch-item-row')).find(r => !r.querySelector('.batch-item').value);
+        if (emptyRow) {
+          emptyRow.querySelector('.batch-item').value = targetCode;
+          emptyRow.querySelector('.batch-qty').value = 1;
+          updateRowHint(emptyRow.querySelector('.batch-item'));
+        } else {
+          addBatchRow(targetCode, 1);
+        }
+        showScannerOverlay(`Ditambah: ${matched.item}`);
+      }
+
+      setTimeout(() => {
+        isProcessingScan = false;
+      }, 2000);
+    }
+
+    function renderLogs() {
+      const logs = (appState.data?.logs || []).slice(0, 10);
+      const tbody = document.getElementById('logsTbody');
+      const mCards = document.getElementById('logsMobileCards');
+
+      if (!logs.length) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:18px; color:#64748b;">Tiada rekod transaksi ditemui.</td></tr>`;
+        mCards.innerHTML = `<div style="text-align:center; padding:16px; color:#64748b; font-size:12px;">Tiada rekod transaksi ditemui.</div>`;
+        return;
+      }
+
+      tbody.innerHTML = logs.map((l, index) => {
+        const isAudit = l.note && l.note.includes('[Audit Fizikal');
+        const auditIndicator = isAudit ? `<span style="font-size:10px; color:#b45309; font-weight:800; margin-left:4px;">● Audit</span>` : '';
+
+        return `
+          <tr class="clickable-row" onclick='openLogDetailModal(${JSON.stringify(l).replace(/'/g, "&apos;")})' title="Tekan untuk lihat perincian penuh">
+            <td>${l.date}</td>
+            <td><strong>${l.sku || ''}</strong></td>
+            <td>${l.item} ${auditIndicator}</td>
+            <td><span class="badge ${l.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}">${l.type}</span></td>
+            <td style="text-align:right; font-weight:800;">${l.qty}</td>
+            <td style="text-align:right;">${l.balanceAfter}</td>
+            <td>${l.pic}</td>
+            <td>${l.location}</td>
+          </tr>
+        `;
+      }).join('');
+
+      mCards.innerHTML = logs.map(l => {
+        const isAudit = l.note && l.note.includes('[Audit Fizikal');
+        const auditIndicator = isAudit ? `<span style="font-size:10px; color:#b45309; font-weight:800; background:#fef3c7; padding:1px 6px; border-radius:4px; margin-left:4px;">Audit</span>` : '';
+
+        return `
+          <div class="card-row clickable-row" onclick='openLogDetailModal(${JSON.stringify(l).replace(/'/g, "&apos;")})' title="Tekan untuk perincian">
+            <div class="card-row-top">
+              <div>
+                <div class="card-title">${l.item} ${auditIndicator}</div>
+                <div class="card-sub">${l.sku ? l.sku + ' • ' : ''}${l.date} • ${l.pic}</div>
+              </div>
+              <span class="badge ${l.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}">${l.type}</span>
+            </div>
+            <div class="card-row-bottom">
+              <span>Kuantiti: <strong>${l.qty} unit</strong></span>
+              <span style="color:#64748b;">Baki: ${l.balanceAfter} &nbsp;<span style="color:var(--primary); font-weight:700;">➔</span></span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderItems() {
+      const items = appState.data.items;
+      const tbody = document.getElementById('itemsTbody');
+      const mCards = document.getElementById('itemsMobileCards');
+
+      tbody.innerHTML = items.map(i => `
+        <tr>
+          <td><strong>${i.sku || i.itemId}</strong></td>
+          <td><strong>${i.item}</strong></td>
+          <td>${i.category}</td>
+          <td style="text-align:right; font-weight:800; color:var(--primary); font-size:13.5px;">${i.currentStock}</td>
+          <td style="text-align:right; color:#64748b;">${i.minimum}</td>
+          <td><span class="badge badge-${i.status === 'OK' ? 'ok' : (i.status === 'HABIS' ? 'empty' : 'low')}">${i.status}</span></td>
+          <td>${i.location}</td>
+          <td style="text-align:center;">
+            <button class="btn btn-secondary" style="padding: 3px 10px; font-size: 11px; min-height: 28px;" onclick='populateEditItem(${JSON.stringify(i).replace(/'/g, "&apos;")})'>Edit</button>
+          </td>
+        </tr>
+      `).join('');
+
+      mCards.innerHTML = items.map(i => `
+        <div class="card-row">
+          <div class="card-row-top">
+            <div>
+              <div class="card-title">${i.item}</div>
+              <div class="card-sub">${i.sku || i.itemId} • ${i.category}</div>
+            </div>
+            <span class="badge badge-${i.status === 'OK' ? 'ok' : (i.status === 'HABIS' ? 'empty' : 'low')}">${i.status}</span>
+          </div>
+          <div class="card-row-bottom">
+            <span>Baki: <strong>${i.currentStock} unit</strong></span>
+            <button class="btn btn-secondary" style="padding: 2px 8px; font-size: 11px; min-height: 26px;" onclick='populateEditItem(${JSON.stringify(i).replace(/'/g, "&apos;")})'>Edit</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterItemsTable() {
+      const q = document.getElementById('tableSearch').value.toLowerCase();
+      document.querySelectorAll('#itemsTbody tr').forEach(tr => {
+        tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none';
+      });
+      document.querySelectorAll('#itemsMobileCards .card-row').forEach(c => {
+        c.style.display = c.textContent.toLowerCase().includes(q) ? '' : 'none';
+      });
+    }
+
+    function submitTransaction(e) {
+      e.preventDefault();
+      const rows = document.querySelectorAll('.batch-item-row');
+      const items = [];
+      const type = appState.globalTxType;
+
+      rows.forEach(r => {
+        const itemId = r.querySelector('.batch-item').value;
+        const qty = Number(r.querySelector('.batch-qty').value);
+        if (itemId && qty >= 0) items.push({ itemId, type, qty });
+      });
+
+      if (!items.length) {
+        showToast('Sila pilih sekurang-kurangnya satu item.', true);
+        return;
+      }
+
+      const payload = {
+        date: document.getElementById('txDate').value,
+        pic: document.getElementById('txPic').value,
+        location: document.getElementById('txLocation').value,
+        note: document.getElementById('txNote').value,
+        items
+      };
+
+      showLoading(true, 'Menyimpan rekod...');
+
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        redirect: 'follow',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'addTransactionsBatch',
+          data: payload
+        })
+      })
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}: Gagal menyambung ke Apps Script`);
+        return res.json();
+      })
+      .then(res => {
+        showLoading(false);
+        if (!res.ok) throw new Error(res.message);
+        showToast(res.message);
+        closeTxModal();
+        appState.data = res.data;
+        renderDashboard();
+        renderLogs();
+        renderItems();
+        document.getElementById('txNote').value = '';
+        document.getElementById('batchContainer').innerHTML = '';
+        addBatchRow();
+      })
+      .catch(err => {
+        showLoading(false);
+        showToast(err.message || 'Gagal menyimpan transaksi.', true);
+      });
+    }
+
+    function populateEditItem(item) {
+      appState.selectedItem = item.sku || item.itemId;
+      document.getElementById('itSku').value = item.sku || item.itemId;
+      document.getElementById('itSku').readOnly = true;
+      document.getElementById('itName').value = item.item;
+      document.getElementById('itCategory').value = item.category;
+      document.getElementById('itLocation').value = item.location;
+      document.getElementById('itOpening').value = item.openingStock;
+      document.getElementById('itMin').value = item.minimum;
+      document.getElementById('itNote').value = item.note || '';
+
+      document.getElementById('itemFormTitle').textContent = `Kemaskini: ${item.sku || item.itemId}`;
+      document.getElementById('btnDeleteItem').classList.remove('hidden');
+      document.getElementById('itemModal').classList.remove('hidden');
+      lockBodyScroll();
+    }
+
+    function resetItemForm() {
+      appState.selectedItem = null;
+      document.getElementById('itemForm').reset();
+      document.getElementById('itSku').readOnly = false;
+      document.getElementById('itemFormTitle').textContent = 'Daftar Item Baharu';
+      document.getElementById('btnDeleteItem').classList.add('hidden');
+    }
+
+    function submitItem(e) {
+      e.preventDefault();
+      showLoading(true, 'Menyimpan item...');
+
+      const skuVal = document.getElementById('itSku').value.trim();
+
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        redirect: 'follow',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'addOrUpdateItem',
+          data: {
+            sku: skuVal,
+            itemId: skuVal,
+            item: document.getElementById('itName').value,
+            category: document.getElementById('itCategory').value,
+            location: document.getElementById('itLocation').value,
+            openingStock: document.getElementById('itOpening').value,
+            minimum: document.getElementById('itMin').value,
+            note: document.getElementById('itNote').value
+          }
+        })
+      })
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}: Gagal menyambung ke Apps Script`);
+        return res.json();
+      })
+      .then(res => {
+        showLoading(false);
+        if (!res.ok) throw new Error(res.message);
+        showToast(res.message);
+        closeItemModal();
+        appState.data = res.data;
+        renderDashboard();
+        renderItems();
+        resetItemForm();
+      })
+      .catch(err => {
+        showLoading(false);
+        showToast(err.message || 'Gagal menyimpan item.', true);
+      });
+    }
+
+    function deleteItemHandler() {
+      if (!appState.selectedItem) return;
+      if (!confirm(`Adakah anda pasti mahu memadam item ${appState.selectedItem}?`)) return;
+
+      showLoading(true, 'Memadam item...');
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        redirect: 'follow',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'deleteItem',
+          data: { itemId: appState.selectedItem }
+        })
+      })
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}: Gagal menyambung ke Apps Script`);
+        return res.json();
+      })
+      .then(res => {
+        showLoading(false);
+        if (!res.ok) throw new Error(res.message);
+        showToast(res.message);
+        closeItemModal();
+        appState.data = res.data;
+        renderDashboard();
+        renderItems();
+        resetItemForm();
+      })
+      .catch(err => {
+        showLoading(false);
+        showToast(err.message || 'Gagal memadam item.', true);
+      });
+    }
+
+    /* ========================================================
+       PENGENDALI BORANG KURSUS UMRAH (DENGAN DATE PICKER)
+       ======================================================== */
+    async function handleGenerateUmrahForm(e) {
+      e.preventDefault();
+
+      const tajuk = document.getElementById('ufTajuk').value.trim();
+      const rawDate = document.getElementById('ufTarikhInput').value;
+      const formattedDate = formatTarikhKursusMelayu(rawDate);
+      const waktu = document.getElementById('ufWaktu').value.trim();
+      const tempat = document.getElementById('ufTempat').value.trim();
+      const noTel = document.getElementById('ufNoTel').value.trim();
+      const fileInput = document.getElementById('ufPosterFile');
+
+      showLoading(true, 'Menjana borang kursus umrah...');
+
+      let posterBase64 = '';
+      let posterType = '';
+
+      if (fileInput.files && fileInput.files[0]) {
+        const file = fileInput.files[0];
+        posterType = file.type || 'image/jpeg';
+        posterBase64 = await readFileAsBase64(file);
+      }
+
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        redirect: 'follow',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'createKursusUmrahForm',
+          data: {
+            tajuk,
+            tarikh: rawDate,
+            tarikhFormatted: formattedDate,
+            waktu,
+            tempat,
+            noTel,
+            posterBase64,
+            posterType,
+            posterTitle: `Poster Kursus Umrah (${formattedDate})`
+          }
+        })
+      })
+      .then(res => res.json())
+      .then(res => {
+        showLoading(false);
+        if (!res.ok) throw new Error(res.message);
+
+        document.getElementById('resLiveUrl').value = res.formUrl;
+        document.getElementById('resEditUrl').value = res.editUrl;
+        document.getElementById('linkLiveBtn').href = res.formUrl;
+        document.getElementById('linkEditBtn').href = res.editUrl;
+
+        document.getElementById('umrahFormResult').classList.remove('hidden');
+        showToast('Borang kursus umrah berjaya dijana!');
+      })
+      .catch(err => {
+        showLoading(false);
+        showToast(err.message || 'Gagal menjana borang.', true);
+      });
+    }
+
+    function readFileAsBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const base64 = reader.result.split(',')[1];
+          resolve(base64);
+        };
+        reader.onerror = error => reject(error);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function copyResultLink(inputId) {
+      const copyText = document.getElementById(inputId);
+      copyText.select();
+      copyText.setSelectionRange(0, 99999);
+      navigator.clipboard.writeText(copyText.value).then(() => {
+        showToast('Pautan disalin!');
+      }).catch(() => {
+        showToast('Gagal menyalin pautan.', true);
+      });
+    }
+  </script>
+</body>
+</html>
