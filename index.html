@@ -893,33 +893,32 @@
     .m-btn svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 2.2; }
     .m-btn.active { color: var(--primary); font-weight: 800; background: var(--primary-soft); }
 
-    /* Reka Bentuk Kemas: Modul Kursus Umrah */
+    /* Modul Kursus Umrah UI */
+    .umrah-container {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 22px;
+      max-width: 860px;
+    }
+
     .umrah-card {
       background: #ffffff;
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 24px;
+      padding: 22px;
       box-shadow: var(--shadow-sm);
-      max-width: 740px;
     }
 
     .umrah-header {
       border-bottom: 1px solid var(--border);
-      padding-bottom: 16px;
-      margin-bottom: 20px;
+      padding-bottom: 14px;
+      margin-bottom: 18px;
     }
 
     .umrah-header h3 {
       font-size: 16px;
       font-weight: 800;
       color: var(--primary);
-      letter-spacing: -0.2px;
-    }
-
-    .umrah-header p {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 4px;
     }
 
     .preview-tarikh-badge {
@@ -935,11 +934,48 @@
     }
 
     .result-card-umrah {
-      margin-top: 22px;
+      margin-top: 18px;
       background: #f0fdf4;
       border: 1.5px solid #86efac;
       border-radius: 12px;
-      padding: 18px;
+      padding: 16px;
+    }
+
+    .form-item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #ffffff;
+      margin-bottom: 10px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .form-item-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .form-item-title {
+      font-weight: 700;
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .form-item-date {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .form-item-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: nowrap;
     }
 
     @media (max-width: 1200px) {
@@ -1005,6 +1041,9 @@
       .modal-overlay { padding: 12px; }
       .modal-dialog { width: 100% !important; max-width: 100% !important; border-radius: 12px; margin: 0; }
       .modal-body { max-height: calc(85vh - 60px); padding: 14px; overflow-x: hidden; }
+
+      .form-item-row { flex-direction: column; align-items: flex-start; }
+      .form-item-actions { width: 100%; justify-content: flex-end; margin-top: 6px; }
     }
   </style>
 </head>
@@ -1417,79 +1456,90 @@
         </div>
       </section>
 
-      <!-- TAB 4: KURSUS UMRAH -->
+      <!-- TAB 4: KURSUS UMRAH (PENJANA & SENARAI BORANG) -->
       <section id="tab-umrahForm" class="hidden">
-        <div class="umrah-card">
-          <div class="umrah-header">
-            <h3>Pendaftaran Kursus Umrah Terbuka</h3>
-            <p>Salin Master Google Form dan simpan terus ke folder Drive cawangan.</p>
+        <div class="umrah-container">
+          
+          <!-- BORANG JANA FORM BAHARU -->
+          <div class="umrah-card">
+            <div class="umrah-header">
+              <h3>Borang Kursus Umrah Terbuka</h3>
+            </div>
+
+            <form id="generateUmrahForm" onsubmit="handleGenerateUmrahForm(event)">
+              <div class="form-group">
+                <div class="input-row">
+                  <div>
+                    <label>Pilih Tarikh Kursus</label>
+                    <input type="date" id="ufTarikhInput" required onchange="updateFormattedDatePreview()">
+                    <div id="previewTarikhBadge" class="preview-tarikh-badge hidden"></div>
+                  </div>
+                  <div>
+                    <label>Waktu Kursus</label>
+                    <input type="text" id="ufWaktu" required value="9.00 PAGI - 12.00 TENGAHARI">
+                  </div>
+                </div>
+
+                <div>
+                  <label>Tempat / Lokasi</label>
+                  <input type="text" id="ufTempat" required value="DEWAN IMAM A'ASIM, MASJID AL-MUKTAFI BILLAH SHAH (MASJID LADANG)">
+                </div>
+
+                <div>
+                  <label>No. Telefon Hotline</label>
+                  <input type="text" id="ufNoTel" required value="011-5508 3367">
+                </div>
+
+                <div>
+                  <label>Muat Naik Poster Baharu (Pilihan)</label>
+                  <input type="file" id="ufPosterFile" accept="image/*" style="padding: 6px 10px;">
+                </div>
+
+                <button type="submit" id="btnGenForm" class="btn btn-primary" style="width: 100%; min-height: 44px; margin-top: 8px; font-size: 13.5px;">
+                  Jana Google Form Kursus
+                </button>
+              </div>
+            </form>
+
+            <!-- KEPUTUSAN HASIL BORANG -->
+            <div id="umrahFormResult" class="result-card-umrah hidden">
+              <h4 style="color: var(--primary); font-size: 14px; font-weight: 800; margin-bottom: 4px;">Borang Berjaya Dijana!</h4>
+              <p id="resultFormName" style="font-size: 12px; color: #047857; margin-bottom: 12px; font-weight: 700;"></p>
+              
+              <div style="display: grid; gap: 12px;">
+                <div>
+                  <label style="font-size: 11.5px; color: #065f46;">Pautan Pendaftaran Jemaah (Live Form):</label>
+                  <div style="display: flex; gap: 8px;">
+                    <input type="text" id="resLiveUrl" readonly style="background: #ffffff; font-size: 12px; color: #047857; font-weight: 700;">
+                    <button type="button" class="btn btn-secondary" style="min-height: 42px;" onclick="copyResultLink('resLiveUrl')">Salin</button>
+                    <a id="linkLiveBtn" href="#" target="_blank" class="btn btn-primary" style="text-decoration: none; min-height: 42px;">Buka</a>
+                  </div>
+                </div>
+
+                <div>
+                  <label style="font-size: 11.5px; color: #065f46;">Pautan Semakan Admin (Edit):</label>
+                  <div style="display: flex; gap: 8px;">
+                    <input type="text" id="resEditUrl" readonly style="background: #ffffff; font-size: 12px;">
+                    <button type="button" class="btn btn-secondary" style="min-height: 42px;" onclick="copyResultLink('resEditUrl')">Salin</button>
+                    <a id="linkEditBtn" href="#" target="_blank" class="btn btn-secondary" style="text-decoration: none; min-height: 42px;">Buka</a>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <form id="generateUmrahForm" onsubmit="handleGenerateUmrahForm(event)">
-            <div class="form-group">
-              <div>
-                <label>Tajuk Kursus</label>
-                <input type="text" id="ufTajuk" required value="KURSUS UMRAH TERBUKA CAWANGAN TERENGGANU">
-              </div>
-
-              <div class="input-row">
-                <div>
-                  <label>Pilih Tarikh Kursus</label>
-                  <input type="date" id="ufTarikhInput" required onchange="updateFormattedDatePreview()">
-                  <div id="previewTarikhBadge" class="preview-tarikh-badge hidden"></div>
-                </div>
-                <div>
-                  <label>Waktu Kursus</label>
-                  <input type="text" id="ufWaktu" required value="9.00 PAGI - 12.00 TENGAHARI">
-                </div>
-              </div>
-
-              <div>
-                <label>Tempat / Lokasi</label>
-                <input type="text" id="ufTempat" required value="DEWAN IMAM A'ASIM, MASJID AL-MUKTAFI BILLAH SHAH (MASJID LADANG)">
-              </div>
-
-              <div>
-                <label>No. Telefon Hotline</label>
-                <input type="text" id="ufNoTel" required value="011-5508 3367">
-              </div>
-
-              <div>
-                <label>Muat Naik Poster Baharu (Pilihan)</label>
-                <input type="file" id="ufPosterFile" accept="image/*" style="padding: 6px 10px;">
-              </div>
-
-              <button type="submit" id="btnGenForm" class="btn btn-primary" style="width: 100%; min-height: 44px; margin-top: 8px; font-size: 13.5px;">
-                Jana Google Form Kursus
-              </button>
+          <!-- SENARAI BORANG YANG PERNAH DIJANA -->
+          <div class="umrah-card">
+            <div class="umrah-header" style="display: flex; justify-content: space-between; align-items: center;">
+              <h3>Senarai Borang Kursus Umrah</h3>
+              <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 30px;" onclick="fetchUmrahFormsList()">Segar Semula</button>
             </div>
-          </form>
-
-          <!-- KEPUTUSAN HASIL BORANG -->
-          <div id="umrahFormResult" class="result-card-umrah hidden">
-            <h4 style="color: var(--primary); font-size: 14px; font-weight: 800; margin-bottom: 4px;">Borang Berjaya Dijana & Disimpan!</h4>
-            <p style="font-size: 11.5px; color: #047857; margin-bottom: 12px;">Fail borang disimpan dalam folder <strong>Borang Kursus Umrah TRG</strong>.</p>
             
-            <div style="display: grid; gap: 12px;">
-              <div>
-                <label style="font-size: 11.5px; color: #065f46;">Pautan Pendaftaran Jemaah:</label>
-                <div style="display: flex; gap: 8px;">
-                  <input type="text" id="resLiveUrl" readonly style="background: #ffffff; font-size: 12px; color: #047857; font-weight: 700;">
-                  <button type="button" class="btn btn-secondary" style="min-height: 42px;" onclick="copyResultLink('resLiveUrl')">Salin</button>
-                  <a id="linkLiveBtn" href="#" target="_blank" class="btn btn-primary" style="text-decoration: none; min-height: 42px;">Buka</a>
-                </div>
-              </div>
-
-              <div>
-                <label style="font-size: 11.5px; color: #065f46;">Pautan Semakan Admin:</label>
-                <div style="display: flex; gap: 8px;">
-                  <input type="text" id="resEditUrl" readonly style="background: #ffffff; font-size: 12px;">
-                  <button type="button" class="btn btn-secondary" style="min-height: 42px;" onclick="copyResultLink('resEditUrl')">Salin</button>
-                  <a id="linkEditBtn" href="#" target="_blank" class="btn btn-secondary" style="text-decoration: none; min-height: 42px;">Buka</a>
-                </div>
-              </div>
+            <div id="umrahFormsListContainer">
+              <p style="font-size: 12px; color: var(--text-muted); text-align: center; padding: 16px;">Memuatkan senarai borang...</p>
             </div>
           </div>
+
         </div>
       </section>
     </main>
@@ -1523,7 +1573,8 @@
       activeTab: 'dashboard',
       selectedItem: null,
       globalTxType: 'Keluar',
-      statusFilter: null
+      statusFilter: null,
+      umrahForms: []
     };
 
     let html5QrCodeScanner = null;
@@ -1549,7 +1600,6 @@
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('txDate').valueAsDate = new Date();
       
-      // Tetapkan tarikh kursus awal: Sabtu minggu hadapan
       const defaultDate = new Date();
       defaultDate.setDate(defaultDate.getDate() + ((6 - defaultDate.getDay() + 7) % 7 || 7));
       const dateInput = document.getElementById('ufTarikhInput');
@@ -1558,6 +1608,7 @@
 
       addBatchRow();
       loadData();
+      fetchUmrahFormsList();
       setTimeout(checkAutoSystemUpdate, 2000);
     });
 
@@ -1565,9 +1616,6 @@
       checkAutoSystemUpdate();
     });
 
-    /* ========================================================
-       PEMFORMAT TARIKH MELAYU (cth: 27 JUN 2026 (SABTU))
-       ======================================================== */
     function formatTarikhKursusMelayu(dateStr) {
       if (!dateStr) return '';
       const parts = dateStr.split('-');
@@ -1582,11 +1630,20 @@
       return `${day} ${months[d.getMonth()]} ${d.getFullYear()} (${days[d.getDay()]})`;
     }
 
+    function getBulanKursusMelayu(dateStr) {
+      if (!dateStr) return '';
+      const parts = dateStr.split('-');
+      const year = parts[0];
+      const monthIndex = parseInt(parts[1], 10) - 1;
+      const months = ['JANUARI', 'FEBRUARI', 'MAC', 'APRIL', 'MEI', 'JUN', 'JULAI', 'OGOS', 'SEPTEMBER', 'OKTOBER', 'NOVEMBER', 'DISEMBER'];
+      return `${months[monthIndex]} ${year}`;
+    }
+
     function updateFormattedDatePreview() {
       const val = document.getElementById('ufTarikhInput').value;
       const badge = document.getElementById('previewTarikhBadge');
       if (val) {
-        badge.textContent = 'Format Form: ' + formatTarikhKursusMelayu(val);
+        badge.textContent = 'Format Tarikh: ' + formatTarikhKursusMelayu(val) + ' | Nama Fail (Bulan): ' + getBulanKursusMelayu(val);
         badge.classList.remove('hidden');
       } else {
         badge.classList.add('hidden');
@@ -1883,10 +1940,14 @@
         dashboard: ['Dashboard e-ASTRA', 'Sistem Pengurusan Stok Cawangan Terengganu.'],
         transactions: ['Transaksi Stok', 'Rekod log keluar, masuk dan pelarasan.'],
         items: ['Data Induk Item', 'Katalog pengurusan item stok.'],
-        umrahForm: ['Pendaftaran Kursus Umrah', 'Jana pautan borang kursus umrah cawangan.']
+        umrahForm: ['Kursus Umrah', 'Pendaftaran & senarai borang kursus umrah cawangan.']
       };
       document.getElementById('viewTitle').textContent = titles[tab][0];
       document.getElementById('viewSubtitle').textContent = titles[tab][1];
+
+      if (tab === 'umrahForm') {
+        fetchUmrahFormsList();
+      }
 
       window.scrollTo({ top: 0, behavior: 'instant' });
     }
@@ -2518,20 +2579,20 @@
     }
 
     /* ========================================================
-       PENGENDALI BORANG KURSUS UMRAH (DENGAN DATE PICKER)
+       MODUL KURSUS UMRAH UI & LOGIK
        ======================================================== */
     async function handleGenerateUmrahForm(e) {
       e.preventDefault();
 
-      const tajuk = document.getElementById('ufTajuk').value.trim();
       const rawDate = document.getElementById('ufTarikhInput').value;
       const formattedDate = formatTarikhKursusMelayu(rawDate);
+      const bulanText = getBulanKursusMelayu(rawDate);
       const waktu = document.getElementById('ufWaktu').value.trim();
       const tempat = document.getElementById('ufTempat').value.trim();
       const noTel = document.getElementById('ufNoTel').value.trim();
       const fileInput = document.getElementById('ufPosterFile');
 
-      showLoading(true, 'Menjana borang kursus umrah...');
+      showLoading(true, 'Menduplikasi Master Form (Kekal Bold & Tema Asal)...');
 
       let posterBase64 = '';
       let posterType = '';
@@ -2549,15 +2610,14 @@
         body: JSON.stringify({
           action: 'createKursusUmrahForm',
           data: {
-            tajuk,
             tarikh: rawDate,
             tarikhFormatted: formattedDate,
+            bulan: bulanText,
             waktu,
             tempat,
             noTel,
             posterBase64,
-            posterType,
-            posterTitle: `Poster Kursus Umrah (${formattedDate})`
+            posterType
           }
         })
       })
@@ -2566,6 +2626,7 @@
         showLoading(false);
         if (!res.ok) throw new Error(res.message);
 
+        document.getElementById('resultFormName').textContent = res.formTitle;
         document.getElementById('resLiveUrl').value = res.formUrl;
         document.getElementById('resEditUrl').value = res.editUrl;
         document.getElementById('linkLiveBtn').href = res.formUrl;
@@ -2573,10 +2634,61 @@
 
         document.getElementById('umrahFormResult').classList.remove('hidden');
         showToast('Borang kursus umrah berjaya dijana!');
+
+        if (res.formsList && res.formsList.length) {
+          renderUmrahFormsList(res.formsList);
+        } else {
+          fetchUmrahFormsList();
+        }
       })
       .catch(err => {
         showLoading(false);
         showToast(err.message || 'Gagal menjana borang.', true);
+      });
+    }
+
+    function fetchUmrahFormsList() {
+      const container = document.getElementById('umrahFormsListContainer');
+      container.innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center; padding:16px;">Memuatkan senarai borang...</p>';
+
+      fetch(`${SCRIPT_URL}?action=getUmrahFormsList`, { method: 'GET', redirect: 'follow' })
+      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error(res.message);
+        renderUmrahFormsList(res.forms || []);
+      })
+      .catch(err => {
+        container.innerHTML = '<p style="font-size:12px; color:#ef4444; text-align:center; padding:16px;">Gagal memuatkan senarai borang.</p>';
+      });
+    }
+
+    function renderUmrahFormsList(forms) {
+      const container = document.getElementById('umrahFormsListContainer');
+      if (!forms || !forms.length) {
+        container.innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center; padding:16px;">Tiada borang kursus umrah dijumpai dalam folder.</p>';
+        return;
+      }
+
+      container.innerHTML = forms.map(f => `
+        <div class="form-item-row">
+          <div class="form-item-info">
+            <span class="form-item-title">${f.name}</span>
+            <span class="form-item-date">Dijana pada: ${f.dateCreated}</span>
+          </div>
+          <div class="form-item-actions">
+            <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 32px;" onclick="copyDirectText('${f.liveUrl}')">Salin Link</button>
+            <a href="${f.liveUrl}" target="_blank" class="btn btn-primary" style="padding: 4px 12px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Live</a>
+            <a href="${f.editUrl}" target="_blank" class="btn btn-secondary" style="padding: 4px 12px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Edit</a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function copyDirectText(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('Pautan disalin!');
+      }).catch(() => {
+        showToast('Gagal menyalin pautan.', true);
       });
     }
 
