@@ -189,6 +189,39 @@
     .nav-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
     .nav-btn.active { background: #ffffff; color: var(--primary); font-weight: 800; box-shadow: var(--shadow-sm); }
 
+    .chevron-icon { width: 14px !important; height: 14px !important; transition: transform 0.2s ease; }
+    .chevron-icon.open { transform: rotate(180deg); }
+
+    .sub-nav-list {
+      display: grid;
+      gap: 3px;
+      list-style: none;
+      padding-left: 28px;
+      margin-bottom: 8px;
+    }
+
+    .sub-nav-btn {
+      width: 100%;
+      border: none;
+      background: transparent;
+      color: rgba(255,255,255,0.75);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s;
+    }
+
+    .sub-nav-btn:hover { background: rgba(255,255,255,0.08); color: #ffffff; }
+    .sub-nav-btn.active { background: rgba(255,255,255,0.18); color: #a7f3d0; font-weight: 800; }
+    .sub-nav-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+
     .sidebar-footer {
       margin-top: auto;
       font-size: 11px;
@@ -817,7 +850,7 @@
       <div class="update-title">Versi Baharu Sedia Dipasang</div>
       <div class="update-details-box">
         <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Nota Keluaran:</strong>
-        <span id="updateChangelogText">Penambahbaikan fungsi dan pemuatan data terpusat.</span>
+        <span id="updateChangelogText">Penambahbaikan paparan peranti mudah alih dan struktur tab Kursus Umrah.</span>
       </div>
       <div class="update-action-row">
         <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
@@ -1713,19 +1746,10 @@
 
     /* PENGENDALIAN DATA STOK */
     function loadData() {
-      showLoading(true, 'Memuatkan data...');
-      
-      fetch(`${SCRIPT_URL}?action=getAppData`, { 
-        method: 'GET', 
-        redirect: 'follow' 
-      })
+      fetch(`${SCRIPT_URL}?action=getAppData`, { method: 'GET', redirect: 'follow' })
+      .then(res => res.json())
       .then(res => {
-        if (!res.ok) throw new Error(`HTTP Ralat ${res.status}`);
-        return res.json();
-      })
-      .then(res => {
-        if (!res.ok && res.message) throw new Error(res.message);
-
+        if (!res.ok) throw new Error(res.message);
         const payload = res.data ? res.data : res;
         appState.data = {
           dashboard: payload.dashboard || {},
@@ -1733,39 +1757,24 @@
           logs: Array.isArray(payload.logs) ? payload.logs : [],
           lists: payload.lists || { pic: [], lokasi: [], kategori: [] }
         };
-
-        try { renderDashboard(); } catch (e) { console.error('Ralat renderDashboard:', e); }
-        try { renderDropdowns(); } catch (e) { console.error('Ralat renderDropdowns:', e); }
-        try { renderLogs(); } catch (e) { console.error('Ralat renderLogs:', e); }
-        try { renderItems(); } catch (e) { console.error('Ralat renderItems:', e); }
-
-        showLoading(false);
-      })
-      .catch(err => {
-        showLoading(false);
-        console.error('Gagal loadData:', err);
-        showToast(err.message || 'Gagal menyambung ke pelayan.', true);
-      });
+        try { renderDashboard(); renderDropdowns(); renderLogs(); renderItems(); } catch (e) {}
+      }).catch(() => {});
     }
 
     function setInventoryFilter(filterType) {
       appState.inventoryFilter = filterType;
-      
       const pills = ['ALL', 'ATTN', 'LOW STOCK', 'HABIS', 'OK'];
       const pillIds = ['pillAll', 'pillAttn', 'pillLow', 'pillEmpty', 'pillOk'];
-      
       pills.forEach((p, idx) => {
         const el = document.getElementById(pillIds[idx]);
         if (el) el.classList.toggle('active', p === filterType);
       });
-
       renderDashboardTableOnly();
     }
 
     function renderDashboard() {
       const d = appState.data.dashboard || {};
       const allItems = appState.data.items || [];
-      
       const countAttn = allItems.filter(i => i.status !== 'OK').length;
       const countLow = allItems.filter(i => i.status === 'LOW STOCK').length;
       const countEmpty = allItems.filter(i => i.status === 'HABIS').length;
@@ -1794,23 +1803,16 @@
         </div>
       `).join('');
       window.cards = cards;
-
       renderDashboardTableOnly();
     }
 
     function renderDashboardTableOnly() {
       const allItems = appState.data.items || [];
       let filtered = allItems;
-
-      if (appState.inventoryFilter === 'ATTN') {
-        filtered = allItems.filter(i => i.status !== 'OK');
-      } else if (appState.inventoryFilter === 'LOW STOCK') {
-        filtered = allItems.filter(i => i.status === 'LOW STOCK');
-      } else if (appState.inventoryFilter === 'HABIS') {
-        filtered = allItems.filter(i => i.status === 'HABIS');
-      } else if (appState.inventoryFilter === 'OK') {
-        filtered = allItems.filter(i => i.status === 'OK');
-      }
+      if (appState.inventoryFilter === 'ATTN') filtered = allItems.filter(i => i.status !== 'OK');
+      else if (appState.inventoryFilter === 'LOW STOCK') filtered = allItems.filter(i => i.status === 'LOW STOCK');
+      else if (appState.inventoryFilter === 'HABIS') filtered = allItems.filter(i => i.status === 'HABIS');
+      else if (appState.inventoryFilter === 'OK') filtered = allItems.filter(i => i.status === 'OK');
 
       const tbody = document.getElementById('attentionTbody');
       const mCards = document.getElementById('attentionMobileCards');
@@ -1932,39 +1934,23 @@
       const logs = appState.data?.logs || [];
       const tbody = document.getElementById('logsTbody');
       const mCards = document.getElementById('logsMobileCards');
-
       if (!logs.length) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:18px; color:#64748b;">Tiada rekod transaksi direkodkan.</td></tr>`;
-        mCards.innerHTML = `<div style="text-align:center; padding:16px; color:#64748b; font-size:12px;">Tiada rekod transaksi direkodkan.</div>`;
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:18px; color:#64748b;">Tiada rekod transaksi.</td></tr>`;
+        mCards.innerHTML = `<div style="text-align:center; padding:16px; color:#64748b; font-size:12px;">Tiada rekod transaksi.</div>`;
         return;
       }
-
       tbody.innerHTML = logs.map((l, idx) => `
-        <tr class="clickable-row" onclick="openLogDetailModalByIndex(${idx})" title="Pilih untuk perincian penuh">
-          <td>${l.date || '-'}</td>
-          <td><strong>${l.sku || '-'}</strong></td>
-          <td>${l.item || '-'}</td>
+        <tr class="clickable-row" onclick="openLogDetailModalByIndex(${idx})">
+          <td>${l.date || '-'}</td><td><strong>${l.sku || '-'}</strong></td><td>${l.item || '-'}</td>
           <td><span class="badge ${l.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}">${l.type}</span></td>
-          <td style="text-align:right; font-weight:800;">${l.qty}</td>
-          <td style="text-align:right;">${l.balanceAfter}</td>
-          <td>${l.pic || '-'}</td>
-          <td>${l.location || '-'}</td>
+          <td style="text-align:right; font-weight:800;">${l.qty}</td><td style="text-align:right;">${l.balanceAfter}</td>
+          <td>${l.pic || '-'}</td><td>${l.location || '-'}</td>
         </tr>
       `).join('');
-
       mCards.innerHTML = logs.map((l, idx) => `
         <div class="card-row clickable-row" onclick="openLogDetailModalByIndex(${idx})">
-          <div class="card-row-top">
-            <div>
-              <div class="card-title">${l.item || 'Item'}</div>
-              <div class="card-sub">${l.sku ? l.sku + ' • ' : ''}${l.date} • ${l.pic || 'Tiada PIC'}</div>
-            </div>
-            <span class="badge ${l.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}">${l.type}</span>
-          </div>
-          <div class="card-row-bottom">
-            <span>Kuantiti: <strong>${l.qty} unit</strong></span>
-            <span style="color:#64748b;">Baki: ${l.balanceAfter}</span>
-          </div>
+          <div class="card-row-top"><div><div class="card-title">${l.item || 'Item'}</div><div class="card-sub">${l.sku ? l.sku + ' • ' : ''}${l.date} • ${l.pic || 'TIADA'}</div></div><span class="badge ${l.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}">${l.type}</span></div>
+          <div class="card-row-bottom"><span>Kuantiti: <strong>${l.qty} unit</strong></span><span style="color:#64748b;">Baki: ${l.balanceAfter}</span></div>
         </div>
       `).join('');
     }
@@ -1972,7 +1958,6 @@
     function openLogDetailModalByIndex(index) {
       const log = (appState.data?.logs || [])[index];
       if (!log) return;
-      
       document.getElementById('dtlType').textContent = log.type;
       document.getElementById('dtlType').className = `badge ${log.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}`;
       document.getElementById('dtlItem').textContent = log.item || '-';
@@ -1983,7 +1968,6 @@
       document.getElementById('dtlPic').textContent = log.pic || '-';
       document.getElementById('dtlLocation').textContent = log.location || '-';
       document.getElementById('dtlNote').textContent = log.note || 'Tiada catatan direkodkan.';
-      
       document.getElementById('logDetailModal').classList.remove('hidden');
       lockBodyScroll();
     }
@@ -1992,13 +1976,11 @@
       const items = appState.data?.items || [];
       const tbody = document.getElementById('itemsTbody');
       const mCards = document.getElementById('itemsMobileCards');
-
       if (!items.length) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:24px; color:#64748b;">Tiada item dalam pangkalan data.</td></tr>`;
-        mCards.innerHTML = `<div style="text-align:center; padding:16px; color:#64748b; font-size:12px;">Tiada item dalam pangkalan data.</div>`;
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:24px; color:#64748b;">Tiada item.</td></tr>`;
+        mCards.innerHTML = `<div style="text-align:center; padding:16px; color:#64748b; font-size:12px;">Tiada item.</div>`;
         return;
       }
-
       tbody.innerHTML = items.map(i => `
         <tr>
           <td><strong>${i.sku || i.itemId}</strong></td><td><strong>${i.item}</strong></td><td>${i.category}</td>
@@ -2007,7 +1989,6 @@
           <td style="text-align:center;"><button class="btn btn-secondary" style="padding:3px 10px; font-size:11px; min-height:28px;" onclick='populateEditItem(${JSON.stringify(i).replace(/'/g, "&apos;")})'>Kemaskini</button></td>
         </tr>
       `).join('');
-
       mCards.innerHTML = items.map(i => `
         <div class="card-row">
           <div class="card-row-top"><div><div class="card-title">${i.item}</div><div class="card-sub">${i.sku || i.itemId} • ${i.category}</div></div><span class="badge badge-${i.status === 'OK' ? 'ok' : (i.status === 'HABIS' ? 'empty' : 'low')}">${i.status}</span></div>
