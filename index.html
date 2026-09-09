@@ -624,7 +624,7 @@
       background: #ffffff;
       border: 1px solid var(--border);
       border-radius: 6px;
-      padding: 4px 10px;
+      padding: 4px 8px;
       font-size: 11px;
       font-weight: 700;
       color: var(--primary);
@@ -640,7 +640,7 @@
     .jemaah-status-box { background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 20px; }
     .jemaah-status-item { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px dashed var(--border); font-size: 12.5px; }
 
-    /* LACI NAVIGASI TELEFON */
+    /* LACI NAVIGASI TELEFON (DRAWER MENU) */
     .mobile-drawer-overlay {
       position: fixed;
       inset: 0;
@@ -715,17 +715,17 @@
       .topbar-title h2 { font-size: 16px; }
       .metrics-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 14px; }
       
-      /* Baiki limpahan container pada mobile */
       .input-row { grid-template-columns: 1fr !important; gap: 12px !important; }
       .checklist-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
       
       .desktop-table { display: none; }
       .mobile-cards { display: grid; gap: 8px; }
-      .card-row { background: #ffffff; border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; }
+      .card-row { background: #ffffff; border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
       .card-row-top { display: flex; justify-content: space-between; align-items: flex-start; }
       .card-title { font-weight: 700; color: var(--text); font-size: 13.5px; }
       .card-sub { font-size: 11px; color: var(--text-muted); }
-      .card-row-bottom { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-top: 4px; padding-top: 4px; border-top: 1px dashed var(--border); }
+      .card-row-bottom { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-top: 4px; padding-top: 6px; border-top: 1px dashed var(--border); }
+      
       .toast { left: 14px; right: 14px; bottom: 74px; text-align: center; }
       .modal-overlay { padding: 12px; }
       .modal-dialog { width: 100% !important; max-width: 100% !important; border-radius: 12px; margin: 0; }
@@ -802,7 +802,7 @@
       <div class="update-title">Versi Baharu Sedia Dipasang</div>
       <div class="update-details-box">
         <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Nota Keluaran:</strong>
-        <span id="updateChangelogText">Pembaikan susun atur borang mudah alih dan pemuatan data jemaah.</span>
+        <span id="updateChangelogText">Penambahbaikan paparan perincian jemaah di peranti mudah alih.</span>
       </div>
       <div class="update-action-row">
         <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
@@ -942,6 +942,19 @@
           <div class="detail-item"><span class="detail-label">Lokasi</span><span id="dtlLocation" class="detail-value">-</span></div>
           <div class="detail-item column"><span class="detail-label">Catatan Rujukan</span><div id="dtlNote" class="detail-note-box">Tiada catatan direkodkan.</div></div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PAPARAN PERINCIAN JEMAAH (MOBILE VIEW) -->
+  <div id="jemaahDetailModal" class="modal-overlay hidden" onclick="closeModalOnBackdrop(event, 'jemaahDetailModal')">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h4 id="modalJemaahTitle">Perincian Jemaah</h4>
+        <button type="button" class="btn btn-secondary" style="padding: 4px 10px; min-height: 28px; font-size: 12px;" onclick="closeJemaahDetailModal()">Tutup</button>
+      </div>
+      <div class="modal-body" id="modalJemaahBody">
+        <!-- Kandungan dijana secara dinamik -->
       </div>
     </div>
   </div>
@@ -2145,7 +2158,7 @@
       }
     }
 
-    /* PENGURUSAN JEMAAH */
+    /* PENGURUSAN JEMAAH & PERINCIAN MOBILE */
     async function fileToBase64Payload(inputEl) {
       if (!inputEl || !inputEl.files || !inputEl.files[0]) return null;
       const file = inputEl.files[0];
@@ -2281,7 +2294,7 @@
         `;
       }).join('');
 
-      mCards.innerHTML = data.map(j => `
+      mCards.innerHTML = data.map((j, idx) => `
         <div class="card-row">
           <div class="card-row-top">
             <div>
@@ -2290,11 +2303,66 @@
             </div>
             <span class="badge badge-ok">${j.telefon}</span>
           </div>
-          <div class="card-row-bottom" style="flex-direction: column; align-items: flex-start; gap: 6px;">
-            <div style="font-size: 11px; color: var(--text-muted);">Checklist: Beg: ${j.beg||'✖'} | Kursus: ${j.kursus||'✖'} | Jadual: ${j.jadual||'✖'} | Key-In: ${j.keyin||'✖'}</div>
+          <div class="card-row-bottom" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <span style="font-size: 11px; color: var(--text-muted);">Beg:${j.beg==='Selesai'?'✔':'✖'} | Kursus:${j.kursus==='Selesai'?'✔':'✖'} | KeyIn:${j.keyin==='Selesai'?'✔':'✖'}</span>
+            <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px; min-height: 28px;" onclick='openJemaahDetailModal(${JSON.stringify(j).replace(/'/g, "&apos;")})'>Lihat Perincian</button>
           </div>
         </div>
       `).join('');
+    }
+
+    function openJemaahDetailModal(j) {
+      document.getElementById('modalJemaahTitle').textContent = j.nama;
+      
+      const d_br = j.borang ? `<a href="${j.borang}" target="_blank" class="badge badge-ok">Borang Pendaftaran</a>` : `<span class="badge badge-empty">Tiada Borang</span>`;
+      const d_gb = j.gambar ? `<a href="${j.gambar}" target="_blank" class="badge badge-ok">Gambar Pasport</a>` : `<span class="badge badge-empty">Tiada Gambar</span>`;
+      const d_ps = j.salinan ? `<a href="${j.salinan}" target="_blank" class="badge badge-ok">Salinan Pasport</a>` : `<span class="badge badge-empty">Tiada Pasport</span>`;
+      const d_bio = j.bio ? `<a href="${j.bio}" target="_blank" class="badge badge-ok">Biometrik</a>` : `<span class="badge badge-empty">Tiada Biometrik</span>`;
+      const d_hhr = j.tiketHHR ? `<a href="${j.tiketHHR}" target="_blank" class="badge badge-ok">Tiket HHR</a>` : `<span class="badge badge-empty">Tiada Tiket HHR</span>`;
+
+      let d_resit = `<span class="badge badge-empty">Tiada Resit</span>`;
+      if (j.resit) {
+        d_resit = j.resit.split(' | ').map(r => {
+          const p = r.split(': ');
+          return p.length === 2 ? `<a href="${p[1]}" target="_blank" class="badge badge-ok">${p[0]}</a>` : `<a href="${r}" target="_blank" class="badge badge-ok">Resit Pembayaran</a>`;
+        }).join(' ');
+      }
+
+      document.getElementById('modalJemaahBody').innerHTML = `
+        <div class="detail-item-group">
+          <div class="detail-item"><span class="detail-label">Pegawai (PU)</span><span class="detail-value">${j.namaPU}</span></div>
+          <div class="detail-item"><span class="detail-label">No. Kad Pengenalan</span><span class="detail-value" style="color:var(--primary);">${j.nokp}</span></div>
+          <div class="detail-item"><span class="detail-label">No. Telefon</span><span class="detail-value">${j.telefon}</span></div>
+          
+          <div class="detail-item column">
+            <span class="detail-label">Dokumen & Fail Jemaah</span>
+            <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:4px;">${d_br} ${d_gb} ${d_ps} ${d_bio} ${d_hhr}</div>
+          </div>
+
+          <div class="detail-item column">
+            <span class="detail-label">Bukti Pembayaran / Resit</span>
+            <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:4px;">${d_resit}</div>
+          </div>
+
+          <div class="detail-item column">
+            <span class="detail-label">Status Checklist Operasi</span>
+            <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:4px;">
+              <span class="badge ${j.beg === 'Selesai' ? 'badge-ok' : 'badge-empty'}">Beg: ${j.beg || 'Belum'}</span>
+              <span class="badge ${j.kursus === 'Selesai' ? 'badge-ok' : 'badge-empty'}">Kursus: ${j.kursus || 'Belum'}</span>
+              <span class="badge ${j.jadual === 'Selesai' ? 'badge-ok' : 'badge-empty'}">Jadual: ${j.jadual || 'Belum'}</span>
+              <span class="badge ${j.keyin === 'Selesai' ? 'badge-ok' : 'badge-empty'}">Key-In: ${j.keyin || 'Belum'}</span>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('jemaahDetailModal').classList.remove('hidden');
+      lockBodyScroll();
+    }
+
+    function closeJemaahDetailModal() {
+      document.getElementById('jemaahDetailModal').classList.add('hidden');
+      unlockBodyScroll();
     }
 
     function tapisJadualJemaah() {
