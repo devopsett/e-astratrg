@@ -784,7 +784,7 @@
 </head>
 <body>
 
-  <!-- LACI MENU TELEFON (DRAWER) - PILIHAN TAB PANTAS -->
+  <!-- LACI MENU TELEFON (DRAWER) -->
   <div id="drawerOverlay" class="mobile-drawer-overlay" onclick="closeMobileDrawer()"></div>
   <div id="mobileDrawer" class="mobile-drawer">
     <div class="brand-box" style="justify-content: space-between;">
@@ -800,27 +800,36 @@
 
     <div class="nav-section-title">Modul Cawangan</div>
     <ul class="nav-list">
-      <!-- 1. STOK & INVENTORI (PILIHAN PANTAS) -->
       <li>
-        <div style="padding: 6px 14px 2px; font-size: 11px; font-weight: 800; color: #a7f3d0; text-transform: uppercase;">Stok & Inventori</div>
-        <div style="display: grid; gap: 4px; padding: 4px 0 10px 10px;">
-          <button class="sub-nav-btn" onclick="switchTabMobile('dashboard')"><span class="sub-nav-dot"></span><span>Ringkasan Stok</span></button>
-          <button class="sub-nav-btn" onclick="switchTabMobile('transactions')"><span class="sub-nav-dot"></span><span>Log Transaksi</span></button>
-          <button class="sub-nav-btn" onclick="switchTabMobile('items')"><span class="sub-nav-dot"></span><span>Katalog Inventori</span></button>
-        </div>
+        <button id="mDrawerBtnStock" class="nav-btn active" type="button" onclick="toggleStockMenu()">
+          <div class="nav-btn-content">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span>Stok & Inventori</span>
+          </div>
+          <svg id="mDrawerChevronStock" class="chevron-icon open" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <ul id="mDrawerSubStock" class="sub-nav-list">
+          <li><button class="sub-nav-btn" onclick="switchTabMobile('dashboard')"><span class="sub-nav-dot"></span><span>Ringkasan Stok</span></button></li>
+          <li><button class="sub-nav-btn" onclick="switchTabMobile('transactions')"><span class="sub-nav-dot"></span><span>Log Transaksi</span></button></li>
+          <li><button class="sub-nav-btn" onclick="switchTabMobile('items')"><span class="sub-nav-dot"></span><span>Katalog Inventori</span></button></li>
+        </ul>
       </li>
 
-      <!-- 2. PENGURUSAN JEMAAH (PILIHAN PANTAS) -->
       <li>
-        <div style="padding: 6px 14px 2px; font-size: 11px; font-weight: 800; color: #a7f3d0; text-transform: uppercase;">Pengurusan Jemaah</div>
-        <div style="display: grid; gap: 4px; padding: 4px 0 10px 10px;">
-          <button class="sub-nav-btn" onclick="switchTabMobile('jemaahList')"><span class="sub-nav-dot"></span><span>Senarai & Status</span></button>
-          <button class="sub-nav-btn" onclick="switchTabMobile('jemaahAdd')"><span class="sub-nav-dot"></span><span>Daftar Jemaah</span></button>
-          <button class="sub-nav-btn" onclick="switchTabMobile('jemaahEdit')"><span class="sub-nav-dot"></span><span>Semak & Kemaskini</span></button>
-        </div>
+        <button id="mDrawerBtnJemaah" class="nav-btn" type="button" onclick="toggleJemaahMenu()">
+          <div class="nav-btn-content">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            <span>Pengurusan Jemaah</span>
+          </div>
+          <svg id="mDrawerChevronJemaah" class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <ul id="mDrawerSubJemaah" class="sub-nav-list hidden">
+          <li><button class="sub-nav-btn" onclick="switchTabMobile('jemaahList')"><span class="sub-nav-dot"></span><span>Senarai & Status</span></button></li>
+          <li><button class="sub-nav-btn" onclick="switchTabMobile('jemaahAdd')"><span class="sub-nav-dot"></span><span>Daftar Jemaah</span></button></li>
+          <li><button class="sub-nav-btn" onclick="switchTabMobile('jemaahEdit')"><span class="sub-nav-dot"></span><span>Semak & Kemaskini</span></button></li>
+        </ul>
       </li>
 
-      <!-- 3. KURSUS UMRAH -->
       <li>
         <button id="mDrawerBtnUmrah" class="nav-btn" type="button" onclick="switchTabMobile('umrahForm')">
           <div class="nav-btn-content">
@@ -841,7 +850,7 @@
       <div class="update-title">Versi Baharu Sedia Dipasang</div>
       <div class="update-details-box">
         <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Nota Keluaran:</strong>
-        <span id="updateChangelogText">Penambahbaikan navigasi mudah alih dan kestabilan sistem.</span>
+        <span id="updateChangelogText">Penambahbaikan fungsi dan pemuatan data terpusat.</span>
       </div>
       <div class="update-action-row">
         <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
@@ -862,7 +871,7 @@
   <div id="toast" class="toast">Notifikasi</div>
 
   <!-- BUTANG TERAPUNG (FAB) - HANYA MODUL STOK -->
-  <button type="button" id="mainFabBtn" class="fab-btn hidden" onclick="openTxModal()" title="Daftar Transaksi Stok">
+  <button type="button" id="mainFabBtn" class="fab-btn" onclick="openTxModal()" title="Daftar Transaksi Stok">
     <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
   </button>
 
@@ -1011,16 +1020,16 @@
       <ul class="nav-list">
         <!-- 1. STOK & INVENTORI -->
         <li>
-          <button id="btnParentStock" class="nav-btn" type="button" onclick="toggleStockMenu()">
+          <button id="btnParentStock" class="nav-btn active" type="button" onclick="toggleStockMenu()">
             <div class="nav-btn-content">
               <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
               <span>Stok & Inventori</span>
             </div>
-            <svg id="chevronStock" class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            <svg id="chevronStock" class="chevron-icon open" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
           
-          <ul id="subStockMenu" class="sub-nav-list hidden">
-            <li><button id="subBtnDashboard" class="sub-nav-btn" type="button" onclick="switchTab('dashboard')"><span class="sub-nav-dot"></span><span>Ringkasan Stok</span></button></li>
+          <ul id="subStockMenu" class="sub-nav-list">
+            <li><button id="subBtnDashboard" class="sub-nav-btn active" type="button" onclick="switchTab('dashboard')"><span class="sub-nav-dot"></span><span>Ringkasan Stok</span></button></li>
             <li><button id="subBtnTransactions" class="sub-nav-btn" type="button" onclick="switchTab('transactions')"><span class="sub-nav-dot"></span><span>Log Transaksi</span></button></li>
             <li><button id="subBtnItems" class="sub-nav-btn" type="button" onclick="switchTab('items')"><span class="sub-nav-dot"></span><span>Katalog Inventori</span></button></li>
           </ul>
@@ -1155,7 +1164,7 @@
         </div>
       </section>
 
-      <!-- SEKSYEN 2: KURSUS UMRAH -->
+      <!-- SEKSYEN 2: KURSUS UMRAH (DENGAN PILIHAN JANA / ARKIB) -->
       <section id="tab-umrahForm">
         <div class="panel" style="margin-bottom: 16px;">
           <div class="panel-body" style="padding: 12px 16px;">
@@ -1166,6 +1175,7 @@
           </div>
         </div>
 
+        <!-- SUB-TAB 1: JANA BORANG -->
         <div id="subTabUmrahGenerate" class="umrah-container" style="grid-template-columns: 1fr;">
           <div class="umrah-card" style="max-width: 800px; margin: 0 auto; width: 100%;">
             <div class="umrah-header">
@@ -1222,6 +1232,7 @@
           </div>
         </div>
 
+        <!-- SUB-TAB 2: ARKIB BORANG -->
         <div id="subTabUmrahArchive" class="umrah-container hidden" style="grid-template-columns: 1fr;">
           <div class="umrah-card" style="max-width: 800px; margin: 0 auto; width: 100%;">
             <div class="umrah-header">
@@ -1651,6 +1662,8 @@
       appState.stockMenuOpen = !appState.stockMenuOpen;
       document.getElementById('subStockMenu').classList.toggle('hidden', !appState.stockMenuOpen);
       document.getElementById('chevronStock').classList.toggle('open', appState.stockMenuOpen);
+      document.getElementById('mDrawerSubStock').classList.toggle('hidden', !appState.stockMenuOpen);
+      document.getElementById('mDrawerChevronStock').classList.toggle('open', appState.stockMenuOpen);
       if (['umrahForm', 'jemaahList', 'jemaahAdd', 'jemaahEdit'].includes(appState.activeTab)) switchTab('dashboard');
     }
 
@@ -1658,6 +1671,8 @@
       appState.jemaahMenuOpen = !appState.jemaahMenuOpen;
       document.getElementById('subJemaahMenu').classList.toggle('hidden', !appState.jemaahMenuOpen);
       document.getElementById('chevronJemaah').classList.toggle('open', appState.jemaahMenuOpen);
+      document.getElementById('mDrawerSubJemaah').classList.toggle('hidden', !appState.jemaahMenuOpen);
+      document.getElementById('mDrawerChevronJemaah').classList.toggle('open', appState.jemaahMenuOpen);
       if (!['jemaahList', 'jemaahAdd', 'jemaahEdit'].includes(appState.activeTab)) switchTab('jemaahList');
     }
 
@@ -1679,6 +1694,10 @@
       document.getElementById('subBtnJemaahList').classList.toggle('active', tab === 'jemaahList');
       document.getElementById('subBtnJemaahAdd').classList.toggle('active', tab === 'jemaahAdd');
       document.getElementById('subBtnJemaahEdit').classList.toggle('active', tab === 'jemaahEdit');
+
+      document.getElementById('mDrawerBtnStock').classList.toggle('active', isStockTab);
+      document.getElementById('mDrawerBtnJemaah').classList.toggle('active', isJemaahTab);
+      document.getElementById('mDrawerBtnUmrah').classList.toggle('active', isUmrahTab);
 
       document.getElementById('mBtnStock').classList.toggle('active', isStockTab);
       document.getElementById('mBtnJemaah').classList.toggle('active', isJemaahTab);
@@ -1909,6 +1928,48 @@
         sel.value = cur;
         updateRowHint(sel);
       });
+    }
+
+    function renderLogs() {
+      const logs = appState.data?.logs || [];
+      const tbody = document.getElementById('logsTbody');
+      const mCards = document.getElementById('logsMobileCards');
+      if (!logs.length) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:18px; color:#64748b;">Tiada rekod transaksi.</td></tr>`;
+        mCards.innerHTML = `<div style="text-align:center; padding:16px; color:#64748b; font-size:12px;">Tiada rekod transaksi.</div>`;
+        return;
+      }
+      tbody.innerHTML = logs.map((l, idx) => `
+        <tr class="clickable-row" onclick="openLogDetailModalByIndex(${idx})">
+          <td>${l.date || '-'}</td><td><strong>${l.sku || '-'}</strong></td><td>${l.item || '-'}</td>
+          <td><span class="badge ${l.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}">${l.type}</span></td>
+          <td style="text-align:right; font-weight:800;">${l.qty}</td><td style="text-align:right;">${l.balanceAfter}</td>
+          <td>${l.pic || '-'}</td><td>${l.location || '-'}</td>
+        </tr>
+      `).join('');
+      mCards.innerHTML = logs.map((l, idx) => `
+        <div class="card-row clickable-row" onclick="openLogDetailModalByIndex(${idx})">
+          <div class="card-row-top"><div><div class="card-title">${l.item || 'Item'}</div><div class="card-sub">${l.sku ? l.sku + ' • ' : ''}${l.date} • ${l.pic || 'TIADA'}</div></div><span class="badge ${l.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}">${l.type}</span></div>
+          <div class="card-row-bottom"><span>Kuantiti: <strong>${l.qty} unit</strong></span><span style="color:#64748b;">Baki: ${l.balanceAfter}</span></div>
+        </div>
+      `).join('');
+    }
+
+    function openLogDetailModalByIndex(index) {
+      const log = (appState.data?.logs || [])[index];
+      if (!log) return;
+      document.getElementById('dtlType').textContent = log.type;
+      document.getElementById('dtlType').className = `badge ${log.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}`;
+      document.getElementById('dtlItem').textContent = log.item || '-';
+      document.getElementById('dtlSku').textContent = log.sku || '-';
+      document.getElementById('dtlDate').textContent = log.date || '-';
+      document.getElementById('dtlQty').textContent = `${log.qty} unit`;
+      document.getElementById('dtlBalance').textContent = `${log.balanceAfter} unit`;
+      document.getElementById('dtlPic').textContent = log.pic || '-';
+      document.getElementById('dtlLocation').textContent = log.location || '-';
+      document.getElementById('dtlNote').textContent = log.note || 'Tiada catatan direkodkan.';
+      document.getElementById('logDetailModal').classList.remove('hidden');
+      lockBodyScroll();
     }
 
     function renderItems() {
