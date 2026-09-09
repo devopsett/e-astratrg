@@ -267,25 +267,6 @@
 
     .topbar-actions { display: flex; align-items: center; gap: 8px; }
 
-    .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 11.5px;
-      font-weight: 700;
-      background: #ecfdf5;
-      color: #047857;
-      border: 1px solid #a7f3d0;
-    }
-    .status-pill.error {
-      background: #fef2f2;
-      color: #b91c1c;
-      border-color: #fecaca;
-    }
-    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
-
     .btn-icon-action {
       height: 40px;
       padding: 0 14px;
@@ -401,7 +382,6 @@
     .panel-header h3 { font-size: 15px; font-weight: 800; color: var(--text); }
     .panel-body { padding: 20px; }
 
-    /* PENAPIS TAB PADA JADUAL UTAMA */
     .filter-pills-bar {
       display: flex;
       gap: 6px;
@@ -591,7 +571,60 @@
     .form-item-date { font-size: 11px; color: var(--text-muted); font-weight: 600; }
     .form-item-actions { display: flex; align-items: center; gap: 6px; border-top: 1px dashed var(--border); padding-top: 10px; }
 
-    /* Modul Jemaah Sub-Styles */
+    /* KAD UPLOAD FILE JEMAAH KORPORAT */
+    .file-dropzone-compact {
+      border: 1.5px dashed #cbd5e1;
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 10px 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      transition: all 0.15s ease;
+      min-height: 44px;
+    }
+    .file-dropzone-compact:hover {
+      border-color: var(--primary);
+      background: #f1f5f9;
+    }
+    .file-dropzone-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+    .file-dropzone-left svg {
+      width: 18px;
+      height: 18px;
+      stroke: #64748b;
+      flex-shrink: 0;
+    }
+    .file-dropzone-text {
+      font-size: 12px;
+      color: #64748b;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .file-dropzone-text.has-file {
+      color: #047857;
+      font-weight: 700;
+    }
+    .file-btn-browse {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--primary);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
     .checklist-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; background: #f8fafc; padding: 14px; border-radius: 8px; border: 1px solid var(--border); }
     .checkbox-item { display: flex; align-items: center; gap: 8px; }
     .checkbox-item input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; }
@@ -666,6 +699,10 @@
       .sidebar { display: none; }
       .mobile-nav { display: grid; }
       .btn-hamburger { display: grid; }
+      
+      /* SEMBUNYIKAN BUTANG REFRESH PADA MOBILE */
+      .topbar-actions .btn-icon-refresh { display: none !important; }
+
       main { padding: 14px; padding-bottom: 74px; width: 100vw; max-width: 100vw; overflow-x: hidden; }
       .topbar { padding: 12px 14px; margin-bottom: 14px; }
       .topbar-mobile-logo { display: block; }
@@ -768,7 +805,7 @@
   <div id="loading" class="loading-overlay hidden">
     <div style="text-align: center; padding: 24px;">
       <div class="spinner" style="margin: 0 auto 12px;"></div>
-      <p id="loadingMsg" style="font-size: 13.5px; font-weight: 700; color: var(--primary-dark);">Memproses data...</p>
+      <p id="loadingMsg" style="font-size: 13.5px; font-weight: 700; color: var(--primary-dark);">Memuatkan data...</p>
       <p id="loadingSubMsg" style="font-size: 11.5px; color: var(--text-muted); margin-top: 4px;" class="hidden"></p>
     </div>
   </div>
@@ -976,11 +1013,6 @@
           </div>
         </div>
         <div class="topbar-actions">
-          <div id="connStatusPill" class="status-pill">
-            <span class="status-dot"></span>
-            <span id="connStatusText">Menyambung...</span>
-          </div>
-
           <button type="button" id="btnStockQR" class="btn-icon-action" onclick="generateQRPdf1Page()" title="Cetak Senarai Kod QR Produk">
             <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><path d="M14 14h3v3h-3z"></path><path d="M20 14v3"></path><path d="M14 20h7"></path></svg>
             <span>Cetak QR</span>
@@ -1000,7 +1032,6 @@
             <h3 id="attentionHeader">Senarai Inventori Semasa</h3>
           </div>
           <div class="panel-body">
-            <!-- PENAPIS TAB INVENTORI -->
             <div class="filter-pills-bar">
               <button type="button" id="pillAll" class="pill-btn active" onclick="setInventoryFilter('ALL')">Semua Item (<span id="cntAll">0</span>)</button>
               <button type="button" id="pillAttn" class="pill-btn" onclick="setInventoryFilter('ATTN')">Perhatian (<span id="cntAttn">0</span>)</button>
@@ -1083,7 +1114,7 @@
                     <div id="posterDropzone" class="poster-upload-zone" onclick="document.getElementById('ufPosterFile').click()">
                       <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
                       <div style="font-weight: 700; color: #1e293b; font-size: 12.5px;">Pilih imej poster baharu</div>
-                      <div style="font-size: 11px; color: #64748b; margin-top: 2px;">Format JPG atau PNG (Poster lalai digunakan jika tidak diubah)</div>
+                      <div style="font-size: 11px; color: #64748b; margin-top: 2px;">Format JPG atau PNG (Poster asal digunakan jika tidak diubah)</div>
                     </div>
                     <input type="file" id="ufPosterFile" accept="image/*" class="hidden" onchange="handlePosterSelection(event)">
                     <div id="posterPreviewContainer" class="poster-preview-card hidden">
@@ -1195,7 +1226,7 @@
                 </div>
                 <div>
                   <label>No. Kad Pengenalan (12 Digit)</label>
-                  <input type="text" id="regIC" required placeholder="Contoh: 880101115566" pattern="\d{12}" maxlength="12">
+                  <input type="text" id="regIC" required placeholder="Contoh: 880101115566 (tanpa tanda sempang)" pattern="\d{12}" maxlength="12">
                 </div>
               </div>
 
@@ -1211,12 +1242,19 @@
               </div>
 
               <div>
-                <label>Borang Pendaftaran Rasmi (PDF/Imej)</label>
-                <input type="file" id="regFileBorang" accept=".pdf,.jpg,.jpeg,.png" required style="padding: 6px 10px;">
+                <label>Borang Pendaftaran Rasmi (Wajib)</label>
+                <div class="file-dropzone-compact" onclick="document.getElementById('regFileBorang').click()">
+                  <div class="file-dropzone-left">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                    <span id="label_regFileBorang" class="file-dropzone-text">Pilih salinan borang (PDF / Gambar)</span>
+                  </div>
+                  <span class="file-btn-browse">Pilih Fail</span>
+                </div>
+                <input type="file" id="regFileBorang" accept=".pdf,.jpg,.jpeg,.png" required class="hidden" onchange="updateFileLabel(this, 'label_regFileBorang')">
               </div>
 
               <div>
-                <label>Checklist Tugasan Operasi (Tandakan jika telah selesai)</label>
+                <label>Checklist Tugasan Operasi</label>
                 <div class="checklist-grid">
                   <div class="checkbox-item"><input type="checkbox" id="reg_cb_beg"><label for="reg_cb_beg">Penyerahan Beg</label></div>
                   <div class="checkbox-item"><input type="checkbox" id="reg_cb_kursus"><label for="reg_cb_kursus">Kursus Umrah</label></div>
@@ -1225,19 +1263,71 @@
                 </div>
               </div>
 
-              <div style="border-top: 1px dashed var(--border); padding-top: 12px; margin-top: 4px;">
+              <div style="border-top: 1px dashed var(--border); padding-top: 14px; margin-top: 4px;">
                 <label style="color: var(--primary);">Lampiran Dokumen Tambahan (Pilihan)</label>
+                
                 <div class="input-row" style="margin-top: 8px;">
-                  <div><label>Gambar Pasport</label><input type="file" id="regFileGambar" accept=".pdf,.jpg,.jpeg,.png" style="padding: 6px 10px;"></div>
-                  <div><label>Salinan Pasport</label><input type="file" id="regFileSalinan" accept=".pdf,.jpg,.jpeg,.png" style="padding: 6px 10px;"></div>
+                  <div>
+                    <label>Gambar Pasport</label>
+                    <div class="file-dropzone-compact" onclick="document.getElementById('regFileGambar').click()">
+                      <div class="file-dropzone-left">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                        <span id="label_regFileGambar" class="file-dropzone-text">Pilih gambar ukuran pasport</span>
+                      </div>
+                      <span class="file-btn-browse">Pilih Fail</span>
+                    </div>
+                    <input type="file" id="regFileGambar" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_regFileGambar')">
+                  </div>
+
+                  <div>
+                    <label>Salinan Pasport</label>
+                    <div class="file-dropzone-compact" onclick="document.getElementById('regFileSalinan').click()">
+                      <div class="file-dropzone-left">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                        <span id="label_regFileSalinan" class="file-dropzone-text">Pilih salinan muka surat pasport</span>
+                      </div>
+                      <span class="file-btn-browse">Pilih Fail</span>
+                    </div>
+                    <input type="file" id="regFileSalinan" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_regFileSalinan')">
+                  </div>
                 </div>
+
                 <div class="input-row" style="margin-top: 8px;">
-                  <div><label>Biometrik (Saudi Visa Bio)</label><input type="file" id="regFileBio" accept=".pdf,.jpg,.jpeg,.png" style="padding: 6px 10px;"></div>
-                  <div><label>Tiket Kereta Api HHR</label><input type="file" id="regFileHHR" accept=".pdf,.jpg,.jpeg,.png" style="padding: 6px 10px;"></div>
+                  <div>
+                    <label>Biometrik (Saudi Visa Bio)</label>
+                    <div class="file-dropzone-compact" onclick="document.getElementById('regFileBio').click()">
+                      <div class="file-dropzone-left">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 0-6.88 17.24"></path><path d="M12 6a6 6 0 0 0-4.13 10.34"></path><circle cx="12" cy="12" r="2"></circle></svg>
+                        <span id="label_regFileBio" class="file-dropzone-text">Pilih slip pengesahan biometrik</span>
+                      </div>
+                      <span class="file-btn-browse">Pilih Fail</span>
+                    </div>
+                    <input type="file" id="regFileBio" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_regFileBio')">
+                  </div>
+
+                  <div>
+                    <label>Tiket Kereta Api HHR</label>
+                    <div class="file-dropzone-compact" onclick="document.getElementById('regFileHHR').click()">
+                      <div class="file-dropzone-left">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="16" rx="2"></rect><path d="M4 11h16"></path><path d="M12 3v8"></path><path d="m8 19-2 3"></path><path d="m16 19 2 3"></path></svg>
+                        <span id="label_regFileHHR" class="file-dropzone-text">Pilih tiket penerbangan / HHR</span>
+                      </div>
+                      <span class="file-btn-browse">Pilih Fail</span>
+                    </div>
+                    <input type="file" id="regFileHHR" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_regFileHHR')">
+                  </div>
                 </div>
+
                 <div style="margin-top: 8px;">
-                  <label>Resit Pembayaran (Deposit/Penuh)</label>
-                  <input type="file" id="regFileResit" accept=".pdf,.jpg,.jpeg,.png" style="padding: 6px 10px;">
+                  <label>Resit Bayaran (Deposit / Penuh)</label>
+                  <div class="file-dropzone-compact" onclick="document.getElementById('regFileResit').click()">
+                    <div class="file-dropzone-left">
+                      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                      <span id="label_regFileResit" class="file-dropzone-text">Pilih slip pemindahan atau resit bayaran</span>
+                    </div>
+                    <span class="file-btn-browse">Pilih Fail</span>
+                  </div>
+                  <input type="file" id="regFileResit" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_regFileResit')">
                 </div>
               </div>
 
@@ -1256,7 +1346,7 @@
           <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 18px; margin-bottom: 20px;">
             <label>Carian Melalui No. Kad Pengenalan (12 Digit)</label>
             <div style="display: flex; gap: 8px; margin-top: 6px;">
-              <input type="text" id="searchJemaahIC" placeholder="Masukkan 12 digit No. K/P..." maxlength="12">
+              <input type="text" id="searchJemaahIC" placeholder="Masukkan 12 digit nombor kad pengenalan..." maxlength="12">
               <button type="button" class="btn btn-primary" onclick="cariJemaahRecord()">Semak</button>
             </div>
             <div id="cariJemaahFeedback" style="font-size: 12px; font-weight: 700; margin-top: 8px;"></div>
@@ -1283,19 +1373,85 @@
                   <div class="checkbox-item"><input type="checkbox" id="edit_cb_keyin"><label for="edit_cb_keyin">Key-In Pasport</label></div>
                 </div>
 
-                <div style="border-top: 1px dashed var(--border); padding-top: 12px;">
+                <div style="border-top: 1px dashed var(--border); padding-top: 14px;">
                   <label style="color: var(--primary);">Kemaskini / Muat Naik Dokumen Baharu</label>
-                  <div class="input-row" style="margin-top: 6px;">
-                    <div><label>Ganti Borang</label><input type="file" id="editFileBorang" accept=".pdf,.jpg,.jpeg,.png" style="padding: 6px 10px;"></div>
-                    <div><label>Ganti Gambar</label><input type="file" id="editFileGambar" accept=".pdf,.jpg,.jpeg,.png" style="padding: 6px 10px;"></div>
+                  
+                  <div class="input-row" style="margin-top: 8px;">
+                    <div>
+                      <label>Ganti Borang</label>
+                      <div class="file-dropzone-compact" onclick="document.getElementById('editFileBorang').click()">
+                        <div class="file-dropzone-left">
+                          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                          <span id="label_editFileBorang" class="file-dropzone-text">Pilih borang baharu</span>
+                        </div>
+                        <span class="file-btn-browse">Pilih</span>
+                      </div>
+                      <input type="file" id="editFileBorang" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_editFileBorang')">
+                    </div>
+
+                    <div>
+                      <label>Ganti Gambar Pasport</label>
+                      <div class="file-dropzone-compact" onclick="document.getElementById('editFileGambar').click()">
+                        <div class="file-dropzone-left">
+                          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                          <span id="label_editFileGambar" class="file-dropzone-text">Pilih gambar baharu</span>
+                        </div>
+                        <span class="file-btn-browse">Pilih</span>
+                      </div>
+                      <input type="file" id="editFileGambar" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_editFileGambar')">
+                    </div>
                   </div>
-                  <div class="input-row" style="margin-top: 6px;">
-                    <div><label>Ganti Pasport</label><input type="file" id="editFileSalinan" accept=".pdf,.jpg,.jpeg,.png" style="padding: 6px 10px;"></div>
-                    <div><label>Ganti Biometrik</label><input type="file" id="editFileBio" accept=".pdf,.jpg,.jpeg,.png" style="padding: 6px 10px;"></div>
+
+                  <div class="input-row" style="margin-top: 8px;">
+                    <div>
+                      <label>Ganti Salinan Pasport</label>
+                      <div class="file-dropzone-compact" onclick="document.getElementById('editFileSalinan').click()">
+                        <div class="file-dropzone-left">
+                          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                          <span id="label_editFileSalinan" class="file-dropzone-text">Pilih pasport baharu</span>
+                        </div>
+                        <span class="file-btn-browse">Pilih</span>
+                      </div>
+                      <input type="file" id="editFileSalinan" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_editFileSalinan')">
+                    </div>
+
+                    <div>
+                      <label>Ganti Biometrik</label>
+                      <div class="file-dropzone-compact" onclick="document.getElementById('editFileBio').click()">
+                        <div class="file-dropzone-left">
+                          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"></circle></svg>
+                          <span id="label_editFileBio" class="file-dropzone-text">Pilih biometrik baharu</span>
+                        </div>
+                        <span class="file-btn-browse">Pilih</span>
+                      </div>
+                      <input type="file" id="editFileBio" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_editFileBio')">
+                    </div>
                   </div>
-                  <div class="input-row" style="margin-top: 6px;">
-                    <div><label>Ganti Tiket HHR</label><input type="file" id="editFileHHR" accept=".pdf,.jpg,.jpeg,.png" style="padding: 6px 10px;"></div>
-                    <div><label>Tambah Resit Bayaran</label><input type="file" id="editFileResit" accept=".pdf,.jpg,.jpeg,.png" style="padding: 6px 10px;"></div>
+
+                  <div class="input-row" style="margin-top: 8px;">
+                    <div>
+                      <label>Ganti Tiket HHR</label>
+                      <div class="file-dropzone-compact" onclick="document.getElementById('editFileHHR').click()">
+                        <div class="file-dropzone-left">
+                          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="16" rx="2"></rect></svg>
+                          <span id="label_editFileHHR" class="file-dropzone-text">Pilih tiket baharu</span>
+                        </div>
+                        <span class="file-btn-browse">Pilih</span>
+                      </div>
+                      <input type="file" id="editFileHHR" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_editFileHHR')">
+                    </div>
+
+                    <div>
+                      <label>Tambah Resit Bayaran</label>
+                      <div class="file-dropzone-compact" onclick="document.getElementById('editFileResit').click()">
+                        <div class="file-dropzone-left">
+                          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line></svg>
+                          <span id="label_editFileResit" class="file-dropzone-text">Muat naik resit tambahan</span>
+                        </div>
+                        <span class="file-btn-browse">Pilih</span>
+                      </div>
+                      <input type="file" id="editFileResit" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_editFileResit')">
+                    </div>
                   </div>
                 </div>
 
@@ -1377,6 +1533,20 @@
     });
 
     window.addEventListener('focus', () => { checkAutoSystemUpdate(); });
+
+    /* KEMASKINI LABEL NAMA FAIL SELEPAS PILIH */
+    function updateFileLabel(inputEl, labelId) {
+      const label = document.getElementById(labelId);
+      if (inputEl.files && inputEl.files[0]) {
+        const f = inputEl.files[0];
+        const sizeKb = (f.size / 1024).toFixed(1);
+        label.textContent = `${f.name} (${sizeKb} KB)`;
+        label.classList.add('has-file');
+      } else {
+        label.textContent = 'Pilih fail dokumen...';
+        label.classList.remove('has-file');
+      }
+    }
 
     /* KAWALAN LACI MENU MOBILE */
     function openMobileDrawer() {
@@ -1483,11 +1653,9 @@
       }
     }
 
-    /* PENGENDALIAN MEMUAT TURUN DATA UTAMA DENGAN KALIS-RALAT */
+    /* PENGENDALIAN MEMUAT TURUN DATA */
     function loadData() {
-      showLoading(true, 'Memuatkan data dari Google Sheets...');
-      const pill = document.getElementById('connStatusPill');
-      const txt = document.getElementById('connStatusText');
+      showLoading(true, 'Memuatkan data...');
       
       fetch(`${SCRIPT_URL}?action=getAppData`, { 
         method: 'GET', 
@@ -1508,10 +1676,6 @@
           lists: payload.lists || { pic: [], lokasi: [], kategori: [] }
         };
 
-        // Kemaskini status pill hijau
-        pill.classList.remove('error');
-        txt.textContent = `Bersambung (${appState.data.items.length} item)`;
-
         try { renderDashboard(); } catch (e) { console.error('Ralat renderDashboard:', e); }
         try { renderDropdowns(); } catch (e) { console.error('Ralat renderDropdowns:', e); }
         try { renderLogs(); } catch (e) { console.error('Ralat renderLogs:', e); }
@@ -1521,10 +1685,8 @@
       })
       .catch(err => {
         showLoading(false);
-        pill.classList.add('error');
-        txt.textContent = 'Terputus';
         console.error('Gagal loadData:', err);
-        showToast(err.message || 'Gagal menyambung ke server.', true);
+        showToast(err.message || 'Gagal menyambung ke pelayan.', true);
       });
     }
 
@@ -2021,6 +2183,13 @@
 
         showToast(res.message);
         document.getElementById('formDaftarJemaah').reset();
+        
+        // Reset label fail
+        ['label_regFileBorang', 'label_regFileGambar', 'label_regFileSalinan', 'label_regFileBio', 'label_regFileHHR', 'label_regFileResit'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) { el.textContent = 'Pilih fail dokumen...'; el.classList.remove('has-file'); }
+        });
+
         switchTab('jemaahList');
       } catch (err) {
         showLoading(false);
@@ -2449,7 +2618,7 @@
       document.querySelectorAll('.batch-item').forEach(sel => updateRowHint(sel));
     }
 
-    function showLoading(show, msg = 'Memproses data...') {
+    function showLoading(show, msg = 'Memuatkan data...') {
       const overlay = document.getElementById('loading');
       if (!show) { overlay.classList.add('hidden'); return; }
       document.getElementById('loadingMsg').textContent = msg;
