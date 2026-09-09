@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>e-ASTRA | Sistem Pengurusan Cawangan</title>
+  <title>e-ASTRA | Hab Operasi Cawangan</title>
   
   <link rel="manifest" href="manifest.json">
   <meta name="mobile-web-app-capable" content="yes">
@@ -260,7 +260,7 @@
       gap: 12px;
       padding-bottom: 20px;
       border-bottom: 1px solid rgba(255,255,255,0.12);
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
 
     .brand-logo-img {
@@ -283,10 +283,11 @@
       color: #6ee7b7;
       text-transform: uppercase;
       letter-spacing: 0.8px;
-      padding: 10px 14px 4px;
+      padding: 6px 14px 4px;
     }
 
     .nav-list { display: grid; gap: 4px; list-style: none; margin-bottom: 10px; }
+    
     .nav-btn {
       width: 100%;
       border: none;
@@ -301,8 +302,15 @@
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 12px;
+      justify-content: space-between;
+      gap: 10px;
       transition: all 0.18s;
+    }
+
+    .nav-btn-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
     .nav-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.2; flex-shrink: 0; }
@@ -312,6 +320,66 @@
       color: var(--primary);
       font-weight: 800;
       box-shadow: var(--shadow-sm);
+    }
+
+    .chevron-icon {
+      width: 14px !important;
+      height: 14px !important;
+      transition: transform 0.2s ease;
+    }
+    .chevron-icon.open {
+      transform: rotate(180deg);
+    }
+
+    /* Sub-menu Dropdown */
+    .sub-nav-list {
+      display: grid;
+      gap: 3px;
+      list-style: none;
+      padding-left: 28px;
+      margin-bottom: 8px;
+      animation: fadeIn 0.18s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .sub-nav-btn {
+      width: 100%;
+      border: none;
+      background: transparent;
+      color: rgba(255,255,255,0.75);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s;
+    }
+
+    .sub-nav-btn:hover {
+      background: rgba(255,255,255,0.08);
+      color: #ffffff;
+    }
+
+    .sub-nav-btn.active {
+      background: rgba(255,255,255,0.18);
+      color: #a7f3d0;
+      font-weight: 800;
+    }
+
+    .sub-nav-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: currentColor;
     }
 
     .sidebar-footer {
@@ -880,7 +948,7 @@
       background: #ffffff;
       border-top: 1px solid var(--border);
       z-index: 900;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: 1fr 1fr;
       padding: 4px;
     }
 
@@ -1325,30 +1393,48 @@
         </div>
       </div>
       
-      <div class="nav-section-title">Modul Cawangan</div>
+      <div class="nav-section-title">Modul Pengurusan</div>
       <ul class="nav-list">
+        <!-- MENU UTAMA: STOK & INVENTORI DENGAN DROPDOWN -->
         <li>
-          <button class="nav-btn active" onclick="switchTab('dashboard')">
-            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-            Ringkasan Operasi
+          <button id="btnParentStock" class="nav-btn active" type="button" onclick="toggleStockMenu()">
+            <div class="nav-btn-content">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+              <span>Stok & Inventori</span>
+            </div>
+            <svg id="chevronStock" class="chevron-icon open" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
+          
+          <!-- SUB-MENU DROPDOWN -->
+          <ul id="subStockMenu" class="sub-nav-list">
+            <li>
+              <button id="subBtnDashboard" class="sub-nav-btn active" type="button" onclick="switchTab('dashboard')">
+                <span class="sub-nav-dot"></span>
+                <span>Ringkasan Stok</span>
+              </button>
+            </li>
+            <li>
+              <button id="subBtnTransactions" class="sub-nav-btn" type="button" onclick="switchTab('transactions')">
+                <span class="sub-nav-dot"></span>
+                <span>Log Transaksi</span>
+              </button>
+            </li>
+            <li>
+              <button id="subBtnItems" class="sub-nav-btn" type="button" onclick="switchTab('items')">
+                <span class="sub-nav-dot"></span>
+                <span>Katalog Inventori</span>
+              </button>
+            </li>
+          </ul>
         </li>
+
+        <!-- MENU MODUL KURSUS UMRAH -->
         <li>
-          <button class="nav-btn" onclick="switchTab('transactions')">
-            <svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
-            Log Transaksi Stok
-          </button>
-        </li>
-        <li>
-          <button class="nav-btn" onclick="switchTab('items')">
-            <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
-            Katalog Inventori
-          </button>
-        </li>
-        <li>
-          <button class="nav-btn" onclick="switchTab('umrahForm')">
-            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-            Kursus Umrah
+          <button id="btnNavUmrah" class="nav-btn" type="button" onclick="switchTab('umrahForm')">
+            <div class="nav-btn-content">
+              <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              <span>Kursus Umrah</span>
+            </div>
           </button>
         </li>
       </ul>
@@ -1363,12 +1449,11 @@
         <div class="topbar-left">
           <img class="topbar-mobile-logo" src="Logo%20Azzuha.png" alt="Logo e-ASTRA">
           <div class="topbar-title">
-            <h2 id="viewTitle">Ringkasan Operasi</h2>
-            <p id="viewSubtitle">Paparan metrik dan status operasi cawangan semasa.</p>
+            <h2 id="viewTitle">Stok & Inventori</h2>
+            <p id="viewSubtitle">Paparan metrik dan status operasi inventori semasa.</p>
           </div>
         </div>
         <div class="topbar-actions">
-          <!-- BUTANG KHAS STOK: DISEMBUNYIKAN BILA BERADA DI MODUL KURSUS UMRAH -->
           <button type="button" id="btnStockQR" class="btn-icon-action" onclick="generateQRPdf1Page()" title="Cetak Senarai Kod QR Produk">
             <svg viewBox="0 0 24 24">
               <rect x="3" y="3" width="7" height="7"></rect>
@@ -1389,7 +1474,7 @@
         </div>
       </div>
 
-      <!-- TAB 1: RINGKASAN OPERASI (DASHBOARD) -->
+      <!-- TAB 1: RINGKASAN STOK (DASHBOARD) -->
       <section id="tab-dashboard">
         <div class="metrics-grid" id="metricsCards"></div>
 
@@ -1576,22 +1661,15 @@
       </section>
     </main>
 
+    <!-- MOBILE NAVIGATION (2 TAB UTAMA: STOK & KURSUS) -->
     <nav class="mobile-nav">
-      <button class="m-btn active" type="button" onclick="switchTab('dashboard')">
+      <button id="mBtnStock" class="m-btn active" type="button" onclick="switchTab('dashboard')">
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-        <span>Ringkasan</span>
+        <span>Stok & Inventori</span>
       </button>
-      <button class="m-btn" type="button" onclick="switchTab('transactions')">
-        <svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
-        <span>Transaksi</span>
-      </button>
-      <button class="m-btn" type="button" onclick="switchTab('items')">
-        <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
-        <span>Inventori</span>
-      </button>
-      <button class="m-btn" type="button" onclick="switchTab('umrahForm')">
+      <button id="mBtnUmrah" class="m-btn" type="button" onclick="switchTab('umrahForm')">
         <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-        <span>Kursus</span>
+        <span>Kursus Umrah</span>
       </button>
     </nav>
   </div>
@@ -1606,7 +1684,8 @@
       selectedItem: null,
       globalTxType: 'Keluar',
       statusFilter: null,
-      umrahForms: []
+      umrahForms: [],
+      stockMenuOpen: true
     };
 
     let html5QrCodeScanner = null;
@@ -1646,6 +1725,90 @@
     window.addEventListener('focus', () => {
       checkAutoSystemUpdate();
     });
+
+    function toggleStockMenu() {
+      appState.stockMenuOpen = !appState.stockMenuOpen;
+      const subMenu = document.getElementById('subStockMenu');
+      const chevron = document.getElementById('chevronStock');
+      
+      if (appState.stockMenuOpen) {
+        subMenu.classList.remove('hidden');
+        chevron.classList.add('open');
+      } else {
+        subMenu.classList.add('hidden');
+        chevron.classList.remove('open');
+      }
+
+      // Jika pengguna tekan menu induk, buka dashboard stok
+      if (appState.activeTab === 'umrahForm') {
+        switchTab('dashboard');
+      }
+    }
+
+    function switchTab(tab) {
+      appState.activeTab = tab;
+
+      const isStockTab = ['dashboard', 'transactions', 'items'].includes(tab);
+      const isUmrahTab = (tab === 'umrahForm');
+
+      // Kemas kini butang navigasi desktop
+      const btnParentStock = document.getElementById('btnParentStock');
+      const btnNavUmrah = document.getElementById('btnNavUmrah');
+      
+      if (btnParentStock) btnParentStock.classList.toggle('active', isStockTab);
+      if (btnNavUmrah) btnNavUmrah.classList.toggle('active', isUmrahTab);
+
+      // Kemas kini sub-menu dropdown
+      document.getElementById('subBtnDashboard').classList.toggle('active', tab === 'dashboard');
+      document.getElementById('subBtnTransactions').classList.toggle('active', tab === 'transactions');
+      document.getElementById('subBtnItems').classList.toggle('active', tab === 'items');
+
+      // Buka dropdown jika berada di tab stok
+      if (isStockTab && !appState.stockMenuOpen) {
+        toggleStockMenu();
+      }
+
+      // Kemas kini mobile bar
+      document.getElementById('mBtnStock').classList.toggle('active', isStockTab);
+      document.getElementById('mBtnUmrah').classList.toggle('active', isUmrahTab);
+
+      // Paparan seksyen kandungan
+      document.getElementById('tab-dashboard').classList.toggle('hidden', tab !== 'dashboard');
+      document.getElementById('tab-transactions').classList.toggle('hidden', tab !== 'transactions');
+      document.getElementById('tab-items').classList.toggle('hidden', tab !== 'items');
+      document.getElementById('tab-umrahForm').classList.toggle('hidden', tab !== 'umrahForm');
+
+      const titles = {
+        dashboard: ['Stok & Inventori', 'Paparan metrik dan status operasi inventori semasa.'],
+        transactions: ['Log Transaksi Stok', 'Rekod terperinci pergerakan masuk, keluar dan pelarasan stok.'],
+        items: ['Katalog Inventori', 'Senarai pangkalan data dan had simpanan item cawangan.'],
+        umrahForm: ['Pusat Kursus Umrah', 'Penjanaan dan arkib pautan borang digital jemaah cawangan.']
+      };
+      document.getElementById('viewTitle').textContent = titles[tab][0];
+      document.getElementById('viewSubtitle').textContent = titles[tab][1];
+
+      // Kawal butang Cetak QR dan butang terapung (FAB)
+      const qrBtn = document.getElementById('btnStockQR');
+      const fabBtn = document.getElementById('mainFabBtn');
+      
+      if (qrBtn) qrBtn.classList.toggle('hidden', isUmrahTab);
+      if (fabBtn) fabBtn.classList.toggle('hidden', isUmrahTab);
+
+      if (isUmrahTab) {
+        fetchUmrahFormsList();
+      }
+
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+
+    function refreshCurrentView() {
+      if (appState.activeTab === 'umrahForm') {
+        fetchUmrahFormsList();
+        showToast('Senarai borang dikemas kini.');
+      } else {
+        loadData();
+      }
+    }
 
     function formatTarikhKursusMelayu(dateStr) {
       if (!dateStr) return '';
@@ -1944,52 +2107,6 @@
       }
 
       document.querySelectorAll('.batch-item').forEach(sel => updateRowHint(sel));
-    }
-
-    function switchTab(tab) {
-      if (appState.activeTab === tab) return;
-      appState.activeTab = tab;
-      
-      const tabs = ['dashboard', 'transactions', 'items', 'umrahForm'];
-      document.querySelectorAll('.nav-btn').forEach((b, idx) => b.classList.toggle('active', tabs[idx] === tab));
-      document.querySelectorAll('.m-btn').forEach((b, idx) => b.classList.toggle('active', tabs[idx] === tab));
-
-      document.getElementById('tab-dashboard').classList.toggle('hidden', tab !== 'dashboard');
-      document.getElementById('tab-transactions').classList.toggle('hidden', tab !== 'transactions');
-      document.getElementById('tab-items').classList.toggle('hidden', tab !== 'items');
-      document.getElementById('tab-umrahForm').classList.toggle('hidden', tab !== 'umrahForm');
-
-      const titles = {
-        dashboard: ['Ringkasan Operasi', 'Paparan metrik dan status operasi cawangan semasa.'],
-        transactions: ['Log Transaksi Stok', 'Rekod terperinci pergerakan masuk, keluar dan pelarasan stok.'],
-        items: ['Katalog Inventori', 'Senarai pangkalan data dan had simpanan item cawangan.'],
-        umrahForm: ['Pusat Kursus Umrah', 'Penjanaan dan arkib pautan borang digital jemaah cawangan.']
-      };
-      document.getElementById('viewTitle').textContent = titles[tab][0];
-      document.getElementById('viewSubtitle').textContent = titles[tab][1];
-
-      // KAWAL BUTANG CETAK QR & BUTANG TERAPUNG (FAB)
-      const isUmrahTab = (tab === 'umrahForm');
-      const qrBtn = document.getElementById('btnStockQR');
-      const fabBtn = document.getElementById('mainFabBtn');
-      
-      if (qrBtn) qrBtn.classList.toggle('hidden', isUmrahTab);
-      if (fabBtn) fabBtn.classList.toggle('hidden', isUmrahTab);
-
-      if (isUmrahTab) {
-        fetchUmrahFormsList();
-      }
-
-      window.scrollTo({ top: 0, behavior: 'instant' });
-    }
-
-    function refreshCurrentView() {
-      if (appState.activeTab === 'umrahForm') {
-        fetchUmrahFormsList();
-        showToast('Senarai borang dikemas kini.');
-      } else {
-        loadData();
-      }
     }
 
     function showLoading(show, msg = 'Memproses data...', isUpdateMode = false, subMsg = '') {
