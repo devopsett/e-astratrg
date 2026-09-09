@@ -248,7 +248,6 @@
 
     .topbar-left { display: flex; align-items: center; gap: 14px; }
     
-    /* BUTANG HAMBURGER TELEFON */
     .btn-hamburger {
       display: none;
       width: 40px;
@@ -648,7 +647,7 @@
 </head>
 <body>
 
-  <!-- LACI MENU TELEFON (MOBILE DRAWER OVERLAY & SIDEBAR) -->
+  <!-- LACI MENU TELEFON (DRAWER) -->
   <div id="drawerOverlay" class="mobile-drawer-overlay" onclick="closeMobileDrawer()"></div>
   <div id="mobileDrawer" class="mobile-drawer">
     <div class="brand-box" style="justify-content: space-between;">
@@ -664,7 +663,6 @@
 
     <div class="nav-section-title">Modul Cawangan</div>
     <ul class="nav-list">
-      <!-- 1. STOK & INVENTORI -->
       <li>
         <button id="mDrawerBtnStock" class="nav-btn active" type="button" onclick="toggleStockMenu()">
           <div class="nav-btn-content">
@@ -680,7 +678,6 @@
         </ul>
       </li>
 
-      <!-- 2. PENGURUSAN JEMAAH -->
       <li>
         <button id="mDrawerBtnJemaah" class="nav-btn" type="button" onclick="toggleJemaahMenu()">
           <div class="nav-btn-content">
@@ -696,7 +693,6 @@
         </ul>
       </li>
 
-      <!-- 3. KURSUS UMRAH -->
       <li>
         <button id="mDrawerBtnUmrah" class="nav-btn" type="button" onclick="switchTabMobile('umrahForm')">
           <div class="nav-btn-content">
@@ -717,7 +713,7 @@
       <div class="update-title">Versi Baharu Sedia Dipasang</div>
       <div class="update-details-box">
         <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Nota Keluaran:</strong>
-        <span id="updateChangelogText">Penambahan laci navigasi mudah alih dan kestabilan sistem.</span>
+        <span id="updateChangelogText">Penambahbaikan fungsi dan kestabilan sistem aplikasi.</span>
       </div>
       <div class="update-action-row">
         <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
@@ -1348,29 +1344,19 @@
     /* KAWALAN MENU SIDEBAR DESKTOP & DRAWER */
     function toggleStockMenu() {
       appState.stockMenuOpen = !appState.stockMenuOpen;
-      
-      // Desktop
       document.getElementById('subStockMenu').classList.toggle('hidden', !appState.stockMenuOpen);
       document.getElementById('chevronStock').classList.toggle('open', appState.stockMenuOpen);
-
-      // Drawer Mobile
       document.getElementById('mDrawerSubStock').classList.toggle('hidden', !appState.stockMenuOpen);
       document.getElementById('mDrawerChevronStock').classList.toggle('open', appState.stockMenuOpen);
-
       if (['umrahForm', 'jemaahList', 'jemaahAdd', 'jemaahEdit'].includes(appState.activeTab)) switchTab('dashboard');
     }
 
     function toggleJemaahMenu() {
       appState.jemaahMenuOpen = !appState.jemaahMenuOpen;
-      
-      // Desktop
       document.getElementById('subJemaahMenu').classList.toggle('hidden', !appState.jemaahMenuOpen);
       document.getElementById('chevronJemaah').classList.toggle('open', appState.jemaahMenuOpen);
-
-      // Drawer Mobile
       document.getElementById('mDrawerSubJemaah').classList.toggle('hidden', !appState.jemaahMenuOpen);
       document.getElementById('mDrawerChevronJemaah').classList.toggle('open', appState.jemaahMenuOpen);
-
       if (!['jemaahList', 'jemaahAdd', 'jemaahEdit'].includes(appState.activeTab)) switchTab('jemaahList');
     }
 
@@ -1381,32 +1367,26 @@
       const isJemaahTab = ['jemaahList', 'jemaahAdd', 'jemaahEdit'].includes(tab);
       const isUmrahTab = (tab === 'umrahForm');
 
-      // Butang Menu Desktop
       document.getElementById('btnParentStock').classList.toggle('active', isStockTab);
       document.getElementById('btnParentJemaah').classList.toggle('active', isJemaahTab);
       document.getElementById('btnNavUmrah').classList.toggle('active', isUmrahTab);
 
-      // Sub-menu Desktop Stok
       document.getElementById('subBtnDashboard').classList.toggle('active', tab === 'dashboard');
       document.getElementById('subBtnTransactions').classList.toggle('active', tab === 'transactions');
       document.getElementById('subBtnItems').classList.toggle('active', tab === 'items');
 
-      // Sub-menu Desktop Jemaah
       document.getElementById('subBtnJemaahList').classList.toggle('active', tab === 'jemaahList');
       document.getElementById('subBtnJemaahAdd').classList.toggle('active', tab === 'jemaahAdd');
       document.getElementById('subBtnJemaahEdit').classList.toggle('active', tab === 'jemaahEdit');
 
-      // Drawer Mobile Butang Induk
       document.getElementById('mDrawerBtnStock').classList.toggle('active', isStockTab);
       document.getElementById('mDrawerBtnJemaah').classList.toggle('active', isJemaahTab);
       document.getElementById('mDrawerBtnUmrah').classList.toggle('active', isUmrahTab);
 
-      // Mobile Bottom Bar
       document.getElementById('mBtnStock').classList.toggle('active', isStockTab);
       document.getElementById('mBtnJemaah').classList.toggle('active', isJemaahTab);
       document.getElementById('mBtnUmrah').classList.toggle('active', isUmrahTab);
 
-      // Paparan Seksyen
       const allTabs = ['dashboard', 'transactions', 'items', 'umrahForm', 'jemaahList', 'jemaahAdd', 'jemaahEdit'];
       allTabs.forEach(t => {
         const el = document.getElementById('tab-' + t);
@@ -1425,7 +1405,6 @@
       document.getElementById('viewTitle').textContent = titles[tab][0];
       document.getElementById('viewSubtitle').textContent = titles[tab][1];
 
-      // Sembunyi/Papar Butang Stok
       const qrBtn = document.getElementById('btnStockQR');
       const fabBtn = document.getElementById('mainFabBtn');
       if (qrBtn) qrBtn.classList.toggle('hidden', !isStockTab);
@@ -1449,355 +1428,294 @@
       }
     }
 
-    /* PENGURUSAN JEMAAH */
-    async function fileToBase64Payload(inputEl) {
-      if (!inputEl || !inputEl.files || !inputEl.files[0]) return null;
-      const file = inputEl.files[0];
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve({
-          name: file.name,
-          type: file.type || 'application/pdf',
-          base64: reader.result.split(',')[1]
-        });
-        reader.onerror = err => reject(err);
-        reader.readAsDataURL(file);
+    /* PENGENDALIAN MEMUAT TURUN DATA (DEFENSIVE & AUTO FORMAT FIX) */
+    function loadData() {
+      showLoading(true, 'Memuatkan data operasi...');
+      
+      fetch(`${SCRIPT_URL}?action=getAppData`, { 
+        method: 'GET', 
+        redirect: 'follow' 
+      })
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP Ralat ${res.status}`);
+        return res.json();
+      })
+      .then(res => {
+        console.log("Data diterima dari server:", res);
+
+        if (!res.ok && res.message) {
+          throw new Error(res.message);
+        }
+
+        const payloadData = res.data ? res.data : res;
+
+        if (!payloadData || !payloadData.items) {
+          throw new Error("Struktur data tidak lengkap (senarai item tidak ditemui).");
+        }
+
+        appState.data = payloadData;
+
+        try {
+          renderDashboard();
+        } catch (errDash) {
+          console.error("Ralat melukis Dashboard:", errDash);
+        }
+
+        try {
+          renderDropdowns();
+        } catch (errDrop) {
+          console.error("Ralat mengisi Dropdown:", errDrop);
+        }
+
+        try {
+          renderLogs();
+        } catch (errLogs) {
+          console.error("Ralat melukis Log:", errLogs);
+        }
+
+        try {
+          renderItems();
+        } catch (errItems) {
+          console.error("Ralat melukis Jadual Item:", errItems);
+        }
+
+        showLoading(false);
+      })
+      .catch(err => {
+        showLoading(false);
+        console.error("Gagal loadData:", err);
+        showToast(err.message || 'Gagal memuatkan data.', true);
       });
     }
 
-    async function handleDaftarJemaah(e) {
-      e.preventDefault();
-      showLoading(true, 'Mendaftarkan jemaah ke pangkalan data...');
+    function renderDashboard() {
+      const d = appState.data.dashboard || {};
+      const cards = [
+        { label: 'Jumlah Katalog', val: d.totalItems || 0, sub: 'SKU Berdaftar', fn: null },
+        { label: 'Unit Keseluruhan', val: d.totalStock || 0, sub: 'Baki Fizikal', fn: null },
+        { label: 'Stok Sedia', val: d.okStock || 0, sub: 'Kuantiti Optimum', fn: () => filterDashboard('OK') },
+        { label: 'Paras Rendah', val: d.lowStock || 0, sub: 'Perlu Tambahan', fn: () => filterDashboard('LOW STOCK') },
+        { label: 'Kehabisan Stok', val: d.emptyStock || 0, sub: 'Kuantiti Sifar', fn: () => filterDashboard('HABIS') },
+        { label: 'Aktiviti Hari Ini', val: d.keluarHariIni || 0, sub: `Masuk: ${d.masukHariIni || 0} unit`, fn: null }
+      ];
 
-      try {
-        const payload = {
-          namaPU: document.getElementById('regPU').value,
-          nama: document.getElementById('regNama').value.trim(),
-          nokp: document.getElementById('regIC').value.trim(),
-          telefon: document.getElementById('regTel').value.trim(),
-          beg: document.getElementById('reg_cb_beg').checked,
-          kursus: document.getElementById('reg_cb_kursus').checked,
-          jadual: document.getElementById('reg_cb_jadual').checked,
-          keyin: document.getElementById('reg_cb_keyin').checked,
-          borang: await fileToBase64Payload(document.getElementById('regFileBorang')),
-          gambarPasport: await fileToBase64Payload(document.getElementById('regFileGambar')),
-          salinanPasport: await fileToBase64Payload(document.getElementById('regFileSalinan')),
-          bio: await fileToBase64Payload(document.getElementById('regFileBio')),
-          tiketHHR: await fileToBase64Payload(document.getElementById('regFileHHR')),
-          buktiPembayaran: await fileToBase64Payload(document.getElementById('regFileResit'))
-        };
+      document.getElementById('metricsCards').innerHTML = cards.map((c, i) => `
+        <div class="metric-card" ${c.fn ? `onclick="cards[${i}].fn()"` : ''}>
+          <div class="metric-title">${c.label}</div>
+          <div class="metric-val">${Number(c.val).toLocaleString()}</div>
+          <div class="metric-sub">${c.sub}</div>
+        </div>
+      `).join('');
+      window.cards = cards;
 
-        const res = await fetch(SCRIPT_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'daftarJemaah', data: payload })
-        }).then(r => r.json());
+      let items = appState.data.items || [];
+      if (appState.statusFilter) items = items.filter(i => i.status === appState.statusFilter);
+      else items = items.filter(i => i.status !== 'OK');
 
-        showLoading(false);
-        if (!res.ok) throw new Error(res.message);
+      const tbody = document.getElementById('attentionTbody');
+      const mCards = document.getElementById('attentionMobileCards');
 
-        showToast(res.message);
-        document.getElementById('formDaftarJemaah').reset();
-        switchTab('jemaahList');
-      } catch (err) {
-        showLoading(false);
-        showToast(err.message || 'Gagal mendaftar jemaah.', true);
+      if (!items.length) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:18px; color:#64748b;">Semua item berada pada paras mencukupi.</td></tr>`;
+        mCards.innerHTML = `<div style="text-align:center; padding:16px; color:#64748b; font-size:12px;">Semua item berada pada paras mencukupi.</div>`;
+      } else {
+        tbody.innerHTML = items.map(i => `
+          <tr>
+            <td><strong>${i.sku || i.itemId}</strong></td>
+            <td><strong>${i.item}</strong></td>
+            <td>${i.category}</td>
+            <td style="text-align:right; font-weight:800; color:var(--primary); font-size:13.5px;">${i.currentStock}</td>
+            <td style="text-align:right; color:#64748b;">${i.minimum}</td>
+            <td><span class="badge badge-${i.status === 'OK' ? 'ok' : (i.status === 'HABIS' ? 'empty' : 'low')}">${i.status}</span></td>
+            <td>${i.location}</td>
+          </tr>
+        `).join('');
+
+        mCards.innerHTML = items.map(i => `
+          <div class="card-row">
+            <div class="card-row-top">
+              <div><div class="card-title">${i.item}</div><div class="card-sub">${i.sku || i.itemId} • ${i.category}</div></div>
+              <span class="badge badge-${i.status === 'OK' ? 'ok' : (i.status === 'HABIS' ? 'empty' : 'low')}">${i.status}</span>
+            </div>
+            <div class="card-row-bottom"><span>Baki: <strong style="color:var(--primary); font-size:13px;">${i.currentStock} unit</strong></span><span style="color:#64748b;">Min: ${i.minimum}</span></div>
+          </div>
+        `).join('');
       }
     }
 
-    function loadDataJemaah() {
-      const tbody = document.getElementById('tbodyJemaah');
-      tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:30px;">Memuatkan data jemaah...</td></tr>`;
-      
-      fetch(`${SCRIPT_URL}?action=getSenaraiJemaah`, { method: 'GET', redirect: 'follow' })
-      .then(res => res.json())
-      .then(res => {
-        if (!res.ok) throw new Error(res.message);
-        appState.senaraiJemaah = res.data || [];
-        renderJemaahTable(appState.senaraiJemaah);
-      })
-      .catch(() => {
-        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#ef4444; padding:30px;">Gagal memuat turun rekod jemaah.</td></tr>`;
+    function filterDashboard(status) {
+      appState.statusFilter = status;
+      renderDashboard();
+      document.getElementById('btnClearFilter').classList.remove('hidden');
+      document.getElementById('attentionHeader').textContent = `Status Item: ${status}`;
+    }
+
+    function resetDashboardFilter() {
+      appState.statusFilter = null;
+      renderDashboard();
+      document.getElementById('btnClearFilter').classList.add('hidden');
+      document.getElementById('attentionHeader').textContent = 'Perhatian Inventori';
+    }
+
+    function renderDropdowns() {
+      const l = appState.data.lists || { pic: [], lokasi: [], kategori: [] };
+      const fill = (id, arr) => { document.getElementById(id).innerHTML = (arr || []).map(x => `<option value="${x}">${x}</option>`).join(''); };
+      fill('txPic', l.pic);
+      fill('txLocation', l.lokasi);
+      fill('itCategory', l.kategori);
+      fill('itLocation', l.lokasi);
+      updateBatchOptions();
+    }
+
+    function addBatchRow(prefillId = '', prefillQty = 1) {
+      const container = document.getElementById('batchContainer');
+      const div = document.createElement('div');
+      div.className = 'batch-item-row';
+      div.innerHTML = `
+        <div class="item-select-col"><select class="batch-item" onchange="updateRowHint(this)" required></select></div>
+        <div class="item-bottom-bar">
+          <div class="item-baki-badge hidden"></div>
+          <div class="item-action-controls">
+            <div class="stepper">
+              <button type="button" class="stepper-btn" onclick="stepQty(this, -1)">-</button>
+              <input type="number" class="batch-qty stepper-input" min="0" value="${prefillQty}" oninput="updateRowHint(this)" required>
+              <button type="button" class="stepper-btn" onclick="stepQty(this, 1)">+</button>
+            </div>
+            <button type="button" class="btn-row-del" onclick="removeBatchRow(this)">✕</button>
+          </div>
+        </div>
+      `;
+      container.appendChild(div);
+      updateBatchOptions();
+      if (prefillId) {
+        const sel = div.querySelector('.batch-item');
+        sel.value = prefillId;
+        updateRowHint(sel);
+      }
+    }
+
+    function stepQty(btn, change) {
+      const input = btn.closest('.stepper').querySelector('.batch-qty');
+      let val = (Number(input.value) || 0) + change;
+      const minLimit = appState.globalTxType === 'Pelarasan' ? 0 : 1;
+      if (val < minLimit) val = minLimit;
+      input.value = val;
+      updateRowHint(input);
+    }
+
+    function updateRowHint(elem) {
+      const row = elem.closest('.batch-item-row');
+      const sel = row.querySelector('.batch-item');
+      const badge = row.querySelector('.item-baki-badge');
+      const input = row.querySelector('.batch-qty');
+      const item = (appState.data?.items || []).find(i => (i.sku || i.itemId) === sel.value);
+
+      if (item && sel.value) {
+        badge.classList.remove('hidden', 'low', 'audit-hint');
+        if (appState.globalTxType === 'Pelarasan') {
+          const diff = (Number(input.value) || 0) - item.currentStock;
+          badge.textContent = `Sistem: ${item.currentStock} | Beza: ${diff > 0 ? '+'+diff : diff}`;
+          badge.classList.add('audit-hint');
+        } else {
+          badge.textContent = `Baki Semasa: ${item.currentStock} unit`;
+          badge.classList.toggle('low', item.currentStock <= item.minimum);
+        }
+      } else badge.classList.add('hidden');
+    }
+
+    function removeBatchRow(btn) {
+      if (document.querySelectorAll('.batch-item-row').length > 1) btn.closest('.batch-item-row').remove();
+      else showToast('Sekurang-kurangnya satu item diperlukan.', true);
+    }
+
+    function updateBatchOptions() {
+      const items = appState.data?.items || [];
+      const opts = `<option value="">Pilih Item...</option>` + items.map(i => `<option value="${i.sku || i.itemId}">${i.sku || i.itemId} — ${i.item}</option>`).join('');
+      document.querySelectorAll('.batch-item').forEach(sel => {
+        const cur = sel.value;
+        sel.innerHTML = opts;
+        sel.value = cur;
+        updateRowHint(sel);
       });
     }
 
-    function renderJemaahTable(data) {
-      const tbody = document.getElementById('tbodyJemaah');
-      const mCards = document.getElementById('mobileCardsJemaah');
+    function renderLogs() {
+      const logs = (appState.data?.logs || []).slice(0, 10);
+      const tbody = document.getElementById('logsTbody');
+      const mCards = document.getElementById('logsMobileCards');
 
-      let jumFatin = 0, jumFikriyah = 0;
-      data.forEach(j => {
-        if (j.namaPU === 'Fatin') jumFatin++;
-        if (j.namaPU === 'Fikriyah') jumFikriyah++;
-      });
-      document.getElementById('statJumlahJemaah').textContent = data.length;
-      document.getElementById('statFatin').textContent = jumFatin;
-      document.getElementById('statFikriyah').textContent = jumFikriyah;
-
-      if (!data.length) {
-        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:30px;">Tiada rekod jemaah dijumpai.</td></tr>`;
-        mCards.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:20px; font-size:12px;">Tiada rekod jemaah dijumpai.</div>`;
+      if (!logs.length) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:18px; color:#64748b;">Tiada rekod transaksi direkodkan.</td></tr>`;
+        mCards.innerHTML = `<div style="text-align:center; padding:16px; color:#64748b; font-size:12px;">Tiada rekod transaksi direkodkan.</div>`;
         return;
       }
 
-      tbody.innerHTML = data.map(j => {
-        const d_br = j.borang ? `<a href="${j.borang}" target="_blank" class="badge badge-ok">Borang</a>` : `<span class="badge badge-empty">Borang</span>`;
-        const d_gb = j.gambar ? `<a href="${j.gambar}" target="_blank" class="badge badge-ok">Gambar</a>` : `<span class="badge badge-empty">Gambar</span>`;
-        const d_ps = j.salinan ? `<a href="${j.salinan}" target="_blank" class="badge badge-ok">Pasport</a>` : `<span class="badge badge-empty">Pasport</span>`;
-        const d_bio = j.bio ? `<a href="${j.bio}" target="_blank" class="badge badge-ok">Bio</a>` : `<span class="badge badge-empty">Bio</span>`;
-        const d_hhr = j.tiketHHR ? `<a href="${j.tiketHHR}" target="_blank" class="badge badge-ok">HHR</a>` : `<span class="badge" style="background:#f1f5f9; color:#64748b;">HHR</span>`;
+      tbody.innerHTML = logs.map(l => `
+        <tr class="clickable-row" onclick='openLogDetailModal(${JSON.stringify(l).replace(/'/g, "&apos;")})' title="Pilih untuk perincian penuh">
+          <td>${l.date}</td><td><strong>${l.sku || ''}</strong></td><td>${l.item}</td><td><span class="badge ${l.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}">${l.type}</span></td>
+          <td style="text-align:right; font-weight:800;">${l.qty}</td><td style="text-align:right;">${l.balanceAfter}</td><td>${l.pic}</td><td>${l.location}</td>
+        </tr>
+      `).join('');
 
-        let d_resit = `<span class="badge badge-empty">Tiada Resit</span>`;
-        if (j.resit) {
-          d_resit = j.resit.split(' | ').map(r => {
-            const p = r.split(': ');
-            return p.length === 2 ? `<a href="${p[1]}" target="_blank" class="badge badge-ok">${p[0]}</a>` : `<a href="${r}" target="_blank" class="badge badge-ok">Resit</a>`;
-          }).join(' ');
-        }
-
-        const c_beg = `<span class="badge ${j.beg === 'Selesai' ? 'badge-ok' : 'badge-empty'}">Beg ${j.beg === 'Selesai' ? '✔' : '✖'}</span>`;
-        const c_kur = `<span class="badge ${j.kursus === 'Selesai' ? 'badge-ok' : 'badge-empty'}">Kursus ${j.kursus === 'Selesai' ? '✔' : '✖'}</span>`;
-        const c_jad = `<span class="badge ${j.jadual === 'Selesai' ? 'badge-ok' : 'badge-empty'}">Jadual ${j.jadual === 'Selesai' ? '✔' : '✖'}</span>`;
-        const c_key = `<span class="badge ${j.keyin === 'Selesai' ? 'badge-ok' : 'badge-empty'}">Key-In ${j.keyin === 'Selesai' ? '✔' : '✖'}</span>`;
-
-        return `
-          <tr class="baris-jemaah">
-            <td>
-              <div style="font-size:11px; font-weight:800; color:var(--primary); text-transform:uppercase;">PU: ${j.namaPU}</div>
-              <div style="font-weight:700; color:var(--text); font-size:13.5px;">${j.nama}</div>
-              <div style="font-size:11.5px; color:#475569;">KP: ${j.nokp} • Tel: ${j.telefon}</div>
-            </td>
-            <td><div style="display:flex; flex-wrap:wrap; gap:3px; max-width:210px;">${d_br} ${d_gb} ${d_ps} ${d_bio} ${d_hhr}</div></td>
-            <td><div style="display:flex; flex-wrap:wrap; gap:3px; max-width:200px;">${d_resit}</div></td>
-            <td><div style="display:flex; flex-wrap:wrap; gap:3px;">${c_beg} ${c_kur} ${c_jad} ${c_key}</div></td>
-          </tr>
-        `;
-      }).join('');
-
-      mCards.innerHTML = data.map(j => `
-        <div class="card-row">
-          <div class="card-row-top">
-            <div>
-              <div class="card-title">${j.nama}</div>
-              <div class="card-sub">PU: ${j.namaPU} • KP: ${j.nokp}</div>
-            </div>
-            <span class="badge badge-ok">${j.telefon}</span>
-          </div>
-          <div class="card-row-bottom" style="flex-direction: column; align-items: flex-start; gap: 6px;">
-            <div style="font-size: 11px; color: var(--text-muted);">Checklist: Beg: ${j.beg||'✖'} | Kursus: ${j.kursus||'✖'} | Jadual: ${j.jadual||'✖'} | Key-In: ${j.keyin||'✖'}</div>
-          </div>
+      mCards.innerHTML = logs.map(l => `
+        <div class="card-row clickable-row" onclick='openLogDetailModal(${JSON.stringify(l).replace(/'/g, "&apos;")})'>
+          <div class="card-row-top"><div><div class="card-title">${l.item}</div><div class="card-sub">${l.sku ? l.sku + ' • ' : ''}${l.date} • ${l.pic}</div></div><span class="badge ${l.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}">${l.type}</span></div>
+          <div class="card-row-bottom"><span>Kuantiti: <strong>${l.qty} unit</strong></span><span style="color:#64748b;">Baki: ${l.balanceAfter}</span></div>
         </div>
       `).join('');
     }
 
-    function tapisJadualJemaah() {
-      const cariTxt = document.getElementById('cariJemaahInput').value.toLowerCase();
-      const puTxt = document.getElementById('tapisPUSelect').value.toLowerCase();
-      const rows = document.querySelectorAll('#tbodyJemaah tr.baris-jemaah');
+    function renderItems() {
+      const items = appState.data?.items || [];
+      const tbody = document.getElementById('itemsTbody');
+      const mCards = document.getElementById('itemsMobileCards');
 
-      rows.forEach(row => {
-        const text = row.innerText.toLowerCase();
-        const matchCari = text.includes(cariTxt);
-        const matchPU = (puTxt === '') || text.includes('pu: ' + puTxt);
-        row.style.display = (matchCari && matchPU) ? '' : 'none';
-      });
+      tbody.innerHTML = items.map(i => `
+        <tr>
+          <td><strong>${i.sku || i.itemId}</strong></td><td><strong>${i.item}</strong></td><td>${i.category}</td>
+          <td style="text-align:right; font-weight:800; color:var(--primary);">${i.currentStock}</td><td style="text-align:right; color:#64748b;">${i.minimum}</td>
+          <td><span class="badge badge-${i.status === 'OK' ? 'ok' : (i.status === 'HABIS' ? 'empty' : 'low')}">${i.status}</span></td><td>${i.location}</td>
+          <td style="text-align:center;"><button class="btn btn-secondary" style="padding:3px 10px; font-size:11px; min-height:28px;" onclick='populateEditItem(${JSON.stringify(i).replace(/'/g, "&apos;")})'>Kemaskini</button></td>
+        </tr>
+      `).join('');
+
+      mCards.innerHTML = items.map(i => `
+        <div class="card-row">
+          <div class="card-row-top"><div><div class="card-title">${i.item}</div><div class="card-sub">${i.sku || i.itemId} • ${i.category}</div></div><span class="badge badge-${i.status === 'OK' ? 'ok' : (i.status === 'HABIS' ? 'empty' : 'low')}">${i.status}</span></div>
+          <div class="card-row-bottom"><span>Baki: <strong>${i.currentStock} unit</strong></span><button class="btn btn-secondary" style="padding:2px 8px; font-size:11px; min-height:26px;" onclick='populateEditItem(${JSON.stringify(i).replace(/'/g, "&apos;")})'>Kemaskini</button></div>
+        </div>
+      `).join('');
     }
 
-    function cariJemaahRecord() {
-      const nokp = document.getElementById('searchJemaahIC').value.trim();
-      const feedback = document.getElementById('cariJemaahFeedback');
-      const panel = document.getElementById('panelJemaahFound');
-
-      if (!nokp || nokp.length !== 12) {
-        showToast('Sila masukkan tepat 12 digit No. Kad Pengenalan.', true);
-        return;
-      }
-
-      feedback.textContent = 'Menyemak rekod jemaah...';
-      feedback.style.color = 'var(--text-muted)';
-      panel.classList.add('hidden');
-
-      fetch(`${SCRIPT_URL}?action=semakStatusJemaah&nokp=${encodeURIComponent(nokp)}`, { method: 'GET', redirect: 'follow' })
-      .then(res => res.json())
-      .then(res => {
-        if (!res.ok) throw new Error(res.message);
-        const j = res.data;
-        appState.currentJemaahIC = nokp;
-
-        feedback.textContent = `Rekod: ${j.nama} (${j.telefon}) - PU: ${j.namaPU}`;
-        feedback.style.color = '#047857';
-
-        const updateDoc = (id, url) => {
-          document.getElementById(id).innerHTML = url ? `<a href="${url}" target="_blank" class="badge badge-ok">Lihat Fail</a>` : `<span class="badge badge-empty">Tiada</span>`;
-        };
-        updateDoc('st_borang', j.borang);
-        updateDoc('st_gambar', j.gambar);
-        updateDoc('st_salinan', j.salinan);
-        updateDoc('st_bio', j.bio);
-        updateDoc('st_hhr', j.tiketHHR);
-
-        const resitBox = document.getElementById('st_resit');
-        if (j.resit) {
-          resitBox.innerHTML = j.resit.split(' | ').map(r => {
-            const p = r.split(': ');
-            return p.length === 2 ? `<a href="${p[1]}" target="_blank" class="badge badge-ok">${p[0]}</a>` : `<a href="${r}" target="_blank" class="badge badge-ok">Resit</a>`;
-          }).join(' ');
-        } else resitBox.innerHTML = `<span class="badge badge-empty">Tiada Resit</span>`;
-
-        document.getElementById('edit_cb_beg').checked = (j.beg === 'Selesai');
-        document.getElementById('edit_cb_kursus').checked = (j.kursus === 'Selesai');
-        document.getElementById('edit_cb_jadual').checked = (j.jadual === 'Selesai');
-        document.getElementById('edit_cb_keyin').checked = (j.keyin === 'Selesai');
-
-        panel.classList.remove('hidden');
-      })
-      .catch(err => {
-        feedback.textContent = err.message || 'Rekod jemaah tidak ditemui.';
-        feedback.style.color = '#b91c1c';
-      });
+    function filterItemsTable() {
+      const q = document.getElementById('tableSearch').value.toLowerCase();
+      document.querySelectorAll('#itemsTbody tr').forEach(tr => tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none');
+      document.querySelectorAll('#itemsMobileCards .card-row').forEach(c => c.style.display = c.textContent.toLowerCase().includes(q) ? '' : 'none');
     }
 
-    async function handleKemaskiniJemaah(e) {
+    function submitTransaction(e) {
       e.preventDefault();
-      if (!appState.currentJemaahIC) return;
-
-      showLoading(true, 'Mengemas kini rekod jemaah...');
-      try {
-        const payload = {
-          nokp_kemaskini: appState.currentJemaahIC,
-          beg_k: document.getElementById('edit_cb_beg').checked,
-          kursus_k: document.getElementById('edit_cb_kursus').checked,
-          jadual_k: document.getElementById('edit_cb_jadual').checked,
-          keyin_k: document.getElementById('edit_cb_keyin').checked,
-          borang_k: await fileToBase64Payload(document.getElementById('editFileBorang')),
-          gambarPasport_k: await fileToBase64Payload(document.getElementById('editFileGambar')),
-          salinanPasport_k: await fileToBase64Payload(document.getElementById('editFileSalinan')),
-          bio_k: await fileToBase64Payload(document.getElementById('editFileBio')),
-          tiketHHR_k: await fileToBase64Payload(document.getElementById('editFileHHR')),
-          buktiPembayaran_k: await fileToBase64Payload(document.getElementById('editFileResit'))
-        };
-
-        const res = await fetch(SCRIPT_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'kemaskiniDokumen', data: payload })
-        }).then(r => r.json());
-
-        showLoading(false);
-        if (!res.ok) throw new Error(res.message);
-
-        showToast(res.message);
-        cariJemaahRecord();
-      } catch (err) {
-        showLoading(false);
-        showToast(err.message || 'Gagal mengemaskini jemaah.', true);
-      }
-    }
-
-    function sahkanPadamJemaah() {
-      if (!appState.currentJemaahIC) return;
-      const ic = prompt(`PENGESAHAN KESELAMATAN:\nSila taip semula No. K/P (${appState.currentJemaahIC}) untuk memadam & mengarkibkan rekod ini:`);
-      if (ic !== appState.currentJemaahIC) {
-        if (ic !== null) showToast('No. Kad Pengenalan tidak sepadan. Pemadaman dibatalkan.', true);
-        return;
-      }
-
-      showLoading(true, 'Memadam dan mengarkibkan rekod...');
-      fetch(SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'padamJemaah', data: { nokp: appState.currentJemaahIC } })
-      })
-      .then(r => r.json())
-      .then(res => {
-        showLoading(false);
-        if (!res.ok) throw new Error(res.message);
-        showToast(res.message);
-        document.getElementById('panelJemaahFound').classList.add('hidden');
-        document.getElementById('searchJemaahIC').value = '';
-        document.getElementById('cariJemaahFeedback').textContent = '';
-        appState.currentJemaahIC = '';
-      })
-      .catch(err => {
-        showLoading(false);
-        showToast(err.message || 'Gagal memadamkan rekod.', true);
+      const rows = document.querySelectorAll('.batch-item-row');
+      const items = [];
+      rows.forEach(r => {
+        const itemId = r.querySelector('.batch-item').value;
+        const qty = Number(r.querySelector('.batch-qty').value);
+        if (itemId && qty >= 0) items.push({ itemId, type: appState.globalTxType, qty });
       });
-    }
+      if (!items.length) { showToast('Sila pilih sekurang-kurangnya satu item.', true); return; }
 
-    /* KURSUS UMRAH & POSTER LOGIC */
-    function handlePosterSelection(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const dropzone = document.getElementById('posterDropzone');
-      const container = document.getElementById('posterPreviewContainer');
-      const img = document.getElementById('posterPreviewImg');
-      document.getElementById('posterPreviewName').textContent = file.name;
-      document.getElementById('posterPreviewSize').textContent = (file.size / 1024).toFixed(1) + ' KB';
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        img.src = e.target.result;
-        dropzone.classList.add('hidden');
-        container.classList.remove('hidden');
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function removePosterFile() {
-      document.getElementById('ufPosterFile').value = '';
-      document.getElementById('posterPreviewImg').src = '';
-      document.getElementById('posterPreviewContainer').classList.add('hidden');
-      document.getElementById('posterDropzone').classList.remove('hidden');
-    }
-
-    function formatTarikhKursusMelayu(dateStr) {
-      if (!dateStr) return '';
-      const parts = dateStr.split('-');
-      const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
-      const months = ['JAN', 'FEB', 'MAC', 'APR', 'MEI', 'JUN', 'JUL', 'OGOS', 'SEP', 'OKT', 'NOV', 'DIS'];
-      const days = ['AHAD', 'ISNIN', 'SELASA', 'RABU', 'KHAMIS', 'JUMAAT', 'SABTU'];
-      return `${parts[2]} ${months[d.getMonth()]} ${d.getFullYear()} (${days[d.getDay()]})`;
-    }
-
-    function getBulanKursusMelayu(dateStr) {
-      if (!dateStr) return '';
-      const parts = dateStr.split('-');
-      const months = ['JANUARI', 'FEBRUARI', 'MAC', 'APRIL', 'MEI', 'JUN', 'JULAI', 'OGOS', 'SEPTEMBER', 'OKTOBER', 'NOVEMBER', 'DISEMBER'];
-      return `${months[parseInt(parts[1], 10) - 1]} ${parts[0]}`;
-    }
-
-    async function handleGenerateUmrahForm(e) {
-      e.preventDefault();
-      const rawDate = document.getElementById('ufTarikhInput').value;
-      const formattedDate = formatTarikhKursusMelayu(rawDate);
-      const bulanText = getBulanKursusMelayu(rawDate);
-      const fileInput = document.getElementById('ufPosterFile');
-
-      showLoading(true, 'Menduplikasi templat borang...');
-      let posterBase64 = '', posterType = '';
-      if (fileInput.files && fileInput.files[0]) {
-        const file = fileInput.files[0];
-        posterType = file.type || 'image/jpeg';
-        posterBase64 = await new Promise(res => {
-          const r = new FileReader();
-          r.onload = () => res(r.result.split(',')[1]);
-          r.readAsDataURL(file);
-        });
-      }
-
+      showLoading(true, 'Menyimpan transaksi...');
       fetch(SCRIPT_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
-          action: 'createKursusUmrahForm',
+          action: 'addTransactionsBatch',
           data: {
-            tarikh: rawDate,
-            tarikhFormatted: formattedDate,
-            bulan: bulanText,
-            waktu: document.getElementById('ufWaktu').value.trim(),
-            tempat: document.getElementById('ufTempat').value.trim(),
-            noTel: document.getElementById('ufNoTel').value.trim(),
-            posterBase64, posterType
+            date: document.getElementById('txDate').value,
+            pic: document.getElementById('txPic').value,
+            location: document.getElementById('txLocation').value,
+            note: document.getElementById('txNote').value,
+            items
           }
         })
       })
@@ -1805,64 +1723,178 @@
       .then(res => {
         showLoading(false);
         if (!res.ok) throw new Error(res.message);
-        document.getElementById('resultFormName').textContent = res.formTitle;
-        document.getElementById('resLiveUrl').value = res.formUrl;
-        document.getElementById('resEditUrl').value = res.editUrl;
-        document.getElementById('linkLiveBtn').href = res.formUrl;
-        document.getElementById('linkEditBtn').href = res.editUrl;
-        document.getElementById('umrahFormResult').classList.remove('hidden');
-
-        let localForms = JSON.parse(localStorage.getItem('eastra_umrah_forms') || '[]');
-        localForms = localForms.filter(f => f.id !== res.formUrl);
-        localForms.unshift({ id: res.formUrl, name: res.formTitle, liveUrl: res.formUrl, editUrl: res.editUrl, dateCreated: new Date().toLocaleDateString('ms-MY') });
-        localStorage.setItem('eastra_umrah_forms', JSON.stringify(localForms));
-
-        if (res.formsList && res.formsList.length) renderUmrahFormsList(res.formsList);
-        else renderUmrahFormsList(localForms);
-        showToast('Borang kursus berjaya dijana.');
+        showToast('Transaksi berjaya didaftarkan.');
+        closeTxModal();
+        appState.data = res.data;
+        renderDashboard(); renderLogs(); renderItems();
+        document.getElementById('txNote').value = '';
+        document.getElementById('batchContainer').innerHTML = '';
+        addBatchRow();
       })
-      .catch(err => {
-        showLoading(false);
-        showToast(err.message || 'Gagal menjana borang.', true);
-      });
+      .catch(err => { showLoading(false); showToast(err.message || 'Ralat transaksi.', true); });
     }
 
-    function fetchUmrahFormsList() {
-      const container = document.getElementById('umrahFormsListContainer');
-      const localForms = JSON.parse(localStorage.getItem('eastra_umrah_forms') || '[]');
-      if (localForms.length) renderUmrahFormsList(localForms);
+    function populateEditItem(item) {
+      appState.selectedItem = item.sku || item.itemId;
+      document.getElementById('itSku').value = item.sku || item.itemId;
+      document.getElementById('itSku').readOnly = true;
+      document.getElementById('itName').value = item.item;
+      document.getElementById('itCategory').value = item.category;
+      document.getElementById('itLocation').value = item.location;
+      document.getElementById('itOpening').value = item.openingStock;
+      document.getElementById('itMin').value = item.minimum;
+      document.getElementById('itNote').value = item.note || '';
+      document.getElementById('itemFormTitle').textContent = `Kemaskini: ${item.sku || item.itemId}`;
+      document.getElementById('btnDeleteItem').classList.remove('hidden');
+      document.getElementById('itemModal').classList.remove('hidden');
+      lockBodyScroll();
+    }
 
-      fetch(`${SCRIPT_URL}?action=getUmrahFormsList`, { method: 'GET', redirect: 'follow' })
+    function resetItemForm() {
+      appState.selectedItem = null;
+      document.getElementById('itemForm').reset();
+      document.getElementById('itSku').readOnly = false;
+      document.getElementById('itemFormTitle').textContent = 'Pendaftaran Item Baharu';
+      document.getElementById('btnDeleteItem').classList.add('hidden');
+    }
+
+    function submitItem(e) {
+      e.preventDefault();
+      showLoading(true, 'Menyimpan maklumat...');
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'addOrUpdateItem',
+          data: {
+            sku: document.getElementById('itSku').value.trim(),
+            itemId: document.getElementById('itSku').value.trim(),
+            item: document.getElementById('itName').value,
+            category: document.getElementById('itCategory').value,
+            location: document.getElementById('itLocation').value,
+            openingStock: document.getElementById('itOpening').value,
+            minimum: document.getElementById('itMin').value,
+            note: document.getElementById('itNote').value
+          }
+        })
+      })
       .then(res => res.json())
       .then(res => {
+        showLoading(false);
         if (!res.ok) throw new Error(res.message);
-        if (res.forms && res.forms.length) {
-          localStorage.setItem('eastra_umrah_forms', JSON.stringify(res.forms));
-          renderUmrahFormsList(res.forms);
-        }
-      }).catch(() => {});
+        showToast('Maklumat item disimpan.');
+        closeItemModal();
+        appState.data = res.data;
+        renderDashboard(); renderItems(); resetItemForm();
+      })
+      .catch(err => { showLoading(false); showToast(err.message || 'Ralat simpan item.', true); });
     }
 
-    function renderUmrahFormsList(forms) {
-      const container = document.getElementById('umrahFormsListContainer');
-      if (!forms || !forms.length) {
-        container.innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px;">Tiada rekod borang kursus ditemui.</p>';
+    function deleteItemHandler() {
+      if (!appState.selectedItem || !confirm(`Sahkan padam rekod item ${appState.selectedItem}?`)) return;
+      showLoading(true, 'Memadamkan item...');
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'deleteItem', data: { itemId: appState.selectedItem } })
+      })
+      .then(res => res.json())
+      .then(res => {
+        showLoading(false);
+        if (!res.ok) throw new Error(res.message);
+        showToast('Item telah dipadamkan.');
+        closeItemModal();
+        appState.data = res.data;
+        renderDashboard(); renderItems(); resetItemForm();
+      })
+      .catch(err => { showLoading(false); showToast(err.message || 'Ralat pemadaman.', true); });
+    }
+
+    function openScannerModal() {
+      getAudioContext();
+      document.getElementById('scannerModal').classList.remove('hidden');
+      lockBodyScroll();
+      if (!html5QrCodeScanner) html5QrCodeScanner = new Html5Qrcode("scannerReader");
+      html5QrCodeScanner.start({ facingMode: "environment" }, { fps: 3, qrbox: { width: 160, height: 160 } }, onScanSuccess)
+      .catch(() => { showToast('Akses kamera gagal dimulakan.', true); closeScannerModal(); });
+    }
+
+    function closeScannerModal() {
+      const modal = document.getElementById('scannerModal');
+      if (html5QrCodeScanner && html5QrCodeScanner.isScanning) {
+        html5QrCodeScanner.stop().then(() => { modal.classList.add('hidden'); unlockBodyScroll(); }).catch(() => { modal.classList.add('hidden'); unlockBodyScroll(); });
+      } else { modal.classList.add('hidden'); unlockBodyScroll(); }
+    }
+
+    function playFeedback() {
+      try {
+        const ctx = getAudioContext();
+        if (ctx) {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.frequency.setValueAtTime(950, ctx.currentTime);
+          gain.gain.setValueAtTime(0.2, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.12);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.12);
+        }
+      } catch (e) {}
+      if (navigator.vibrate) navigator.vibrate(60);
+    }
+
+    function onScanSuccess(decodedText) {
+      const now = Date.now();
+      if (isProcessingScan || (now - lastScanTime < 2000)) return;
+      isProcessingScan = true; lastScanCode = decodedText; lastScanTime = now;
+
+      const items = appState.data?.items || [];
+      const matched = items.find(i => (i.sku && i.sku.toLowerCase() === decodedText.trim().toLowerCase()));
+      if (!matched) {
+        playFeedback();
+        document.getElementById('scannerOverlayToast').textContent = 'Item tidak ditemui: ' + decodedText;
+        document.getElementById('scannerOverlayToast').classList.add('show', 'error');
+        setTimeout(() => isProcessingScan = false, 1500);
         return;
       }
 
-      container.innerHTML = forms.map(f => `
-        <div class="form-item-row">
-          <div class="form-item-info">
-            <span class="form-item-title">${f.name}</span>
-            <span class="form-item-date">Tarikh Dijana: ${f.dateCreated}</span>
-          </div>
-          <div class="form-item-actions">
-            <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 32px;" onclick="copyDirectText('${f.liveUrl}')">Salin Pautan</button>
-            <a href="${f.liveUrl}" target="_blank" class="btn btn-primary" style="padding: 4px 14px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Pautan Awam</a>
-            <a href="${f.editUrl}" target="_blank" class="btn btn-secondary" style="padding: 4px 14px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Editor</a>
-          </div>
-        </div>
-      `).join('');
+      playFeedback();
+      const targetCode = matched.sku || matched.itemId;
+      let existing = Array.from(document.querySelectorAll('.batch-item-row')).find(r => r.querySelector('.batch-item').value === targetCode);
+      if (existing) {
+        const q = existing.querySelector('.batch-qty');
+        q.value = (Number(q.value) || 0) + 1;
+        updateRowHint(q);
+      } else {
+        const emptyRow = Array.from(document.querySelectorAll('.batch-item-row')).find(r => !r.querySelector('.batch-item').value);
+        if (emptyRow) {
+          emptyRow.querySelector('.batch-item').value = targetCode;
+          updateRowHint(emptyRow.querySelector('.batch-item'));
+        } else addBatchRow(targetCode, 1);
+      }
+
+      document.getElementById('scannerOverlayToast').textContent = `Ditambah: ${matched.item}`;
+      document.getElementById('scannerOverlayToast').classList.remove('error');
+      document.getElementById('scannerOverlayToast').classList.add('show');
+      setTimeout(() => isProcessingScan = false, 1500);
+    }
+
+    async function generateQRPdf1Page() {
+      const items = appState.data?.items || [];
+      if (!items.length) { showToast('Tiada rekod inventori untuk cetakan.', true); return; }
+      showLoading(true, 'Menjana dokumen PDF...');
+      try {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('p', 'mm', 'a4');
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(13);
+        doc.text('LABEL KOD QR PRODUK - CAWANGAN TERENGGANU', 105, 14, { align: 'center' });
+        doc.save(`eASTRA_Label_QR_${new Date().toISOString().slice(0,10)}.pdf`);
+        showLoading(false);
+        showToast('Dokumen PDF berjaya dimuat turun.');
+      } catch (err) {
+        showLoading(false);
+        showToast('Gagal menjana PDF: ' + err.message, true);
+      }
     }
 
     function copyDirectText(text) {
