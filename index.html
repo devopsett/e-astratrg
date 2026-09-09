@@ -68,6 +68,12 @@
       overflow-x: hidden;
     }
 
+    /* Penjajaran angka kemas sebaris */
+    .num-val {
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum";
+    }
+
     body.modal-open {
       overflow: hidden !important;
       position: fixed !important;
@@ -530,7 +536,7 @@
       position: fixed;
       inset: 0;
       background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(5px);
+      backdrop-filter: blur(6px);
       display: grid;
       place-items: center;
       z-index: 999999 !important;
@@ -546,12 +552,12 @@
       background: #ffffff;
       border-radius: 14px;
       width: 100%;
-      max-width: 500px;
-      max-height: 85vh;
+      max-width: 520px;
+      max-height: 88vh;
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      box-shadow: var(--shadow-lg);
+      box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.35);
       margin: auto;
       position: relative;
       box-sizing: border-box;
@@ -575,7 +581,7 @@
       overflow-y: auto;
       overflow-x: hidden;
       flex: 1;
-      max-height: calc(85vh - 60px);
+      max-height: calc(88vh - 60px);
     }
 
     #scannerModal { z-index: 2000000 !important; }
@@ -772,12 +778,12 @@
       .card-row-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
       .card-title { font-weight: 800; color: var(--text); font-size: 14px; }
       .card-sub { font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
-      .card-row-bottom { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-top: 2px; padding-top: 8px; border-top: 1px dashed var(--border); width: 100%; }
+      .card-row-bottom { display: flex; flex-direction: column; gap: 8px; margin-top: 2px; padding-top: 8px; border-top: 1px dashed var(--border); width: 100%; }
       
       .toast { left: 14px; right: 14px; bottom: 74px; text-align: center; }
       .modal-overlay { padding: 12px; }
       .modal-dialog { width: 100% !important; max-width: 100% !important; border-radius: 12px; margin: 0; }
-      .modal-body { max-height: calc(85vh - 60px); padding: 16px; overflow-x: hidden; }
+      .modal-body { max-height: calc(88vh - 60px); padding: 16px; overflow-x: hidden; }
       .form-item-actions { width: 100%; justify-content: flex-end; }
     }
   </style>
@@ -954,8 +960,8 @@
             </div>
             <div><label>Nama Item</label><input type="text" id="itName" required placeholder="Nama penuh item inventori"></div>
             <div class="input-row">
-              <div><label>Baki Pembukaan</label><input type="number" id="itOpening" min="0" value="0" required></div>
-              <div><label>Had Minimum Stok</label><input type="number" id="itMin" min="0" value="10" required></div>
+              <div><label>Baki Pembukaan</label><input type="number" id="itOpening" min="0" value="0" required class="num-val"></div>
+              <div><label>Had Minimum Stok</label><input type="number" id="itMin" min="0" value="10" required class="num-val"></div>
             </div>
             <div><label>Lokasi Simpanan Utama</label><select id="itLocation" required></select></div>
             <div><label>Catatan Tambahan</label><textarea id="itNote" placeholder="Spesifikasi atau perincian item"></textarea></div>
@@ -983,9 +989,9 @@
           <div class="detail-item"><span class="detail-label">Jenis Urusan</span><span id="dtlType" class="badge">Keluar</span></div>
           <div class="detail-item"><span class="detail-label">Item</span><span id="dtlItem" class="detail-value" style="text-align: right;">-</span></div>
           <div class="detail-item"><span class="detail-label">Kod SKU</span><span id="dtlSku" class="detail-value" style="color: var(--primary);">-</span></div>
-          <div class="detail-item"><span class="detail-label">Tarikh</span><span id="dtlDate" class="detail-value">-</span></div>
-          <div class="detail-item"><span class="detail-label">Kuantiti</span><span id="dtlQty" class="detail-value" style="font-size: 15px;">-</span></div>
-          <div class="detail-item"><span class="detail-label">Baki Selepas Transaksi</span><span id="dtlBalance" class="detail-value">-</span></div>
+          <div class="detail-item"><span class="detail-label">Tarikh</span><span id="dtlDate" class="detail-value num-val">-</span></div>
+          <div class="detail-item"><span class="detail-label">Kuantiti</span><span id="dtlQty" class="detail-value num-val" style="font-size: 15px;">-</span></div>
+          <div class="detail-item"><span class="detail-label">Baki Selepas Transaksi</span><span id="dtlBalance" class="detail-value num-val">-</span></div>
           <div class="detail-item"><span class="detail-label">Pegawai Pengendali</span><span id="dtlPic" class="detail-value">-</span></div>
           <div class="detail-item"><span class="detail-label">Lokasi</span><span id="dtlLocation" class="detail-value">-</span></div>
           <div class="detail-item column"><span class="detail-label">Catatan Rujukan</span><div id="dtlNote" class="detail-note-box">Tiada catatan direkodkan.</div></div>
@@ -998,7 +1004,7 @@
   <div id="jemaahDetailModal" class="modal-overlay hidden" onclick="closeModalOnBackdrop(event, 'jemaahDetailModal')">
     <div class="modal-dialog">
       <div class="modal-header">
-        <h4 id="modalJemaahTitle">Perincian Jemaah</h4>
+        <h4 id="modalJemaahTitle">Perincian Lengkap Jemaah</h4>
         <button type="button" class="btn btn-secondary" style="padding: 4px 10px; min-height: 28px; font-size: 12px;" onclick="closeJemaahDetailModal()">Tutup</button>
       </div>
       <div class="modal-body" id="modalJemaahBody"></div>
@@ -1102,16 +1108,26 @@
           </div>
           <div class="panel-body">
             <div class="filter-pills-bar">
-              <button type="button" id="pillAll" class="pill-btn active" onclick="setInventoryFilter('ALL')">Semua Item (<span id="cntAll">0</span>)</button>
-              <button type="button" id="pillAttn" class="pill-btn" onclick="setInventoryFilter('ATTN')">Perhatian (<span id="cntAttn">0</span>)</button>
-              <button type="button" id="pillLow" class="pill-btn" onclick="setInventoryFilter('LOW STOCK')">Stok Rendah (<span id="cntLow">0</span>)</button>
-              <button type="button" id="pillEmpty" class="pill-btn" onclick="setInventoryFilter('HABIS')">Habis (<span id="cntEmpty">0</span>)</button>
-              <button type="button" id="pillOk" class="pill-btn" onclick="setInventoryFilter('OK')">Stok Sedia (<span id="cntOk">0</span>)</button>
+              <button type="button" id="pillAll" class="pill-btn active" onclick="setInventoryFilter('ALL')">Semua Item (<span id="cntAll" class="num-val">0</span>)</button>
+              <button type="button" id="pillAttn" class="pill-btn" onclick="setInventoryFilter('ATTN')">Perhatian (<span id="cntAttn" class="num-val">0</span>)</button>
+              <button type="button" id="pillLow" class="pill-btn" onclick="setInventoryFilter('LOW STOCK')">Stok Rendah (<span id="cntLow" class="num-val">0</span>)</button>
+              <button type="button" id="pillEmpty" class="pill-btn" onclick="setInventoryFilter('HABIS')">Habis (<span id="cntEmpty" class="num-val">0</span>)</button>
+              <button type="button" id="pillOk" class="pill-btn" onclick="setInventoryFilter('OK')">Stok Sedia (<span id="cntOk" class="num-val">0</span>)</button>
             </div>
 
             <div class="table-container desktop-table">
               <table>
-                <thead><tr><th>Kod SKU</th><th>Nama Item</th><th>Kategori</th><th style="text-align: right;">Baki Semasa</th><th style="text-align: right;">Paras Minimum</th><th>Status</th><th>Lokasi</th></tr></thead>
+                <thead>
+                  <tr>
+                    <th style="text-align: left;">Kod SKU</th>
+                    <th style="text-align: left;">Nama Item</th>
+                    <th style="text-align: left;">Kategori</th>
+                    <th style="text-align: right;">Baki Semasa</th>
+                    <th style="text-align: right;">Paras Min</th>
+                    <th style="text-align: center;">Status</th>
+                    <th style="text-align: left;">Lokasi</th>
+                  </tr>
+                </thead>
                 <tbody id="attentionTbody">
                   <tr><td colspan="7" style="text-align:center; padding:24px; color:var(--text-muted);">Memuatkan rekod...</td></tr>
                 </tbody>
@@ -1125,12 +1141,26 @@
       <section id="tab-transactions" class="hidden">
         <div class="panel">
           <div class="panel-header">
-            <div><h3>Rekod Transaksi Terkini</h3><p style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">Pilih mana-mana baris untuk menyemak maklumat lengkap.</p></div>
+            <div>
+              <h3>Rekod Transaksi Terkini</h3>
+              <p style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">Pilih mana-mana baris untuk menyemak maklumat lengkap urusan.</p>
+            </div>
           </div>
           <div class="panel-body">
             <div class="table-container desktop-table">
               <table>
-                <thead><tr><th>Tarikh</th><th>Kod SKU</th><th>Nama Item</th><th>Urusan</th><th style="text-align: right;">Kuantiti</th><th style="text-align: right;">Baki</th><th>Pegawai</th><th>Lokasi</th></tr></thead>
+                <thead>
+                  <tr>
+                    <th style="text-align: left;">Tarikh</th>
+                    <th style="text-align: left;">Kod SKU</th>
+                    <th style="text-align: left;">Nama Item</th>
+                    <th style="text-align: center;">Urusan</th>
+                    <th style="text-align: right;">Kuantiti</th>
+                    <th style="text-align: right;">Baki Semasa</th>
+                    <th style="text-align: left;">Pegawai (PIC)</th>
+                    <th style="text-align: left;">Lokasi Stor</th>
+                  </tr>
+                </thead>
                 <tbody id="logsTbody">
                   <tr><td colspan="8" style="text-align:center; padding:24px; color:var(--text-muted);">Memuatkan log...</td></tr>
                 </tbody>
@@ -1153,7 +1183,18 @@
           <div class="panel-body">
             <div class="table-container desktop-table">
               <table>
-                <thead><tr><th>Kod SKU</th><th>Nama Item</th><th>Kategori</th><th style="text-align: right;">Baki Semasa</th><th style="text-align: right;">Paras Min</th><th>Status</th><th>Lokasi</th><th style="text-align: center;">Tindakan</th></tr></thead>
+                <thead>
+                  <tr>
+                    <th style="text-align: left;">Kod SKU</th>
+                    <th style="text-align: left;">Nama Item</th>
+                    <th style="text-align: left;">Kategori</th>
+                    <th style="text-align: right;">Baki Semasa</th>
+                    <th style="text-align: right;">Paras Min</th>
+                    <th style="text-align: center;">Status</th>
+                    <th style="text-align: left;">Lokasi</th>
+                    <th style="text-align: center;">Tindakan</th>
+                  </tr>
+                </thead>
                 <tbody id="itemsTbody">
                   <tr><td colspan="8" style="text-align:center; padding:24px; color:var(--text-muted);">Memuatkan katalog...</td></tr>
                 </tbody>
@@ -1238,9 +1279,9 @@
       <!-- SEKSYEN 3: PENGURUSAN JEMAAH -->
       <section id="tab-jemaahList" class="hidden">
         <div class="metrics-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 18px;">
-          <div class="metric-card"><div class="metric-title">Jumlah Jemaah</div><div id="statJumlahJemaah" class="metric-val">0</div><div class="metric-sub">Pendaftaran Keseluruhan</div></div>
-          <div class="metric-card"><div class="metric-title">PU Fatin</div><div id="statFatin" class="metric-val">0</div><div class="metric-sub">Jemaah Diuruskan</div></div>
-          <div class="metric-card"><div class="metric-title">PU Fikriyah</div><div id="statFikriyah" class="metric-val">0</div><div class="metric-sub">Jemaah Diuruskan</div></div>
+          <div class="metric-card"><div class="metric-title">Jumlah Jemaah</div><div id="statJumlahJemaah" class="metric-val num-val">0</div><div class="metric-sub">Pendaftaran Keseluruhan</div></div>
+          <div class="metric-card"><div class="metric-title">PU Fatin</div><div id="statFatin" class="metric-val num-val">0</div><div class="metric-sub">Jemaah Diuruskan</div></div>
+          <div class="metric-card"><div class="metric-title">PU Fikriyah</div><div id="statFikriyah" class="metric-val num-val">0</div><div class="metric-sub">Jemaah Diuruskan</div></div>
         </div>
 
         <div class="panel">
@@ -1261,10 +1302,10 @@
               <table>
                 <thead>
                   <tr>
-                    <th>Maklumat Jemaah</th>
-                    <th>Dokumen Utama</th>
-                    <th>Bukti Pembayaran</th>
-                    <th>Checklist Operasi</th>
+                    <th style="text-align: left;">Maklumat Jemaah</th>
+                    <th style="text-align: left;">Semakan Dokumen</th>
+                    <th style="text-align: left;">Bukti Pembayaran</th>
+                    <th style="text-align: center;">Checklist Operasi</th>
                   </tr>
                 </thead>
                 <tbody id="tbodyJemaah">
@@ -1295,7 +1336,7 @@
                 </div>
                 <div>
                   <label>No. Kad Pengenalan (12 Digit)</label>
-                  <input type="text" id="regIC" required placeholder="Contoh: 880101115566 (tanpa tanda sempang)" pattern="\d{12}" maxlength="12">
+                  <input type="text" id="regIC" required placeholder="Contoh: 880101115566 (tanpa tanda sempang)" pattern="\d{12}" maxlength="12" class="num-val">
                 </div>
               </div>
 
@@ -1306,7 +1347,7 @@
                 </div>
                 <div>
                   <label>No. Telefon</label>
-                  <input type="text" id="regTel" required placeholder="Contoh: 0123456789">
+                  <input type="text" id="regTel" required placeholder="Contoh: 0123456789" class="num-val">
                 </div>
               </div>
 
@@ -1415,7 +1456,7 @@
           <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 18px; margin-bottom: 20px;">
             <label>Carian Melalui No. Kad Pengenalan (12 Digit)</label>
             <div style="display: flex; gap: 8px; margin-top: 6px;">
-              <input type="text" id="searchJemaahIC" placeholder="Masukkan 12 digit nombor kad pengenalan..." maxlength="12">
+              <input type="text" id="searchJemaahIC" placeholder="Masukkan 12 digit nombor kad pengenalan..." maxlength="12" class="num-val">
               <button type="button" class="btn btn-primary" onclick="cariJemaahRecord()">Semak</button>
             </div>
             <div id="cariJemaahFeedback" style="font-size: 12px; font-weight: 700; margin-top: 8px;"></div>
@@ -1597,17 +1638,15 @@
 
       addBatchRow();
       
-      // Pemuatan data berperingkat untuk kestabilan pelayan
       loadData();
-      setTimeout(fetchUmrahFormsList, 800);
-      setTimeout(loadDataJemaah, 1500);
+      setTimeout(fetchUmrahFormsList, 600);
+      setTimeout(loadDataJemaah, 1200);
 
       setTimeout(checkAutoSystemUpdate, 3000);
     });
 
     window.addEventListener('focus', () => { checkAutoSystemUpdate(); });
 
-    /* KEMASKINI LABEL NAMA FAIL SELEPAS PILIH */
     function updateFileLabel(inputEl, labelId) {
       const label = document.getElementById(labelId);
       if (inputEl.files && inputEl.files[0]) {
@@ -1621,7 +1660,6 @@
       }
     }
 
-    /* KAWALAN LACI MENU MOBILE */
     function openMobileDrawer() {
       document.getElementById('drawerOverlay').classList.add('active');
       document.getElementById('mobileDrawer').classList.add('open');
@@ -1639,7 +1677,6 @@
       switchTab(tab);
     }
 
-    /* KAWALAN MENU SIDEBAR DESKTOP & DRAWER */
     function toggleStockMenu() {
       appState.stockMenuOpen = !appState.stockMenuOpen;
       document.getElementById('subStockMenu').classList.toggle('hidden', !appState.stockMenuOpen);
@@ -1808,7 +1845,7 @@
       document.getElementById('metricsCards').innerHTML = cards.map((c, i) => `
         <div class="metric-card" ${c.fn ? `onclick="cards[${i}].fn()"` : ''}>
           <div class="metric-title">${c.label}</div>
-          <div class="metric-val">${Number(c.val).toLocaleString()}</div>
+          <div class="metric-val num-val">${Number(c.val).toLocaleString()}</div>
           <div class="metric-sub">${c.sub}</div>
         </div>
       `).join('');
@@ -1840,13 +1877,13 @@
       } else {
         tbody.innerHTML = filtered.map(i => `
           <tr>
-            <td><strong>${i.sku || i.itemId}</strong></td>
-            <td><strong>${i.item}</strong></td>
-            <td>${i.category}</td>
-            <td style="text-align:right; font-weight:800; color:var(--primary); font-size:13.5px;">${i.currentStock}</td>
-            <td style="text-align:right; color:#64748b;">${i.minimum}</td>
-            <td><span class="badge badge-${i.status === 'OK' ? 'ok' : (i.status === 'HABIS' ? 'empty' : 'low')}">${i.status}</span></td>
-            <td>${i.location}</td>
+            <td style="text-align:left;"><strong>${i.sku || i.itemId}</strong></td>
+            <td style="text-align:left;"><strong>${i.item}</strong></td>
+            <td style="text-align:left;">${i.category}</td>
+            <td style="text-align:right; font-weight:800; color:var(--primary); font-size:13.5px;" class="num-val">${i.currentStock}</td>
+            <td style="text-align:right; color:#64748b;" class="num-val">${i.minimum}</td>
+            <td style="text-align:center;"><span class="badge badge-${i.status === 'OK' ? 'ok' : (i.status === 'HABIS' ? 'empty' : 'low')}">${i.status}</span></td>
+            <td style="text-align:left;">${i.location}</td>
           </tr>
         `).join('');
 
@@ -1856,7 +1893,10 @@
               <div><div class="card-title">${i.item}</div><div class="card-sub">${i.sku || i.itemId} • ${i.category}</div></div>
               <span class="badge badge-${i.status === 'OK' ? 'ok' : (i.status === 'HABIS' ? 'empty' : 'low')}">${i.status}</span>
             </div>
-            <div class="card-row-bottom"><span>Baki: <strong style="color:var(--primary); font-size:13px;">${i.currentStock} unit</strong></span><span style="color:#64748b;">Min: ${i.minimum}</span></div>
+            <div class="card-row-bottom" style="flex-direction:row; justify-content:space-between;">
+              <span>Baki: <strong style="color:var(--primary); font-size:13px;" class="num-val">${i.currentStock} unit</strong></span>
+              <span style="color:#64748b;" class="num-val">Min: ${i.minimum}</span>
+            </div>
           </div>
         `).join('');
       }
@@ -1886,7 +1926,7 @@
           <div class="item-action-controls">
             <div class="stepper">
               <button type="button" class="stepper-btn" onclick="stepQty(this, -1)">-</button>
-              <input type="number" class="batch-qty stepper-input" min="0" value="${prefillQty}" oninput="updateRowHint(this)" required>
+              <input type="number" class="batch-qty stepper-input num-val" min="0" value="${prefillQty}" oninput="updateRowHint(this)" required>
               <button type="button" class="stepper-btn" onclick="stepQty(this, 1)">+</button>
             </div>
             <button type="button" class="btn-row-del" onclick="removeBatchRow(this)">✕</button>
@@ -1960,14 +2000,14 @@
 
       tbody.innerHTML = logs.map((l, idx) => `
         <tr class="clickable-row" onclick="openLogDetailModalByIndex(${idx})" title="Pilih untuk perincian penuh">
-          <td>${l.date || '-'}</td>
-          <td><strong>${l.sku || '-'}</strong></td>
-          <td>${l.item || '-'}</td>
-          <td><span class="badge ${l.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}">${l.type}</span></td>
-          <td style="text-align:right; font-weight:800;">${l.qty}</td>
-          <td style="text-align:right;">${l.balanceAfter}</td>
-          <td>${l.pic || '-'}</td>
-          <td>${l.location || '-'}</td>
+          <td style="text-align:left;" class="num-val">${l.date || '-'}</td>
+          <td style="text-align:left;"><strong>${l.sku || '-'}</strong></td>
+          <td style="text-align:left;">${l.item || '-'}</td>
+          <td style="text-align:center;"><span class="badge ${l.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}">${l.type}</span></td>
+          <td style="text-align:right; font-weight:800;" class="num-val">${l.qty}</td>
+          <td style="text-align:right;" class="num-val">${l.balanceAfter}</td>
+          <td style="text-align:left;">${l.pic || '-'}</td>
+          <td style="text-align:left;">${l.location || '-'}</td>
         </tr>
       `).join('');
 
@@ -1980,9 +2020,9 @@
             </div>
             <span class="badge ${l.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}">${l.type}</span>
           </div>
-          <div class="card-row-bottom">
-            <span>Kuantiti: <strong>${l.qty} unit</strong></span>
-            <span style="color:#64748b;">Baki: ${l.balanceAfter}</span>
+          <div class="card-row-bottom" style="flex-direction:row; justify-content:space-between;">
+            <span>Kuantiti: <strong class="num-val">${l.qty} unit</strong></span>
+            <span style="color:#64748b;" class="num-val">Baki: ${l.balanceAfter}</span>
           </div>
         </div>
       `).join('');
@@ -2020,9 +2060,13 @@
 
       tbody.innerHTML = items.map(i => `
         <tr>
-          <td><strong>${i.sku || i.itemId}</strong></td><td><strong>${i.item}</strong></td><td>${i.category}</td>
-          <td style="text-align:right; font-weight:800; color:var(--primary);">${i.currentStock}</td><td style="text-align:right; color:#64748b;">${i.minimum}</td>
-          <td><span class="badge badge-${i.status === 'OK' ? 'ok' : (i.status === 'HABIS' ? 'empty' : 'low')}">${i.status}</span></td><td>${i.location}</td>
+          <td style="text-align:left;"><strong>${i.sku || i.itemId}</strong></td>
+          <td style="text-align:left;"><strong>${i.item}</strong></td>
+          <td style="text-align:left;">${i.category}</td>
+          <td style="text-align:right; font-weight:800; color:var(--primary);" class="num-val">${i.currentStock}</td>
+          <td style="text-align:right; color:#64748b;" class="num-val">${i.minimum}</td>
+          <td style="text-align:center;"><span class="badge badge-${i.status === 'OK' ? 'ok' : (i.status === 'HABIS' ? 'empty' : 'low')}">${i.status}</span></td>
+          <td style="text-align:left;">${i.location}</td>
           <td style="text-align:center;"><button class="btn btn-secondary" style="padding:3px 10px; font-size:11px; min-height:28px;" onclick='populateEditItem(${JSON.stringify(i).replace(/'/g, "&apos;")})'>Kemaskini</button></td>
         </tr>
       `).join('');
@@ -2030,7 +2074,10 @@
       mCards.innerHTML = items.map(i => `
         <div class="card-row">
           <div class="card-row-top"><div><div class="card-title">${i.item}</div><div class="card-sub">${i.sku || i.itemId} • ${i.category}</div></div><span class="badge badge-${i.status === 'OK' ? 'ok' : (i.status === 'HABIS' ? 'empty' : 'low')}">${i.status}</span></div>
-          <div class="card-row-bottom"><span>Baki: <strong>${i.currentStock} unit</strong></span><button class="btn btn-secondary" style="padding:2px 8px; font-size:11px; min-height:26px;" onclick='populateEditItem(${JSON.stringify(i).replace(/'/g, "&apos;")})'>Kemaskini</button></div>
+          <div class="card-row-bottom" style="flex-direction:row; justify-content:space-between;">
+            <span>Baki: <strong class="num-val">${i.currentStock} unit</strong></span>
+            <button class="btn btn-secondary" style="padding:3px 10px; font-size:11px; min-height:28px;" onclick='populateEditItem(${JSON.stringify(i).replace(/'/g, "&apos;")})'>Kemaskini</button>
+          </div>
         </div>
       `).join('');
     }
@@ -2326,6 +2373,12 @@
       });
     }
 
+    function isChecklistDone(val) {
+      if (!val) return false;
+      const str = String(val).trim().toLowerCase();
+      return str === 'selesai' || str === 'ya' || str === 'true';
+    }
+
     function renderJemaahTable(data) {
       const tbody = document.getElementById('tbodyJemaah');
       const mCards = document.getElementById('mobileCardsJemaah');
@@ -2360,466 +2413,49 @@
           }).join(' ');
         }
 
-        const c_beg = `<span class="badge ${j.beg === 'Selesai' ? 'badge-ok' : 'badge-empty'}">Beg ${j.beg === 'Selesai' ? '✔' : '✖'}</span>`;
-        const c_kur = `<span class="badge ${j.kursus === 'Selesai' ? 'badge-ok' : 'badge-empty'}">Kursus ${j.kursus === 'Selesai' ? '✔' : '✖'}</span>`;
-        const c_jad = `<span class="badge ${j.jadual === 'Selesai' ? 'badge-ok' : 'badge-empty'}">Jadual ${j.jadual === 'Selesai' ? '✔' : '✖'}</span>`;
-        const c_key = `<span class="badge ${j.keyin === 'Selesai' ? 'badge-ok' : 'badge-empty'}">Key-In ${j.keyin === 'Selesai' ? '✔' : '✖'}</span>`;
+        const c_beg = `<span class="badge ${isChecklistDone(j.beg) ? 'badge-ok' : 'badge-empty'}">Beg ${isChecklistDone(j.beg) ? '✔' : '✖'}</span>`;
+        const c_kur = `<span class="badge ${isChecklistDone(j.kursus) ? 'badge-ok' : 'badge-empty'}">Kursus ${isChecklistDone(j.kursus) ? '✔' : '✖'}</span>`;
+        const c_jad = `<span class="badge ${isChecklistDone(j.jadual) ? 'badge-ok' : 'badge-empty'}">Jadual ${isChecklistDone(j.jadual) ? '✔' : '✖'}</span>`;
+        const c_key = `<span class="badge ${isChecklistDone(j.keyin) ? 'badge-ok' : 'badge-empty'}">Key-In ${isChecklistDone(j.keyin) ? '✔' : '✖'}</span>`;
 
         return `
           <tr class="baris-jemaah">
-            <td>
+            <td style="text-align:left;">
               <div style="font-size:11px; font-weight:800; color:var(--primary); text-transform:uppercase;">PU: ${j.namaPU}</div>
               <div style="font-weight:700; color:var(--text); font-size:13.5px;">${j.nama}</div>
-              <div style="font-size:11.5px; color:#475569;">KP: ${j.nokp} • Tel: ${j.telefon}</div>
+              <div style="font-size:11.5px; color:#475569;" class="num-val">KP: ${j.nokp} • Tel: ${j.telefon}</div>
             </td>
-            <td><div style="display:flex; flex-wrap:wrap; gap:3px; max-width:210px;">${d_br} ${d_gb} ${d_ps} ${d_bio} ${d_hhr}</div></td>
-            <td><div style="display:flex; flex-wrap:wrap; gap:3px; max-width:200px;">${d_resit}</div></td>
-            <td><div style="display:flex; flex-wrap:wrap; gap:3px;">${c_beg} ${c_kur} ${c_jad} ${c_key}</div></td>
+            <td style="text-align:left;"><div style="display:flex; flex-wrap:wrap; gap:3px; max-width:210px;">${d_br} ${d_gb} ${d_ps} ${d_bio} ${d_hhr}</div></td>
+            <td style="text-align:left;"><div style="display:flex; flex-wrap:wrap; gap:3px; max-width:200px;">${d_resit}</div></td>
+            <td style="text-align:center;"><div style="display:flex; flex-wrap:wrap; justify-content:center; gap:3px;">${c_beg} ${c_kur} ${c_jad} ${c_key}</div></td>
           </tr>
         `;
       }).join('');
 
-      mCards.innerHTML = data.map((j) => `
+      mCards.innerHTML = data.map((j, idx) => `
         <div class="card-row">
           <div class="card-row-top">
             <div>
               <div class="card-title">${j.nama}</div>
-              <div class="card-sub">PU: ${j.namaPU} • KP: ${j.nokp}</div>
+              <div class="card-sub num-val">PU: ${j.namaPU} • KP: ${j.nokp}</div>
             </div>
-            <span class="badge badge-ok">${j.telefon}</span>
+            <span class="badge badge-ok num-val">${j.telefon}</span>
           </div>
           <div class="card-row-bottom">
-            <span style="font-size: 11px; color: var(--text-muted);">Beg:${j.beg==='Selesai'?'✔':'✖'} | Kursus:${j.kursus==='Selesai'?'✔':'✖'} | KeyIn:${j.keyin==='Selesai'?'✔':'✖'}</span>
-            <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px; min-height: 28px;" onclick='openJemaahDetailModal(${JSON.stringify(j).replace(/'/g, "&apos;")})'>Lihat Perincian</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function openJemaahDetailModal(j) {
-      document.getElementById('modalJemaahTitle').textContent = j.nama;
-      
-      const d_br = j.borang ? `<a href="${j.borang}" target="_blank" class="badge badge-ok">Borang Pendaftaran</a>` : `<span class="badge badge-empty">Tiada Borang</span>`;
-      const d_gb = j.gambar ? `<a href="${j.gambar}" target="_blank" class="badge badge-ok">Gambar Pasport</a>` : `<span class="badge badge-empty">Tiada Gambar</span>`;
-      const d_ps = j.salinan ? `<a href="${j.salinan}" target="_blank" class="badge badge-ok">Salinan Pasport</a>` : `<span class="badge badge-empty">Tiada Pasport</span>`;
-      const d_bio = j.bio ? `<a href="${j.bio}" target="_blank" class="badge badge-ok">Biometrik</a>` : `<span class="badge badge-empty">Tiada Biometrik</span>`;
-      const d_hhr = j.tiketHHR ? `<a href="${j.tiketHHR}" target="_blank" class="badge badge-ok">Tiket HHR</a>` : `<span class="badge badge-empty">Tiada Tiket HHR</span>`;
-
-      let d_resit = `<span class="badge badge-empty">Tiada Resit</span>`;
-      if (j.resit) {
-        d_resit = j.resit.split(' | ').map(r => {
-          const p = r.split(': ');
-          return p.length === 2 ? `<a href="${p[1]}" target="_blank" class="badge badge-ok">${p[0]}</a>` : `<a href="${r}" target="_blank" class="badge badge-ok">Resit Pembayaran</a>`;
-        }).join(' ');
-      }
-
-      document.getElementById('modalJemaahBody').innerHTML = `
-        <div class="detail-item-group">
-          <div class="detail-item"><span class="detail-label">Pegawai (PU)</span><span class="detail-value">${j.namaPU}</span></div>
-          <div class="detail-item"><span class="detail-label">No. Kad Pengenalan</span><span class="detail-value" style="color:var(--primary);">${j.nokp}</span></div>
-          <div class="detail-item"><span class="detail-label">No. Telefon</span><span class="detail-value">${j.telefon}</span></div>
-          
-          <div class="detail-item column">
-            <span class="detail-label">Dokumen & Fail Jemaah</span>
-            <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:4px;">${d_br} ${d_gb} ${d_ps} ${d_bio} ${d_hhr}</div>
-          </div>
-
-          <div class="detail-item column">
-            <span class="detail-label">Bukti Pembayaran / Resit</span>
-            <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:4px;">${d_resit}</div>
-          </div>
-
-          <div class="detail-item column">
-            <span class="detail-label">Status Checklist Operasi</span>
-            <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:4px;">
-              <span class="badge ${j.beg === 'Selesai' ? 'badge-ok' : 'badge-empty'}">Beg: ${j.beg || 'Belum'}</span>
-              <span class="badge ${j.kursus === 'Selesai' ? 'badge-ok' : 'badge-empty'}">Kursus: ${j.kursus || 'Belum'}</span>
-              <span class="badge ${j.jadual === 'Selesai' ? 'badge-ok' : 'badge-empty'}">Jadual: ${j.jadual || 'Belum'}</span>
-              <span class="badge ${j.keyin === 'Selesai' ? 'badge-ok' : 'badge-empty'}">Key-In: ${j.keyin || 'Belum'}</span>
+            <div style="display:flex; flex-wrap:wrap; gap:4px;">
+              <span class="badge ${isChecklistDone(j.beg)?'badge-ok':'badge-empty'}">Beg: ${isChecklistDone(j.beg)?'✔':'✖'}</span>
+              <span class="badge ${isChecklistDone(j.kursus)?'badge-ok':'badge-empty'}">Kursus: ${isChecklistDone(j.kursus)?'✔':'✖'}</span>
+              <span class="badge ${isChecklistDone(j.jadual)?'badge-ok':'badge-empty'}">Jadual: ${isChecklistDone(j.jadual)?'✔':'✖'}</span>
+              <span class="badge ${isChecklistDone(j.keyin)?'badge-ok':'badge-empty'}">Key-In: ${isChecklistDone(j.keyin)?'✔':'✖'}</span>
             </div>
-          </div>
-        </div>
-      `;
-
-      document.getElementById('jemaahDetailModal').classList.remove('hidden');
-      lockBodyScroll();
-    }
-
-    function closeJemaahDetailModal() {
-      document.getElementById('jemaahDetailModal').classList.add('hidden');
-      unlockBodyScroll();
-    }
-
-    function tapisJadualJemaah() {
-      const cariTxt = document.getElementById('cariJemaahInput').value.toLowerCase();
-      const puTxt = document.getElementById('tapisPUSelect').value.toLowerCase();
-      const rows = document.querySelectorAll('#tbodyJemaah tr.baris-jemaah');
-
-      rows.forEach(row => {
-        const text = row.innerText.toLowerCase();
-        const matchCari = text.includes(cariTxt);
-        const matchPU = (puTxt === '') || text.includes('pu: ' + puTxt);
-        row.style.display = (matchCari && matchPU) ? '' : 'none';
-      });
-    }
-
-    function cariJemaahRecord() {
-      const nokp = document.getElementById('searchJemaahIC').value.trim();
-      const feedback = document.getElementById('cariJemaahFeedback');
-      const panel = document.getElementById('panelJemaahFound');
-
-      if (!nokp || nokp.length !== 12) {
-        showToast('Sila masukkan tepat 12 digit No. Kad Pengenalan.', true);
-        return;
-      }
-
-      feedback.textContent = 'Menyemak rekod jemaah...';
-      feedback.style.color = 'var(--text-muted)';
-      panel.classList.add('hidden');
-
-      fetch(`${SCRIPT_URL}?action=semakStatusJemaah&nokp=${encodeURIComponent(nokp)}`, { method: 'GET', redirect: 'follow' })
-      .then(res => res.json())
-      .then(res => {
-        if (!res.ok) throw new Error(res.message);
-        const j = res.data;
-        appState.currentJemaahIC = nokp;
-
-        feedback.textContent = `Rekod: ${j.nama} (${j.telefon}) - PU: ${j.namaPU}`;
-        feedback.style.color = '#047857';
-
-        const updateDoc = (id, url) => {
-          document.getElementById(id).innerHTML = url ? `<a href="${url}" target="_blank" class="badge badge-ok">Lihat Fail</a>` : `<span class="badge badge-empty">Tiada</span>`;
-        };
-        updateDoc('st_borang', j.borang);
-        updateDoc('st_gambar', j.gambar);
-        updateDoc('st_salinan', j.salinan);
-        updateDoc('st_bio', j.bio);
-        updateDoc('st_hhr', j.tiketHHR);
-
-        const resitBox = document.getElementById('st_resit');
-        if (j.resit) {
-          resitBox.innerHTML = j.resit.split(' | ').map(r => {
-            const p = r.split(': ');
-            return p.length === 2 ? `<a href="${p[1]}" target="_blank" class="badge badge-ok">${p[0]}</a>` : `<a href="${r}" target="_blank" class="badge badge-ok">Resit</a>`;
-          }).join(' ');
-        } else resitBox.innerHTML = `<span class="badge badge-empty">Tiada Resit</span>`;
-
-        document.getElementById('edit_cb_beg').checked = (j.beg === 'Selesai');
-        document.getElementById('edit_cb_kursus').checked = (j.kursus === 'Selesai');
-        document.getElementById('edit_cb_jadual').checked = (j.jadual === 'Selesai');
-        document.getElementById('edit_cb_keyin').checked = (j.keyin === 'Selesai');
-
-        panel.classList.remove('hidden');
-      })
-      .catch(err => {
-        feedback.textContent = err.message || 'Rekod jemaah tidak ditemui.';
-        feedback.style.color = '#b91c1c';
-      });
-    }
-
-    async function handleKemaskiniJemaah(e) {
-      e.preventDefault();
-      if (!appState.currentJemaahIC) return;
-
-      showLoading(true, 'Mengemas kini rekod jemaah...');
-      try {
-        const payload = {
-          nokp_kemaskini: appState.currentJemaahIC,
-          beg_k: document.getElementById('edit_cb_beg').checked,
-          kursus_k: document.getElementById('edit_cb_kursus').checked,
-          jadual_k: document.getElementById('edit_cb_jadual').checked,
-          keyin_k: document.getElementById('edit_cb_keyin').checked,
-          borang_k: await fileToBase64Payload(document.getElementById('editFileBorang')),
-          gambarPasport_k: await fileToBase64Payload(document.getElementById('editFileGambar')),
-          salinanPasport_k: await fileToBase64Payload(document.getElementById('editFileSalinan')),
-          bio_k: await fileToBase64Payload(document.getElementById('editFileBio')),
-          tiketHHR_k: await fileToBase64Payload(document.getElementById('editFileHHR')),
-          buktiPembayaran_k: await fileToBase64Payload(document.getElementById('editFileResit'))
-        };
-
-        const res = await fetch(SCRIPT_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: 'kemaskiniDokumen', data: payload })
-        }).then(r => r.json());
-
-        showLoading(false);
-        if (!res.ok) throw new Error(res.message);
-
-        showToast(res.message);
-        loadDataJemaah();
-        cariJemaahRecord();
-      } catch (err) {
-        showLoading(false);
-        showToast(err.message || 'Gagal mengemaskini jemaah.', true);
-      }
-    }
-
-    function sahkanPadamJemaah() {
-      if (!appState.currentJemaahIC) return;
-      const ic = prompt(`PENGESAHAN KESELAMATAN:\nSila taip semula No. K/P (${appState.currentJemaahIC}) untuk memadam & mengarkibkan rekod ini:`);
-      if (ic !== appState.currentJemaahIC) {
-        if (ic !== null) showToast('No. Kad Pengenalan tidak sepadan. Pemadaman dibatalkan.', true);
-        return;
-      }
-
-      showLoading(true, 'Memadam dan mengarkibkan rekod...');
-      fetch(SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'padamJemaah', data: { nokp: appState.currentJemaahIC } })
-      })
-      .then(r => r.json())
-      .then(res => {
-        showLoading(false);
-        if (!res.ok) throw new Error(res.message);
-        showToast(res.message);
-        document.getElementById('panelJemaahFound').classList.add('hidden');
-        document.getElementById('searchJemaahIC').value = '';
-        document.getElementById('cariJemaahFeedback').textContent = '';
-        appState.currentJemaahIC = '';
-        loadDataJemaah();
-      })
-      .catch(err => {
-        showLoading(false);
-        showToast(err.message || 'Gagal memadamkan rekod.', true);
-      });
-    }
-
-    /* KURSUS UMRAH & POSTER LOGIC */
-    function handlePosterSelection(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const dropzone = document.getElementById('posterDropzone');
-      const container = document.getElementById('posterPreviewContainer');
-      const img = document.getElementById('posterPreviewImg');
-      document.getElementById('posterPreviewName').textContent = file.name;
-      document.getElementById('posterPreviewSize').textContent = (file.size / 1024).toFixed(1) + ' KB';
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        img.src = e.target.result;
-        dropzone.classList.add('hidden');
-        container.classList.remove('hidden');
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function removePosterFile() {
-      document.getElementById('ufPosterFile').value = '';
-      document.getElementById('posterPreviewImg').src = '';
-      document.getElementById('posterPreviewContainer').classList.add('hidden');
-      document.getElementById('posterDropzone').classList.remove('hidden');
-    }
-
-    function formatTarikhKursusMelayu(dateStr) {
-      if (!dateStr) return '';
-      const parts = dateStr.split('-');
-      const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
-      const months = ['JAN', 'FEB', 'MAC', 'APR', 'MEI', 'JUN', 'JUL', 'OGOS', 'SEP', 'OKT', 'NOV', 'DIS'];
-      const days = ['AHAD', 'ISNIN', 'SELASA', 'RABU', 'KHAMIS', 'JUMAAT', 'SABTU'];
-      return `${parts[2]} ${months[d.getMonth()]} ${d.getFullYear()} (${days[d.getDay()]})`;
-    }
-
-    function getBulanKursusMelayu(dateStr) {
-      if (!dateStr) return '';
-      const parts = dateStr.split('-');
-      const months = ['JANUARI', 'FEBRUARI', 'MAC', 'APRIL', 'MEI', 'JUN', 'JULAI', 'OGOS', 'SEPTEMBER', 'OKTOBER', 'NOVEMBER', 'DISEMBER'];
-      return `${months[parseInt(parts[1], 10) - 1]} ${parts[0]}`;
-    }
-
-    async function handleGenerateUmrahForm(e) {
-      e.preventDefault();
-      const rawDate = document.getElementById('ufTarikhInput').value;
-      const formattedDate = formatTarikhKursusMelayu(rawDate);
-      const bulanText = getBulanKursusMelayu(rawDate);
-      const fileInput = document.getElementById('ufPosterFile');
-
-      showLoading(true, 'Menduplikasi templat borang...');
-      let posterBase64 = '', posterType = '';
-      if (fileInput.files && fileInput.files[0]) {
-        const file = fileInput.files[0];
-        posterType = file.type || 'image/jpeg';
-        posterBase64 = await new Promise(res => {
-          const r = new FileReader();
-          r.onload = () => res(r.result.split(',')[1]);
-          r.readAsDataURL(file);
-        });
-      }
-
-      fetch(SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-          action: 'createKursusUmrahForm',
-          data: {
-            tarikh: rawDate,
-            tarikhFormatted: formattedDate,
-            bulan: bulanText,
-            waktu: document.getElementById('ufWaktu').value.trim(),
-            tempat: document.getElementById('ufTempat').value.trim(),
-            noTel: document.getElementById('ufNoTel').value.trim(),
-            posterBase64, posterType
-          }
-        })
-      })
-      .then(res => res.json())
-      .then(res => {
-        showLoading(false);
-        if (!res.ok) throw new Error(res.message);
-        document.getElementById('resultFormName').textContent = res.formTitle;
-        document.getElementById('resLiveUrl').value = res.formUrl;
-        document.getElementById('resEditUrl').value = res.editUrl;
-        document.getElementById('linkLiveBtn').href = res.formUrl;
-        document.getElementById('linkEditBtn').href = res.editUrl;
-        document.getElementById('umrahFormResult').classList.remove('hidden');
-
-        let localForms = JSON.parse(localStorage.getItem('eastra_umrah_forms') || '[]');
-        localForms = localForms.filter(f => f.id !== res.formUrl);
-        localForms.unshift({ id: res.formUrl, name: res.formTitle, liveUrl: res.formUrl, editUrl: res.editUrl, dateCreated: new Date().toLocaleDateString('ms-MY') });
-        localStorage.setItem('eastra_umrah_forms', JSON.stringify(localForms));
-
-        if (res.formsList && res.formsList.length) renderUmrahFormsList(res.formsList);
-        else renderUmrahFormsList(localForms);
-        showToast('Borang kursus berjaya dijana.');
-      })
-      .catch(err => {
-        showLoading(false);
-        showToast(err.message || 'Gagal menjana borang.', true);
-      });
-    }
-
-    function fetchUmrahFormsList() {
-      const container = document.getElementById('umrahFormsListContainer');
-      const localForms = JSON.parse(localStorage.getItem('eastra_umrah_forms') || '[]');
-      if (localForms.length) renderUmrahFormsList(localForms);
-
-      fetch(`${SCRIPT_URL}?action=getUmrahFormsList`, { method: 'GET', redirect: 'follow' })
-      .then(res => res.json())
-      .then(res => {
-        const forms = (res && Array.isArray(res.forms)) ? res.forms : [];
-        if (forms.length) {
-          localStorage.setItem('eastra_umrah_forms', JSON.stringify(forms));
-          renderUmrahFormsList(forms);
-        } else if (!localForms.length) {
-          container.innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px;">Tiada rekod borang kursus ditemui.</p>';
-        }
-      })
-      .catch(err => {
-        console.error('Gagal muat borang umrah:', err);
-        if (!localForms.length) {
-          container.innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px;">Tiada rekod borang kursus ditemui.</p>';
-        }
-      });
-    }
-
-    function renderUmrahFormsList(forms) {
-      const container = document.getElementById('umrahFormsListContainer');
-      if (!forms || !forms.length) {
-        container.innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px;">Tiada rekod borang kursus ditemui.</p>';
-        return;
-      }
-
-      container.innerHTML = forms.map(f => `
-        <div class="form-item-row">
-          <div class="form-item-info">
-            <span class="form-item-title">${f.name}</span>
-            <span class="form-item-date">Tarikh Dijana: ${f.dateCreated}</span>
-          </div>
-          <div class="form-item-actions">
-            <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 32px;" onclick="copyDirectText('${f.liveUrl}')">Salin Pautan</button>
-            <a href="${f.liveUrl}" target="_blank" class="btn btn-primary" style="padding: 4px 14px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Pautan Awam</a>
-            <a href="${f.editUrl}" target="_blank" class="btn btn-secondary" style="padding: 4px 14px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Editor</a>
+            <button type="button" class="btn btn-secondary" style="padding: 6px 12px; font-size: 11.5px; min-height: 32px; width: 100%;" onclick='openJemaahDetailModalByIndex(${idx})'>Perincian Fail & Dokumen</button>
           </div>
         </div>
       `).join('');
     }
 
-    function checkAutoSystemUpdate() {
-      fetch(`https://api.github.com/repos/${GITHUB_REPO}/commits?per_page=1&_nocache=${Date.now()}`)
-      .then(r => r.json())
-      .then(commits => {
-        if (!Array.isArray(commits) || !commits.length) return;
-        const sha = commits[0].sha;
-        const saved = localStorage.getItem('eastra_current_commit_sha');
-        if (!saved) { localStorage.setItem('eastra_current_commit_sha', sha); return; }
-        if (saved !== sha) {
-          window.pendingCommitSha = sha;
-          document.getElementById('updateBanner').classList.remove('hidden');
-        }
-      }).catch(() => {});
-    }
+    function openJemaahDetailModalByIndex(idx) {
+      const j = appState.senaraiJemaah[idx];
+      if (!j) return;
 
-    function dismissUpdateBanner() { document.getElementById('updateBanner').classList.add('hidden'); }
-    async function applySystemUpdate() {
-      dismissUpdateBanner();
-      showLoading(true, 'Mengemas kini fail sistem...');
-      if (window.pendingCommitSha) localStorage.setItem('eastra_current_commit_sha', window.pendingCommitSha);
-      if ('caches' in window) {
-        const keys = await caches.keys();
-        await Promise.all(keys.map(k => caches.delete(k)));
-      }
-      setTimeout(() => window.location.reload(true), 1200);
-    }
-
-    function lockBodyScroll() { document.body.classList.add('modal-open'); }
-    function unlockBodyScroll() { if (document.querySelectorAll('.modal-overlay:not(.hidden)').length === 0) document.body.classList.remove('modal-open'); }
-
-    function openTxModal() { document.getElementById('txModal').classList.remove('hidden'); lockBodyScroll(); }
-    function closeTxModal() { document.getElementById('txModal').classList.add('hidden'); unlockBodyScroll(); }
-    function openItemModal() { resetItemForm(); document.getElementById('itemModal').classList.remove('hidden'); lockBodyScroll(); }
-    function closeItemModal() { document.getElementById('itemModal').classList.add('hidden'); resetItemForm(); unlockBodyScroll(); }
-    function openLogDetailModal(log) {
-      document.getElementById('dtlType').textContent = log.type;
-      document.getElementById('dtlType').className = `badge ${log.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}`;
-      document.getElementById('dtlItem').textContent = log.item;
-      document.getElementById('dtlSku').textContent = log.sku || '-';
-      document.getElementById('dtlDate').textContent = log.date;
-      document.getElementById('dtlQty').textContent = `${log.qty} unit`;
-      document.getElementById('dtlBalance').textContent = `${log.balanceAfter} unit`;
-      document.getElementById('dtlPic').textContent = log.pic || '-';
-      document.getElementById('dtlLocation').textContent = log.location || '-';
-      document.getElementById('dtlNote').textContent = log.note || 'Tiada catatan direkodkan.';
-      document.getElementById('logDetailModal').classList.remove('hidden');
-      lockBodyScroll();
-    }
-    function closeLogDetailModal() { document.getElementById('logDetailModal').classList.add('hidden'); unlockBodyScroll(); }
-    function closeModalOnBackdrop(e, modalId) { if (e.target.id === modalId) { document.getElementById(modalId).classList.add('hidden'); unlockBodyScroll(); } }
-
-    function setGlobalTxType(type) {
-      appState.globalTxType = type;
-      document.getElementById('btnTypeOut').classList.toggle('active', type === 'Keluar');
-      document.getElementById('btnTypeIn').classList.toggle('active', type === 'Masuk');
-      document.getElementById('btnTypeAudit').classList.toggle('active', type === 'Pelarasan');
-      document.getElementById('batchLabel').textContent = type === 'Pelarasan' ? 'Kiraan Sebenar di Tapak (Audit)' : (type === 'Masuk' ? 'Senarai Penerimaan Stok' : 'Senarai Item Keluar');
-      document.getElementById('btnSubmitTx').textContent = 'Sahkan ' + (type === 'Pelarasan' ? 'Pelarasan' : (type === 'Masuk' ? 'Penerimaan' : 'Pengeluaran')) + ' Stok';
-      document.querySelectorAll('.batch-item').forEach(sel => updateRowHint(sel));
-    }
-
-    function showLoading(show, msg = 'Memuatkan data...') {
-      const overlay = document.getElementById('loading');
-      if (!show) { overlay.classList.add('hidden'); return; }
-      document.getElementById('loadingMsg').textContent = msg;
-      overlay.classList.remove('hidden');
-    }
-
-    function showToast(msg, isError = false) {
-      const t = document.getElementById('toast');
-      t.textContent = msg;
-      t.classList.toggle('error', isError);
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), 3000);
-    }
-
-    function copyDirectText(text) {
-      navigator.clipboard.writeText(text).then(() => showToast('Pautan disalin ke papan keratan.'));
-    }
-
-    function copyResultLink(inputId) {
-      const input = document.getElementById(inputId);
-      input.select();
-      navigator.clipboard.writeText(input.value).then(() => showToast('Pautan disalin.'));
-    }
-  </script>
-</body>
-</html>
+      document.getElementById('modalJemaahTitle').textContent = j.nama;I seem to be encountering an error. Can I try something else for you?
