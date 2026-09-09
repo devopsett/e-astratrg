@@ -594,9 +594,9 @@
     .mobile-cards { display: none; }
 
     /* Modul Kursus Umrah & Jemaah Shared Styles */
-    .umrah-container { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; width: 100%; }
+    .umrah-container { display: grid; grid-template-columns: 1fr; gap: 22px; align-items: start; width: 100%; }
     .umrah-card { background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow-sm); }
-    .umrah-header { border-bottom: 1px solid var(--border); padding-bottom: 14px; margin-bottom: 18px; }
+    .umrah-header { border-bottom: 1px solid var(--border); padding-bottom: 14px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
     .umrah-header h3 { font-size: 15px; font-weight: 800; color: var(--primary); }
     .result-card-umrah { margin-top: 18px; background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 12px; padding: 16px; }
 
@@ -617,7 +617,7 @@
     .form-item-info { display: flex; flex-direction: column; gap: 4px; }
     .form-item-title { font-weight: 800; color: var(--text); font-size: 13.5px; line-height: 1.35; }
     .form-item-date { font-size: 11px; color: var(--text-muted); font-weight: 600; }
-    .form-item-actions { display: flex; align-items: center; gap: 6px; border-top: 1px dashed var(--border); padding-top: 10px; }
+    .form-item-actions { display: flex; align-items: center; gap: 6px; border-top: 1px dashed var(--border); padding-top: 10px; flex-wrap: wrap; }
 
     /* KAD UPLOAD FILE JEMAAH KORPORAT BEBAS OVERLAP */
     .file-dropzone-compact {
@@ -1054,7 +1054,7 @@
 
         <!-- 3. KURSUS UMRAH -->
         <li>
-          <button id="btnNavUmrah" class="nav-btn" type="button" onclick="switchTab('umrahForm')">
+          <button id="btnNavUmrah" class="nav-btn active" type="button" onclick="switchTab('umrahForm')">
             <div class="nav-btn-content">
               <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
               <span>Kursus Umrah</span>
@@ -1077,12 +1077,12 @@
           
           <img class="topbar-mobile-logo" src="Logo%20Azzuha.png" alt="Logo e-ASTRA">
           <div class="topbar-title">
-            <h2 id="viewTitle">Stok & Inventori</h2>
-            <p id="viewSubtitle">Paparan metrik dan status operasi inventori semasa.</p>
+            <h2 id="viewTitle">Kursus Umrah</h2>
+            <p id="viewSubtitle">Pusat penjanaan dan pengurusan borang pendaftaran digital.</p>
           </div>
         </div>
         <div class="topbar-actions">
-          <button type="button" id="btnStockQR" class="btn-icon-action" onclick="generateQRPdf1Page()" title="Cetak Senarai Kod QR Produk">
+          <button type="button" id="btnStockQR" class="btn-icon-action hidden" onclick="generateQRPdf1Page()" title="Cetak Senarai Kod QR Produk">
             <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><path d="M14 14h3v3h-3z"></path><path d="M20 14v3"></path><path d="M14 20h7"></path></svg>
             <span>Cetak QR</span>
           </button>
@@ -1094,7 +1094,7 @@
       </div>
 
       <!-- SEKSYEN 1: STOK & INVENTORI -->
-      <section id="tab-dashboard">
+      <section id="tab-dashboard" class="hidden">
         <div class="metrics-grid" id="metricsCards"></div>
         <div class="panel">
           <div class="panel-header">
@@ -1164,72 +1164,83 @@
         </div>
       </section>
 
-      <!-- SEKSYEN 2: KURSUS UMRAH -->
-      <section id="tab-umrahForm" class="hidden">
-        <div class="umrah-container">
-          <div>
-            <div class="umrah-card">
-              <div class="umrah-header"><h3>Penyediaan Borang Kursus</h3></div>
-              <form id="generateUmrahForm" onsubmit="handleGenerateUmrahForm(event)">
-                <div class="form-group">
-                  <div class="input-row">
-                    <div><label>Tarikh Pelaksanaan Kursus</label><input type="date" id="ufTarikhInput" required></div>
-                    <div><label>Waktu Kursus</label><input type="text" id="ufWaktu" required value="9.00 PAGI - 12.00 TENGAHARI"></div>
-                  </div>
-                  <div><label>Lokasi / Premis Kursus</label><input type="text" id="ufTempat" required value="DEWAN IMAM A'ASIM, MASJID AL-MUKTAFI BILLAH SHAH (MASJID LADANG)"></div>
-                  <div><label>Talian Khidmat Pelanggan</label><input type="text" id="ufNoTel" required value="011-5508 3367"></div>
-                  <div>
-                    <label>Poster Program (Pilihan)</label>
-                    <div id="posterDropzone" class="poster-upload-zone" onclick="document.getElementById('ufPosterFile').click()">
-                      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-                      <div style="font-weight: 700; color: #1e293b; font-size: 12.5px;">Pilih imej poster baharu</div>
-                      <div style="font-size: 11px; color: #64748b; margin-top: 2px;">Format JPG atau PNG (Poster asal digunakan jika tidak diubah)</div>
-                    </div>
-                    <input type="file" id="ufPosterFile" accept="image/*" class="hidden" onchange="handlePosterSelection(event)">
-                    <div id="posterPreviewContainer" class="poster-preview-card hidden">
-                      <img id="posterPreviewImg" src="" alt="Pratonton" class="poster-preview-img">
-                      <div class="poster-preview-details"><div id="posterPreviewName" class="poster-preview-name">poster.jpg</div><div id="posterPreviewSize" class="poster-preview-size">0 KB</div></div>
-                      <button type="button" class="btn-remove-poster" onclick="removePosterFile()">Padam</button>
-                    </div>
-                  </div>
-                  <button type="submit" id="btnGenForm" class="btn btn-primary" style="width: 100%; min-height: 44px; margin-top: 8px;">Jana Borang Pendaftaran</button>
-                </div>
-              </form>
+      <!-- SEKSYEN 2: KURSUS UMRAH (DENGAN PILIHAN JANA / ARKIB) -->
+      <section id="tab-umrahForm">
+        <div class="panel" style="margin-bottom: 16px;">
+          <div class="panel-body" style="padding: 12px 16px;">
+            <div class="filter-pills-bar" style="margin-bottom: 0;">
+              <button type="button" id="pillUmrahGen" class="pill-btn active" onclick="switchUmrahSubTab('generate')">Jana Borang Baharu</button>
+              <button type="button" id="pillUmrahArchive" class="pill-btn" onclick="switchUmrahSubTab('archive')">Arkib Borang Pendaftaran</button>
+            </div>
+          </div>
+        </div>
 
-              <div id="umrahFormResult" class="result-card-umrah hidden">
-                <h4 style="color: var(--primary); font-size: 14px; font-weight: 800; margin-bottom: 4px;">Borang Telah Berjaya Dijana</h4>
-                <p id="resultFormName" style="font-size: 12px; color: #047857; margin-bottom: 12px; font-weight: 700;"></p>
-                <div style="display: grid; gap: 12px;">
-                  <div>
-                    <label style="font-size: 11.5px; color: #065f46;">Pautan Awam (Peserta):</label>
-                    <div style="display: flex; gap: 8px;">
-                      <input type="text" id="resLiveUrl" readonly style="background: #ffffff; font-size: 12px; color: #047857; font-weight: 700;">
-                      <button type="button" class="btn btn-secondary" style="min-height: 42px;" onclick="copyResultLink('resLiveUrl')">Salin</button>
-                      <a id="linkLiveBtn" href="#" target="_blank" class="btn btn-primary" style="text-decoration: none; min-height: 42px;">Buka</a>
-                    </div>
+        <!-- SUB-TAB 1: JANA BORANG -->
+        <div id="subTabUmrahGenerate" class="umrah-container" style="grid-template-columns: 1fr;">
+          <div class="umrah-card" style="max-width: 800px; margin: 0 auto; width: 100%;">
+            <div class="umrah-header">
+              <h3>Penyediaan Borang Kursus Pendaftaran</h3>
+            </div>
+            <form id="generateUmrahForm" onsubmit="handleGenerateUmrahForm(event)">
+              <div class="form-group">
+                <div class="input-row">
+                  <div><label>Tarikh Pelaksanaan Kursus</label><input type="date" id="ufTarikhInput" required></div>
+                  <div><label>Waktu Kursus</label><input type="text" id="ufWaktu" required value="9.00 PAGI - 12.00 TENGAHARI"></div>
+                </div>
+                <div><label>Lokasi / Premis Kursus</label><input type="text" id="ufTempat" required value="DEWAN IMAM A'ASIM, MASJID AL-MUKTAFI BILLAH SHAH (MASJID LADANG)"></div>
+                <div><label>Talian Khidmat Pelanggan</label><input type="text" id="ufNoTel" required value="011-5508 3367"></div>
+                <div>
+                  <label>Poster Program (Pilihan)</label>
+                  <div id="posterDropzone" class="poster-upload-zone" onclick="document.getElementById('ufPosterFile').click()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                    <div style="font-weight: 700; color: #1e293b; font-size: 12.5px;">Pilih imej poster baharu</div>
+                    <div style="font-size: 11px; color: #64748b; margin-top: 2px;">Format JPG atau PNG (Poster asal digunakan jika tidak diubah)</div>
                   </div>
-                  <div>
-                    <label style="font-size: 11.5px; color: #065f46;">Pautan Pentadbir (Editor):</label>
-                    <div style="display: flex; gap: 8px;">
-                      <input type="text" id="resEditUrl" readonly style="background: #ffffff; font-size: 12px;">
-                      <button type="button" class="btn btn-secondary" style="min-height: 42px;" onclick="copyResultLink('resEditUrl')">Salin</button>
-                      <a id="linkEditBtn" href="#" target="_blank" class="btn btn-secondary" style="text-decoration: none; min-height: 42px;">Buka</a>
-                    </div>
+                  <input type="file" id="ufPosterFile" accept="image/*" class="hidden" onchange="handlePosterSelection(event)">
+                  <div id="posterPreviewContainer" class="poster-preview-card hidden">
+                    <img id="posterPreviewImg" src="" alt="Pratonton" class="poster-preview-img">
+                    <div class="poster-preview-details"><div id="posterPreviewName" class="poster-preview-name">poster.jpg</div><div id="posterPreviewSize" class="poster-preview-size">0 KB</div></div>
+                    <button type="button" class="btn-remove-poster" onclick="removePosterFile()">Padam</button>
+                  </div>
+                </div>
+                <button type="submit" id="btnGenForm" class="btn btn-primary" style="width: 100%; min-height: 44px; margin-top: 8px;">Jana Borang Pendaftaran</button>
+              </div>
+            </form>
+
+            <div id="umrahFormResult" class="result-card-umrah hidden">
+              <h4 style="color: var(--primary); font-size: 14px; font-weight: 800; margin-bottom: 4px;">Borang Telah Berjaya Dijana</h4>
+              <p id="resultFormName" style="font-size: 12px; color: #047857; margin-bottom: 12px; font-weight: 700;"></p>
+              <div style="display: grid; gap: 12px;">
+                <div>
+                  <label style="font-size: 11.5px; color: #065f46;">Pautan Awam (Peserta):</label>
+                  <div style="display: flex; gap: 8px;">
+                    <input type="text" id="resLiveUrl" readonly style="background: #ffffff; font-size: 12px; color: #047857; font-weight: 700;">
+                    <button type="button" class="btn btn-secondary" style="min-height: 42px;" onclick="copyResultLink('resLiveUrl')">Salin</button>
+                    <a id="linkLiveBtn" href="#" target="_blank" class="btn btn-primary" style="text-decoration: none; min-height: 42px;">Buka</a>
+                  </div>
+                </div>
+                <div>
+                  <label style="font-size: 11.5px; color: #065f46;">Pautan Pentadbir (Editor):</label>
+                  <div style="display: flex; gap: 8px;">
+                    <input type="text" id="resEditUrl" readonly style="background: #ffffff; font-size: 12px;">
+                    <button type="button" class="btn btn-secondary" style="min-height: 42px;" onclick="copyResultLink('resEditUrl')">Salin</button>
+                    <a id="linkEditBtn" href="#" target="_blank" class="btn btn-secondary" style="text-decoration: none; min-height: 42px;">Buka</a>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
 
-          <div>
-            <div class="umrah-card">
-              <div class="umrah-header" style="display: flex; justify-content: space-between; align-items: center;">
-                <h3>Arkib Borang Pendaftaran</h3>
-                <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 30px;" onclick="fetchUmrahFormsList()">Kemas Kini</button>
-              </div>
-              <div id="umrahFormsListContainer" class="umrah-forms-grid">
-                <p style="font-size: 12px; color: var(--text-muted); text-align: center; padding: 20px;">Memuatkan arkib borang...</p>
-              </div>
+        <!-- SUB-TAB 2: ARKIB BORANG -->
+        <div id="subTabUmrahArchive" class="umrah-container hidden" style="grid-template-columns: 1fr;">
+          <div class="umrah-card" style="max-width: 800px; margin: 0 auto; width: 100%;">
+            <div class="umrah-header">
+              <h3>Arkib Borang Pendaftaran</h3>
+              <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 30px;" onclick="fetchUmrahFormsList()">Kemas Kini Senarai</button>
+            </div>
+            <div id="umrahFormsListContainer" class="umrah-forms-grid">
+              <p style="font-size: 12px; color: var(--text-muted); text-align: center; padding: 20px;">Memuatkan arkib borang...</p>
             </div>
           </div>
         </div>
@@ -1539,7 +1550,7 @@
 
     <!-- MOBILE BOTTOM NAVIGATION -->
     <nav class="mobile-nav">
-      <button id="mBtnStock" class="m-btn active" type="button" onclick="switchTab('dashboard')">
+      <button id="mBtnStock" class="m-btn" type="button" onclick="switchTab('dashboard')">
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
         <span>Stok</span>
       </button>
@@ -1547,7 +1558,7 @@
         <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
         <span>Jemaah</span>
       </button>
-      <button id="mBtnUmrah" class="m-btn" type="button" onclick="switchTab('umrahForm')">
+      <button id="mBtnUmrah" class="m-btn active" type="button" onclick="switchTab('umrahForm')">
         <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
         <span>Kursus</span>
       </button>
@@ -1560,14 +1571,14 @@
 
     let appState = {
       data: { dashboard: {}, items: [], logs: [], lists: {} },
-      activeTab: 'dashboard',
+      activeTab: 'umrahForm',
       inventoryFilter: 'ALL',
       selectedItem: null,
       globalTxType: 'Keluar',
       umrahForms: [],
       senaraiJemaah: [],
       currentJemaahIC: '',
-      stockMenuOpen: true,
+      stockMenuOpen: false,
       jemaahMenuOpen: false
     };
 
@@ -1596,16 +1607,23 @@
       dateInput.value = defaultDate.toISOString().split('T')[0];
 
       addBatchRow();
-      
-      // Muat data secara berperingkat untuk kestabilan pelayan
       loadData();
-      setTimeout(fetchUmrahFormsList, 800);
+      fetchUmrahFormsList();
       setTimeout(loadDataJemaah, 1500);
-
       setTimeout(checkAutoSystemUpdate, 3000);
     });
 
     window.addEventListener('focus', () => { checkAutoSystemUpdate(); });
+
+    /* SUB-TAB KURSUS UMRAH (JANA / ARKIB) */
+    function switchUmrahSubTab(subTab) {
+      const isGen = (subTab === 'generate');
+      document.getElementById('pillUmrahGen').classList.toggle('active', isGen);
+      document.getElementById('pillUmrahArchive').classList.toggle('active', !isGen);
+      document.getElementById('subTabUmrahGenerate').classList.toggle('hidden', !isGen);
+      document.getElementById('subTabUmrahArchive').classList.toggle('hidden', isGen);
+      if (!isGen) fetchUmrahFormsList();
+    }
 
     /* KEMASKINI LABEL NAMA FAIL SELEPAS PILIH */
     function updateFileLabel(inputEl, labelId) {
@@ -1695,7 +1713,7 @@
         dashboard: ['Stok & Inventori', 'Paparan metrik dan status operasi inventori semasa.'],
         transactions: ['Log Transaksi Stok', 'Rekod terperinci pergerakan masuk, keluar dan pelarasan stok.'],
         items: ['Katalog Inventori', 'Senarai pangkalan data dan had simpanan item cawangan.'],
-        umrahForm: ['Pusat Kursus Umrah', 'Penjanaan dan arkib pautan borang digital jemaah cawangan.'],
+        umrahForm: ['Kursus Umrah', 'Pusat penjanaan dan pengurusan borang pendaftaran digital.'],
         jemaahList: ['Pangkalan Data Jemaah', 'Senarai rekod, semakan dokumen dan checklist operasi.'],
         jemaahAdd: ['Pendaftaran Jemaah Baharu', 'Daftar maklumat jemaah dan muat naik dokumen berkaitan.'],
         jemaahEdit: ['Semakan & Kemaskini Jemaah', 'Semak status fail atau kemaskini rekod jemaah cawangan.']
@@ -1728,19 +1746,10 @@
 
     /* PENGENDALIAN DATA STOK */
     function loadData() {
-      showLoading(true, 'Memuatkan data...');
-      
-      fetch(`${SCRIPT_URL}?action=getAppData`, { 
-        method: 'GET', 
-        redirect: 'follow' 
-      })
+      fetch(`${SCRIPT_URL}?action=getAppData`, { method: 'GET', redirect: 'follow' })
+      .then(res => res.json())
       .then(res => {
-        if (!res.ok) throw new Error(`HTTP Ralat ${res.status}`);
-        return res.json();
-      })
-      .then(res => {
-        if (!res.ok && res.message) throw new Error(res.message);
-
+        if (!res.ok) throw new Error(res.message);
         const payload = res.data ? res.data : res;
         appState.data = {
           dashboard: payload.dashboard || {},
@@ -1748,43 +1757,24 @@
           logs: Array.isArray(payload.logs) ? payload.logs : [],
           lists: payload.lists || { pic: [], lokasi: [], kategori: [] }
         };
-
-        try { renderDashboard(); } catch (e) { console.error('Ralat renderDashboard:', e); }
-        try { renderDropdowns(); } catch (e) { console.error('Ralat renderDropdowns:', e); }
-        try { renderLogs(); } catch (e) { console.error('Ralat renderLogs:', e); }
-        try { renderItems(); } catch (e) { console.error('Ralat renderItems:', e); }
-      })
-      .catch(err => {
-        console.error('Gagal loadData:', err);
-        showToast(err.message || 'Gagal memuat turun data stok.', true);
-        
-        document.getElementById('attentionTbody').innerHTML = `<tr><td colspan="7" style="text-align:center; padding:24px; color:#ef4444;">Gagal memuatkan rekod: ${err.message}</td></tr>`;
-        document.getElementById('logsTbody').innerHTML = `<tr><td colspan="8" style="text-align:center; padding:24px; color:#ef4444;">Gagal memuatkan log transaksi.</td></tr>`;
-        document.getElementById('itemsTbody').innerHTML = `<tr><td colspan="8" style="text-align:center; padding:24px; color:#ef4444;">Gagal memuatkan katalog item.</td></tr>`;
-      })
-      .finally(() => {
-        showLoading(false);
-      });
+        try { renderDashboard(); renderDropdowns(); renderLogs(); renderItems(); } catch (e) {}
+      }).catch(() => {});
     }
 
     function setInventoryFilter(filterType) {
       appState.inventoryFilter = filterType;
-      
       const pills = ['ALL', 'ATTN', 'LOW STOCK', 'HABIS', 'OK'];
       const pillIds = ['pillAll', 'pillAttn', 'pillLow', 'pillEmpty', 'pillOk'];
-      
       pills.forEach((p, idx) => {
         const el = document.getElementById(pillIds[idx]);
         if (el) el.classList.toggle('active', p === filterType);
       });
-
       renderDashboardTableOnly();
     }
 
     function renderDashboard() {
       const d = appState.data.dashboard || {};
       const allItems = appState.data.items || [];
-      
       const countAttn = allItems.filter(i => i.status !== 'OK').length;
       const countLow = allItems.filter(i => i.status === 'LOW STOCK').length;
       const countEmpty = allItems.filter(i => i.status === 'HABIS').length;
@@ -1813,23 +1803,16 @@
         </div>
       `).join('');
       window.cards = cards;
-
       renderDashboardTableOnly();
     }
 
     function renderDashboardTableOnly() {
       const allItems = appState.data.items || [];
       let filtered = allItems;
-
-      if (appState.inventoryFilter === 'ATTN') {
-        filtered = allItems.filter(i => i.status !== 'OK');
-      } else if (appState.inventoryFilter === 'LOW STOCK') {
-        filtered = allItems.filter(i => i.status === 'LOW STOCK');
-      } else if (appState.inventoryFilter === 'HABIS') {
-        filtered = allItems.filter(i => i.status === 'HABIS');
-      } else if (appState.inventoryFilter === 'OK') {
-        filtered = allItems.filter(i => i.status === 'OK');
-      }
+      if (appState.inventoryFilter === 'ATTN') filtered = allItems.filter(i => i.status !== 'OK');
+      else if (appState.inventoryFilter === 'LOW STOCK') filtered = allItems.filter(i => i.status === 'LOW STOCK');
+      else if (appState.inventoryFilter === 'HABIS') filtered = allItems.filter(i => i.status === 'HABIS');
+      else if (appState.inventoryFilter === 'OK') filtered = allItems.filter(i => i.status === 'OK');
 
       const tbody = document.getElementById('attentionTbody');
       const mCards = document.getElementById('attentionMobileCards');
@@ -1951,39 +1934,23 @@
       const logs = appState.data?.logs || [];
       const tbody = document.getElementById('logsTbody');
       const mCards = document.getElementById('logsMobileCards');
-
       if (!logs.length) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:18px; color:#64748b;">Tiada rekod transaksi direkodkan.</td></tr>`;
-        mCards.innerHTML = `<div style="text-align:center; padding:16px; color:#64748b; font-size:12px;">Tiada rekod transaksi direkodkan.</div>`;
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:18px; color:#64748b;">Tiada rekod transaksi.</td></tr>`;
+        mCards.innerHTML = `<div style="text-align:center; padding:16px; color:#64748b; font-size:12px;">Tiada rekod transaksi.</div>`;
         return;
       }
-
       tbody.innerHTML = logs.map((l, idx) => `
-        <tr class="clickable-row" onclick="openLogDetailModalByIndex(${idx})" title="Pilih untuk perincian penuh">
-          <td>${l.date || '-'}</td>
-          <td><strong>${l.sku || '-'}</strong></td>
-          <td>${l.item || '-'}</td>
+        <tr class="clickable-row" onclick="openLogDetailModalByIndex(${idx})">
+          <td>${l.date || '-'}</td><td><strong>${l.sku || '-'}</strong></td><td>${l.item || '-'}</td>
           <td><span class="badge ${l.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}">${l.type}</span></td>
-          <td style="text-align:right; font-weight:800;">${l.qty}</td>
-          <td style="text-align:right;">${l.balanceAfter}</td>
-          <td>${l.pic || '-'}</td>
-          <td>${l.location || '-'}</td>
+          <td style="text-align:right; font-weight:800;">${l.qty}</td><td style="text-align:right;">${l.balanceAfter}</td>
+          <td>${l.pic || '-'}</td><td>${l.location || '-'}</td>
         </tr>
       `).join('');
-
       mCards.innerHTML = logs.map((l, idx) => `
         <div class="card-row clickable-row" onclick="openLogDetailModalByIndex(${idx})">
-          <div class="card-row-top">
-            <div>
-              <div class="card-title">${l.item || 'Item'}</div>
-              <div class="card-sub">${l.sku ? l.sku + ' • ' : ''}${l.date} • ${l.pic || 'Tiada PIC'}</div>
-            </div>
-            <span class="badge ${l.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}">${l.type}</span>
-          </div>
-          <div class="card-row-bottom">
-            <span>Kuantiti: <strong>${l.qty} unit</strong></span>
-            <span style="color:#64748b;">Baki: ${l.balanceAfter}</span>
-          </div>
+          <div class="card-row-top"><div><div class="card-title">${l.item || 'Item'}</div><div class="card-sub">${l.sku ? l.sku + ' • ' : ''}${l.date} • ${l.pic || 'TIADA'}</div></div><span class="badge ${l.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}">${l.type}</span></div>
+          <div class="card-row-bottom"><span>Kuantiti: <strong>${l.qty} unit</strong></span><span style="color:#64748b;">Baki: ${l.balanceAfter}</span></div>
         </div>
       `).join('');
     }
@@ -1991,7 +1958,6 @@
     function openLogDetailModalByIndex(index) {
       const log = (appState.data?.logs || [])[index];
       if (!log) return;
-      
       document.getElementById('dtlType').textContent = log.type;
       document.getElementById('dtlType').className = `badge ${log.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}`;
       document.getElementById('dtlItem').textContent = log.item || '-';
@@ -2002,7 +1968,6 @@
       document.getElementById('dtlPic').textContent = log.pic || '-';
       document.getElementById('dtlLocation').textContent = log.location || '-';
       document.getElementById('dtlNote').textContent = log.note || 'Tiada catatan direkodkan.';
-      
       document.getElementById('logDetailModal').classList.remove('hidden');
       lockBodyScroll();
     }
@@ -2011,13 +1976,11 @@
       const items = appState.data?.items || [];
       const tbody = document.getElementById('itemsTbody');
       const mCards = document.getElementById('itemsMobileCards');
-
       if (!items.length) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:24px; color:#64748b;">Tiada item dalam pangkalan data.</td></tr>`;
-        mCards.innerHTML = `<div style="text-align:center; padding:16px; color:#64748b; font-size:12px;">Tiada item dalam pangkalan data.</div>`;
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:24px; color:#64748b;">Tiada item.</td></tr>`;
+        mCards.innerHTML = `<div style="text-align:center; padding:16px; color:#64748b; font-size:12px;">Tiada item.</div>`;
         return;
       }
-
       tbody.innerHTML = items.map(i => `
         <tr>
           <td><strong>${i.sku || i.itemId}</strong></td><td><strong>${i.item}</strong></td><td>${i.category}</td>
@@ -2026,7 +1989,6 @@
           <td style="text-align:center;"><button class="btn btn-secondary" style="padding:3px 10px; font-size:11px; min-height:28px;" onclick='populateEditItem(${JSON.stringify(i).replace(/'/g, "&apos;")})'>Kemaskini</button></td>
         </tr>
       `).join('');
-
       mCards.innerHTML = items.map(i => `
         <div class="card-row">
           <div class="card-row-top"><div><div class="card-title">${i.item}</div><div class="card-sub">${i.sku || i.itemId} • ${i.category}</div></div><span class="badge badge-${i.status === 'OK' ? 'ok' : (i.status === 'HABIS' ? 'empty' : 'low')}">${i.status}</span></div>
