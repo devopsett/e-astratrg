@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>e-ASTRA</title>
+  <title>e-ASTRA | Sistem Pengurusan Cawangan</title>
   
   <link rel="manifest" href="manifest.json">
   <meta name="mobile-web-app-capable" content="yes">
@@ -275,15 +275,24 @@
     }
 
     .brand-title { font-size: 16px; font-weight: 800; line-height: 1.2; letter-spacing: -0.2px; }
-    .brand-sub { font-size: 11px; color: #a7f3d0; font-weight: 500; }
+    .brand-sub { font-size: 11px; color: #a7f3d0; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
 
-    .nav-list { display: grid; gap: 6px; list-style: none; }
+    .nav-section-title {
+      font-size: 10px;
+      font-weight: 800;
+      color: #6ee7b7;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 10px 14px 4px;
+    }
+
+    .nav-list { display: grid; gap: 4px; list-style: none; margin-bottom: 10px; }
     .nav-btn {
       width: 100%;
       border: none;
       background: transparent;
       color: rgba(255,255,255,0.85);
-      padding: 12px 14px;
+      padding: 11px 14px;
       border-radius: 8px;
       font-family: inherit;
       font-size: 13px;
@@ -296,12 +305,12 @@
       transition: all 0.18s;
     }
 
-    .nav-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.2; }
+    .nav-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.2; flex-shrink: 0; }
     .nav-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
     .nav-btn.active {
       background: #ffffff;
       color: var(--primary);
-      font-weight: 700;
+      font-weight: 800;
       box-shadow: var(--shadow-sm);
     }
 
@@ -364,7 +373,7 @@
 
     .btn-icon-action {
       height: 40px;
-      padding: 0 12px;
+      padding: 0 14px;
       border-radius: 10px;
       border: 1px solid var(--border);
       background: #ffffff;
@@ -373,7 +382,7 @@
       align-items: center;
       gap: 7px;
       cursor: pointer;
-      font-size: 12px;
+      font-size: 12.5px;
       font-weight: 600;
       transition: all 0.18s ease;
       white-space: nowrap;
@@ -446,7 +455,7 @@
       display: grid;
       place-items: center;
       z-index: 950;
-      transition: transform 0.2s ease, background 0.15s ease;
+      transition: transform 0.2s ease, opacity 0.2s ease;
     }
 
     .fab-btn:active { transform: scale(0.92); background: var(--primary-hover); }
@@ -893,7 +902,7 @@
     .m-btn svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 2.2; }
     .m-btn.active { color: var(--primary); font-weight: 800; background: var(--primary-soft); }
 
-    /* Susun atur KIRI & KANAN (2 Kolum Desktop) bagi Modul Kursus Umrah */
+    /* Susun Atur Kiri & Kanan (2 Kolum Desktop) */
     .umrah-container {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -917,7 +926,7 @@
     }
 
     .umrah-header h3 {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 800;
       color: var(--primary);
     }
@@ -989,7 +998,6 @@
     }
 
     @media (max-width: 900px) {
-      /* Bila skrin bawah 900px, kembalikan susunan 1 kolum atas-bawah */
       .umrah-container {
         grid-template-columns: 1fr;
       }
@@ -1068,25 +1076,25 @@
 </head>
 <body>
 
-  <!-- BANNER NOTIFIKASI KEMAS KINI VERSI -->
+  <!-- BANNER NOTIFIKASI KEMAS KINI -->
   <div id="updateBanner" class="update-banner hidden">
     <div class="update-content">
       <div class="update-header-row">
         <div class="update-badge">
           <span class="update-badge-dot"></span>
-          <span>Kemas Kini Tersedia</span>
+          <span>Kemas Kini Perisian</span>
         </div>
       </div>
       <div>
-        <div class="update-title">Versi Baharu e-ASTRA Sedia Dipasang</div>
+        <div class="update-title">Versi Baharu Sedia Dipasang</div>
       </div>
       <div class="update-details-box">
-        <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Apa yang baharu:</strong>
-        <span id="updateChangelogText">Penambahbaikan sistem dan kestabilan aplikasi.</span>
+        <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Nota Keluaran:</strong>
+        <span id="updateChangelogText">Penambahbaikan fungsi dan kestabilan sistem aplikasi.</span>
       </div>
       <div class="update-action-row">
         <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
-        <button type="button" class="btn-update-confirm" onclick="applySystemUpdate()">Kemas Kini Sekarang</button>
+        <button type="button" class="btn-update-confirm" onclick="applySystemUpdate()">Pasang Sekarang</button>
       </div>
     </div>
   </div>
@@ -1103,15 +1111,15 @@
           <img class="update-anim-logo" src="Logo%20Azzuha.png" alt="e-ASTRA">
         </div>
       </div>
-      <p id="loadingMsg" style="font-size: 13.5px; font-weight: 700; color: var(--primary-dark); letter-spacing: -0.2px;">Memuatkan data...</p>
+      <p id="loadingMsg" style="font-size: 13.5px; font-weight: 700; color: var(--primary-dark); letter-spacing: -0.2px;">Memproses data...</p>
       <p id="loadingSubMsg" style="font-size: 11.5px; color: var(--text-muted); margin-top: 4px;" class="hidden"></p>
     </div>
   </div>
 
   <div id="toast" class="toast">Notifikasi</div>
 
-  <!-- BUTANG BULAT TERAPUNG (FAB) -->
-  <button type="button" class="fab-btn" onclick="openTxModal()" title="Rekod Transaksi">
+  <!-- BUTANG TERAPUNG (FAB) - HANYA MUNCUL DI MODUL INVENTORI -->
+  <button type="button" id="mainFabBtn" class="fab-btn" onclick="openTxModal()" title="Rekod Transaksi Stok">
     <svg viewBox="0 0 24 24">
       <line x1="12" y1="5" x2="12" y2="19"></line>
       <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -1122,15 +1130,15 @@
   <div id="scannerModal" class="modal-overlay hidden">
     <div class="scanner-dialog">
       <div class="modal-header">
-        <h4 style="font-size: 13px; font-weight: 700;">Imbas Kod Bar / QR</h4>
+        <h4 style="font-size: 13px; font-weight: 700;">Pengimbas Kod Bar / QR</h4>
         <button type="button" class="btn btn-secondary" style="padding: 4px 10px; min-height: 28px; font-size: 12px;" onclick="closeScannerModal()">Tutup</button>
       </div>
       <div class="scanner-body">
         <div class="scanner-camera-wrapper">
-          <div id="scannerOverlayToast" class="scanner-overlay-toast">Item Berjaya Diimbas</div>
+          <div id="scannerOverlayToast" class="scanner-overlay-toast">Item Dikenal Pasti</div>
           <div id="scannerReader"></div>
         </div>
-        <p style="font-size: 11px; color: var(--text-muted); margin-top: 10px; text-align: center;">Halakan kamera ke arah label kod item.</p>
+        <p style="font-size: 11px; color: var(--text-muted); margin-top: 10px; text-align: center;">Halakan kamera pada kod label item.</p>
       </div>
     </div>
   </div>
@@ -1139,7 +1147,7 @@
   <div id="txModal" class="modal-overlay hidden" onclick="closeModalOnBackdrop(event, 'txModal')">
     <div class="modal-dialog">
       <div class="modal-header">
-        <h4 id="txModalTitle">Rekod Transaksi Stok</h4>
+        <h4 id="txModalTitle">Daftar Transaksi Stok</h4>
         <button type="button" class="btn btn-secondary" style="padding: 4px 10px; min-height: 28px; font-size: 12px;" onclick="closeTxModal()">Tutup</button>
       </div>
       <div class="modal-body">
@@ -1147,23 +1155,23 @@
           <div class="form-group">
             <div class="type-switcher">
               <button type="button" id="btnTypeOut" class="type-btn active" onclick="setGlobalTxType('Keluar')">Stok Keluar</button>
-              <button type="button" id="btnTypeIn" class="type-btn" onclick="setGlobalTxType('Masuk')">Stok Masuk</button>
-              <button type="button" id="btnTypeAudit" class="type-btn" onclick="setGlobalTxType('Pelarasan')">Pelarasan / Audit</button>
+              <button type="button" id="btnTypeIn" class="type-btn" onclick="setGlobalTxType('Masuk')">Penerimaan Stok</button>
+              <button type="button" id="btnTypeAudit" class="type-btn" onclick="setGlobalTxType('Pelarasan')">Audit Fizikal</button>
             </div>
 
             <div class="input-row">
               <div>
-                <label>Tarikh</label>
+                <label>Tarikh Transaksi</label>
                 <input type="date" id="txDate" required>
               </div>
               <div>
-                <label>PIC Bertanggungjawab</label>
+                <label>Pegawai Pengendali (PIC)</label>
                 <select id="txPic" required></select>
               </div>
             </div>
 
             <div>
-              <label>Lokasi Transaksi</label>
+              <label>Lokasi Cawangan / Stor</label>
               <select id="txLocation" required></select>
             </div>
 
@@ -1172,18 +1180,18 @@
                 <span style="font-weight: 700; font-size: 12px;" id="batchLabel">Senarai Item Keluar</span>
                 <div style="display: flex; gap: 6px;">
                   <button type="button" class="btn btn-primary" style="padding: 4px 10px; font-size: 11.5px; min-height: 32px;" onclick="openScannerModal()">Imbas Kod</button>
-                  <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 32px;" onclick="addBatchRow()">+ Item</button>
+                  <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 32px;" onclick="addBatchRow()">+ Tambah Item</button>
                 </div>
               </div>
               <div id="batchContainer"></div>
             </div>
 
             <div>
-              <label id="txNoteLabel">Catatan / Rujukan</label>
-              <textarea id="txNote" placeholder="Tujuan / No. Resit / Catatan Pelarasan"></textarea>
+              <label id="txNoteLabel">Catatan / Rujukan Urusan</label>
+              <textarea id="txNote" placeholder="Tujuan, no. rujukan atau nota ringkas"></textarea>
             </div>
 
-            <button type="submit" id="btnSubmitTx" class="btn btn-primary" style="width: 100%;">Simpan Transaksi</button>
+            <button type="submit" id="btnSubmitTx" class="btn btn-primary" style="width: 100%;">Sahkan Transaksi</button>
           </div>
         </form>
       </div>
@@ -1194,7 +1202,7 @@
   <div id="itemModal" class="modal-overlay hidden" onclick="closeModalOnBackdrop(event, 'itemModal')">
     <div class="modal-dialog">
       <div class="modal-header">
-        <h4 id="itemFormTitle">Daftar / Kemaskini Item</h4>
+        <h4 id="itemFormTitle">Maklumat Item</h4>
         <button type="button" class="btn btn-secondary" style="padding: 4px 10px; min-height: 28px; font-size: 12px;" onclick="closeItemModal()">Tutup</button>
       </div>
       <div class="modal-body">
@@ -1202,7 +1210,7 @@
           <div class="form-group">
             <div class="input-row">
               <div>
-                <label>SKU / Kod Item</label>
+                <label>Kod SKU</label>
                 <input type="text" id="itSku" required placeholder="Contoh: AZZ-BEG-FSC24">
               </div>
               <div>
@@ -1212,34 +1220,34 @@
             </div>
 
             <div>
-              <label>Nama Penuh Item</label>
-              <input type="text" id="itName" required placeholder="Nama item seperti dalam tracker">
+              <label>Nama Item</label>
+              <input type="text" id="itName" required placeholder="Nama penuh item inventori">
             </div>
 
             <div class="input-row">
               <div>
-                <label>Stok Awal</label>
+                <label>Baki Pembukaan</label>
                 <input type="number" id="itOpening" min="0" value="0" required>
               </div>
               <div>
-                <label>Paras Minima</label>
+                <label>Had Minimum Stok</label>
                 <input type="number" id="itMin" min="0" value="10" required>
               </div>
             </div>
 
             <div>
-              <label>Lokasi Simpanan</label>
+              <label>Lokasi Simpanan Utama</label>
               <select id="itLocation" required></select>
             </div>
 
             <div>
               <label>Catatan Tambahan</label>
-              <textarea id="itNote" placeholder="Catatan spesifikasi item"></textarea>
+              <textarea id="itNote" placeholder="Spesifikasi atau perincian item"></textarea>
             </div>
 
             <div style="display: flex; gap: 8px; margin-top: 4px;">
-              <button type="submit" class="btn btn-primary" style="flex: 1;">Simpan Item</button>
-              <button type="button" class="btn btn-secondary" onclick="resetItemForm()">Reset</button>
+              <button type="submit" class="btn btn-primary" style="flex: 1;">Simpan Maklumat</button>
+              <button type="button" class="btn btn-secondary" onclick="resetItemForm()">Set Semula</button>
               <button type="button" id="btnDeleteItem" class="btn btn-danger hidden" onclick="deleteItemHandler()">Padam</button>
             </div>
           </div>
@@ -1252,18 +1260,18 @@
   <div id="logDetailModal" class="modal-overlay hidden" onclick="closeModalOnBackdrop(event, 'logDetailModal')">
     <div class="modal-dialog">
       <div class="modal-header">
-        <h4>Perincian Transaksi</h4>
+        <h4>Perincian Rekod Transaksi</h4>
         <button type="button" class="btn btn-secondary" style="padding: 4px 10px; min-height: 28px; font-size: 12px;" onclick="closeLogDetailModal()">Tutup</button>
       </div>
       <div class="modal-body">
         <div class="detail-item-group">
           <div class="detail-item">
-            <span class="detail-label">Jenis Transaksi</span>
+            <span class="detail-label">Jenis Urusan</span>
             <span id="dtlType" class="badge">Keluar</span>
           </div>
 
           <div class="detail-item">
-            <span class="detail-label">Nama Item</span>
+            <span class="detail-label">Item</span>
             <span id="dtlItem" class="detail-value" style="text-align: right;">-</span>
           </div>
 
@@ -1283,12 +1291,12 @@
           </div>
 
           <div class="detail-item">
-            <span class="detail-label">Baki Selepas</span>
+            <span class="detail-label">Baki Selepas Transaksi</span>
             <span id="dtlBalance" class="detail-value">-</span>
           </div>
 
           <div class="detail-item">
-            <span class="detail-label">PIC Bertanggungjawab</span>
+            <span class="detail-label">Pegawai Pengendali</span>
             <span id="dtlPic" class="detail-value">-</span>
           </div>
 
@@ -1298,8 +1306,8 @@
           </div>
 
           <div class="detail-item column">
-            <span class="detail-label">Catatan / Nota Pelarasan</span>
-            <div id="dtlNote" class="detail-note-box">Tiada catatan</div>
+            <span class="detail-label">Catatan Rujukan</span>
+            <div id="dtlNote" class="detail-note-box">Tiada catatan direkodkan.</div>
           </div>
         </div>
       </div>
@@ -1313,27 +1321,28 @@
         <img class="brand-logo-img" src="Logo%20Azzuha.png" alt="Logo e-ASTRA">
         <div>
           <div class="brand-title">e-ASTRA</div>
-          <div class="brand-sub">Sistem Stok TRG</div>
+          <div class="brand-sub">Hab Operasi Cawangan</div>
         </div>
       </div>
       
+      <div class="nav-section-title">Modul Cawangan</div>
       <ul class="nav-list">
         <li>
           <button class="nav-btn active" onclick="switchTab('dashboard')">
             <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-            Dashboard
+            Ringkasan Operasi
           </button>
         </li>
         <li>
           <button class="nav-btn" onclick="switchTab('transactions')">
             <svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
-            Transaksi Stok
+            Log Transaksi Stok
           </button>
         </li>
         <li>
           <button class="nav-btn" onclick="switchTab('items')">
             <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
-            Data Induk Item
+            Katalog Inventori
           </button>
         </li>
         <li>
@@ -1345,7 +1354,7 @@
       </ul>
 
       <div class="sidebar-footer">
-        © 2026 e-ASTRA TRG
+        © 2026 e-ASTRA • Cawangan Terengganu
       </div>
     </aside>
 
@@ -1354,12 +1363,13 @@
         <div class="topbar-left">
           <img class="topbar-mobile-logo" src="Logo%20Azzuha.png" alt="Logo e-ASTRA">
           <div class="topbar-title">
-            <h2 id="viewTitle">Dashboard e-ASTRA</h2>
-            <p id="viewSubtitle">Sistem Pengurusan Stok Cawangan Terengganu.</p>
+            <h2 id="viewTitle">Ringkasan Operasi</h2>
+            <p id="viewSubtitle">Paparan metrik dan status operasi cawangan semasa.</p>
           </div>
         </div>
         <div class="topbar-actions">
-          <button type="button" class="btn-icon-action" onclick="generateQRPdf1Page()" title="Jana Kod QR Semua Produk (PDF 1 Muka Surat)">
+          <!-- BUTANG KHAS STOK: DISEMBUNYIKAN BILA BERADA DI MODUL KURSUS UMRAH -->
+          <button type="button" id="btnStockQR" class="btn-icon-action" onclick="generateQRPdf1Page()" title="Cetak Senarai Kod QR Produk">
             <svg viewBox="0 0 24 24">
               <rect x="3" y="3" width="7" height="7"></rect>
               <rect x="14" y="3" width="7" height="7"></rect>
@@ -1371,7 +1381,7 @@
             <span>Cetak QR</span>
           </button>
           
-          <button class="btn-icon-action btn-icon-refresh" onclick="loadData()" title="Segar Semula">
+          <button class="btn-icon-action btn-icon-refresh" onclick="refreshCurrentView()" title="Segar Semula Paparan">
             <svg viewBox="0 0 24 24">
               <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
             </svg>
@@ -1379,25 +1389,25 @@
         </div>
       </div>
 
-      <!-- TAB 1: DASHBOARD -->
+      <!-- TAB 1: RINGKASAN OPERASI (DASHBOARD) -->
       <section id="tab-dashboard">
         <div class="metrics-grid" id="metricsCards"></div>
 
         <div class="panel">
           <div class="panel-header">
-            <h3 id="attentionHeader">Item Perlu Perhatian</h3>
-            <button class="btn btn-secondary hidden" id="btnClearFilter" style="padding: 3px 8px; font-size: 11px; min-height: 26px;" onclick="resetDashboardFilter()">Reset Tapisan</button>
+            <h3 id="attentionHeader">Perhatian Inventori</h3>
+            <button class="btn btn-secondary hidden" id="btnClearFilter" style="padding: 3px 8px; font-size: 11px; min-height: 26px;" onclick="resetDashboardFilter()">Kosongkan Tapisan</button>
           </div>
           <div class="panel-body">
             <div class="table-container desktop-table">
               <table>
                 <thead>
                   <tr>
-                    <th>SKU</th>
-                    <th>Item</th>
+                    <th>Kod SKU</th>
+                    <th>Nama Item</th>
                     <th>Kategori</th>
                     <th style="text-align: right;">Baki Semasa</th>
-                    <th style="text-align: right;">Paras Min</th>
+                    <th style="text-align: right;">Paras Minimum</th>
                     <th>Status</th>
                     <th>Lokasi</th>
                   </tr>
@@ -1410,13 +1420,13 @@
         </div>
       </section>
 
-      <!-- TAB 2: TRANSAKSI -->
+      <!-- TAB 2: LOG TRANSAKSI -->
       <section id="tab-transactions" class="hidden">
         <div class="panel">
           <div class="panel-header">
             <div>
-              <h3>Log 10 Transaksi Terkini</h3>
-              <p style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">Tekan mana-mana baris rekod untuk melihat nota & perincian penuh.</p>
+              <h3>Rekod Transaksi Terkini</h3>
+              <p style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">Pilih mana-mana baris untuk menyemak maklumat lengkap.</p>
             </div>
           </div>
           <div class="panel-body">
@@ -1425,12 +1435,12 @@
                 <thead>
                   <tr>
                     <th>Tarikh</th>
-                    <th>SKU</th>
-                    <th>Item</th>
-                    <th>Jenis</th>
-                    <th style="text-align: right;">Qty</th>
-                    <th style="text-align: right;">Baki Selepas</th>
-                    <th>PIC</th>
+                    <th>Kod SKU</th>
+                    <th>Nama Item</th>
+                    <th>Urusan</th>
+                    <th style="text-align: right;">Kuantiti</th>
+                    <th style="text-align: right;">Baki</th>
+                    <th>Pegawai</th>
                     <th>Lokasi</th>
                   </tr>
                 </thead>
@@ -1442,14 +1452,14 @@
         </div>
       </section>
 
-      <!-- TAB 3: DATA INDUK -->
+      <!-- TAB 3: KATALOG INVENTORI -->
       <section id="tab-items" class="hidden">
         <div class="panel">
           <div class="panel-header">
-            <h3>Senarai Data Induk Item</h3>
+            <h3>Pangkalan Data Item</h3>
             <div style="display: flex; gap: 8px; align-items: center;">
-              <input type="text" id="tableSearch" placeholder="Cari item..." style="width: 140px; min-height: 34px; padding: 4px 8px; font-size: 12px;" oninput="filterItemsTable()">
-              <button class="btn btn-primary" style="padding: 6px 14px; font-size: 12px; min-height: 34px;" onclick="openItemModal()">+ Tambah Item</button>
+              <input type="text" id="tableSearch" placeholder="Cari item..." style="width: 150px; min-height: 34px; padding: 4px 10px; font-size: 12px;" oninput="filterItemsTable()">
+              <button class="btn btn-primary" style="padding: 6px 14px; font-size: 12px; min-height: 34px;" onclick="openItemModal()">+ Item Baharu</button>
             </div>
           </div>
           <div class="panel-body">
@@ -1457,8 +1467,8 @@
               <table>
                 <thead>
                   <tr>
-                    <th>SKU</th>
-                    <th>Item</th>
+                    <th>Kod SKU</th>
+                    <th>Nama Item</th>
                     <th>Kategori</th>
                     <th style="text-align: right;">Baki Semasa</th>
                     <th style="text-align: right;">Paras Min</th>
@@ -1475,7 +1485,7 @@
         </div>
       </section>
 
-      <!-- TAB 4: KURSUS UMRAH (SUSUNAN KIRI & KANAN) -->
+      <!-- TAB 4: KURSUS UMRAH (SEBELAH-MENYEBELAH DI DESKTOP) -->
       <section id="tab-umrahForm" class="hidden">
         <div class="umrah-container">
           
@@ -1483,14 +1493,14 @@
           <div>
             <div class="umrah-card">
               <div class="umrah-header">
-                <h3>Borang Kursus Umrah Terbuka</h3>
+                <h3>Penyediaan Borang Kursus</h3>
               </div>
 
               <form id="generateUmrahForm" onsubmit="handleGenerateUmrahForm(event)">
                 <div class="form-group">
                   <div class="input-row">
                     <div>
-                      <label>Pilih Tarikh Kursus</label>
+                      <label>Tarikh Kursus</label>
                       <input type="date" id="ufTarikhInput" required>
                     </div>
                     <div>
@@ -1500,34 +1510,34 @@
                   </div>
 
                   <div>
-                    <label>Tempat / Lokasi</label>
+                    <label>Lokasi / Premis</label>
                     <input type="text" id="ufTempat" required value="DEWAN IMAM A'ASIM, MASJID AL-MUKTAFI BILLAH SHAH (MASJID LADANG)">
                   </div>
 
                   <div>
-                    <label>No. Telefon Hotline</label>
+                    <label>Talian Khidmat Pelanggan</label>
                     <input type="text" id="ufNoTel" required value="011-5508 3367">
                   </div>
 
                   <div>
-                    <label>Muat Naik Poster Baharu (Pilihan)</label>
+                    <label>Poster Program (Pilihan)</label>
                     <input type="file" id="ufPosterFile" accept="image/*" style="padding: 6px 10px;">
                   </div>
 
                   <button type="submit" id="btnGenForm" class="btn btn-primary" style="width: 100%; min-height: 44px; margin-top: 8px; font-size: 13.5px;">
-                    Jana Google Form Kursus
+                    Jana Borang Pendaftaran
                   </button>
                 </div>
               </form>
 
               <!-- KEPUTUSAN HASIL BORANG -->
               <div id="umrahFormResult" class="result-card-umrah hidden">
-                <h4 style="color: var(--primary); font-size: 14px; font-weight: 800; margin-bottom: 4px;">Borang Berjaya Dijana!</h4>
+                <h4 style="color: var(--primary); font-size: 14px; font-weight: 800; margin-bottom: 4px;">Borang Telah Berjaya Dijana</h4>
                 <p id="resultFormName" style="font-size: 12px; color: #047857; margin-bottom: 12px; font-weight: 700;"></p>
                 
                 <div style="display: grid; gap: 12px;">
                   <div>
-                    <label style="font-size: 11.5px; color: #065f46;">Pautan Pendaftaran Jemaah (Live Form):</label>
+                    <label style="font-size: 11.5px; color: #065f46;">Pautan Awam (Peserta):</label>
                     <div style="display: flex; gap: 8px;">
                       <input type="text" id="resLiveUrl" readonly style="background: #ffffff; font-size: 12px; color: #047857; font-weight: 700;">
                       <button type="button" class="btn btn-secondary" style="min-height: 42px;" onclick="copyResultLink('resLiveUrl')">Salin</button>
@@ -1536,7 +1546,7 @@
                   </div>
 
                   <div>
-                    <label style="font-size: 11.5px; color: #065f46;">Pautan Semakan Admin (Edit):</label>
+                    <label style="font-size: 11.5px; color: #065f46;">Pautan Pentadbir (Editor):</label>
                     <div style="display: flex; gap: 8px;">
                       <input type="text" id="resEditUrl" readonly style="background: #ffffff; font-size: 12px;">
                       <button type="button" class="btn btn-secondary" style="min-height: 42px;" onclick="copyResultLink('resEditUrl')">Salin</button>
@@ -1548,16 +1558,16 @@
             </div>
           </div>
 
-          <!-- SEBELAH KANAN: SENARAI BORANG YANG PERNAH DIJANA -->
+          <!-- SEBELAH KANAN: SENARAI BORANG DIGITAL TERDAHULU -->
           <div>
             <div class="umrah-card">
               <div class="umrah-header" style="display: flex; justify-content: space-between; align-items: center;">
-                <h3>Senarai Borang Kursus Umrah</h3>
-                <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 30px;" onclick="fetchUmrahFormsList()">Segar Semula</button>
+                <h3>Arkib Borang Pendaftaran</h3>
+                <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 30px;" onclick="fetchUmrahFormsList()">Kemas Kini</button>
               </div>
               
               <div id="umrahFormsListContainer" class="umrah-forms-grid">
-                <p style="font-size: 12px; color: var(--text-muted); text-align: center; padding: 16px;">Memuatkan senarai borang...</p>
+                <p style="font-size: 12px; color: var(--text-muted); text-align: center; padding: 20px;">Memuatkan arkib borang...</p>
               </div>
             </div>
           </div>
@@ -1569,7 +1579,7 @@
     <nav class="mobile-nav">
       <button class="m-btn active" type="button" onclick="switchTab('dashboard')">
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-        <span>Dashboard</span>
+        <span>Ringkasan</span>
       </button>
       <button class="m-btn" type="button" onclick="switchTab('transactions')">
         <svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
@@ -1577,11 +1587,11 @@
       </button>
       <button class="m-btn" type="button" onclick="switchTab('items')">
         <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
-        <span>Item</span>
+        <span>Inventori</span>
       </button>
       <button class="m-btn" type="button" onclick="switchTab('umrahForm')">
         <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-        <span>Kursus Umrah</span>
+        <span>Kursus</span>
       </button>
     </nav>
   </div>
@@ -1685,7 +1695,7 @@
 
           let friendlyMsg = commitMsg;
           if (!friendlyMsg || friendlyMsg.toLowerCase().startsWith('update index.html')) {
-            friendlyMsg = 'Penambahbaikan ciri perisian dan kestabilan sistem.';
+            friendlyMsg = 'Penambahbaikan ciri dan pengoptimuman sistem aplikasi.';
           }
 
           const changelogEl = document.getElementById('updateChangelogText');
@@ -1704,7 +1714,7 @@
 
     async function applySystemUpdate() {
       dismissUpdateBanner();
-      showLoading(true, 'Mengemaskini aplikasi e-ASTRA...', true, 'Memuat turun fail sistem terkini...');
+      showLoading(true, 'Mengemas kini sistem...', true, 'Memasang fail aplikasi terkini...');
 
       if (window.pendingCommitSha) {
         localStorage.setItem('eastra_current_commit_sha', window.pendingCommitSha);
@@ -1734,11 +1744,11 @@
     async function generateQRPdf1Page() {
       const items = appState.data?.items || [];
       if (!items.length) {
-        showToast('Tiada item inventori ditemui untuk dijana.', true);
+        showToast('Tiada rekod inventori ditemui untuk cetakan.', true);
         return;
       }
 
-      showLoading(true, 'Menjana PDF Kod QR...');
+      showLoading(true, 'Menjana dokumen PDF kod QR...');
 
       try {
         const { jsPDF } = window.jspdf;
@@ -1748,9 +1758,9 @@
         const margin = 10;
 
         doc.setFont('helvetica', 'bold');
-        doc.setFontSize(14);
+        doc.setFontSize(13);
         doc.setTextColor(11, 56, 24);
-        doc.text('LABEL KOD QR PRODUK - e-ASTRA AZ ZUHA TRG', pageWidth / 2, 14, { align: 'center' });
+        doc.text('LABEL KOD QR PRODUK - AZ ZUHA CAWANGAN TERENGGANU', pageWidth / 2, 14, { align: 'center' });
         
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(9);
@@ -1813,12 +1823,12 @@
           doc.text(itm.category || 'Item', textX, y + cardHeight - 3);
         }
 
-        doc.save(`eASTRA_QR_Labels_${new Date().toISOString().slice(0,10)}.pdf`);
+        doc.save(`eASTRA_Label_QR_${new Date().toISOString().slice(0,10)}.pdf`);
         showLoading(false);
-        showToast('PDF Kod QR 1 muka surat berjaya dimuat turun!');
+        showToast('Dokumen PDF berjaya dimuat turun.');
       } catch (err) {
         showLoading(false);
-        showToast('Gagal menjana PDF: ' + err.message, true);
+        showToast('Gagal menjana dokumen PDF: ' + err.message, true);
       }
     }
 
@@ -1889,7 +1899,7 @@
           noteBox.style.fontWeight = '500';
         }
       } else {
-        noteBox.textContent = 'Tiada catatan.';
+        noteBox.textContent = 'Tiada catatan direkodkan.';
         noteBox.style.background = '#f8fafc';
         noteBox.style.color = '#64748b';
         noteBox.style.borderColor = '#e2e8f0';
@@ -1923,11 +1933,14 @@
       const submitBtn = document.getElementById('btnSubmitTx');
 
       if (type === 'Pelarasan') {
-        batchLabel.textContent = 'Kiraan Fizikal Sebenar (Audit)';
-        submitBtn.textContent = 'Simpan Pelarasan Stok';
+        batchLabel.textContent = 'Kiraan Sebenar di Tapak (Audit)';
+        submitBtn.textContent = 'Sahkan Pelarasan Stok';
+      } else if (type === 'Masuk') {
+        batchLabel.textContent = 'Senarai Penerimaan Stok';
+        submitBtn.textContent = 'Sahkan Penerimaan Stok';
       } else {
-        batchLabel.textContent = `Senarai Item ${type}`;
-        submitBtn.textContent = `Simpan Transaksi (${type})`;
+        batchLabel.textContent = 'Senarai Item Keluar';
+        submitBtn.textContent = 'Sahkan Pengeluaran Stok';
       }
 
       document.querySelectorAll('.batch-item').forEach(sel => updateRowHint(sel));
@@ -1947,22 +1960,39 @@
       document.getElementById('tab-umrahForm').classList.toggle('hidden', tab !== 'umrahForm');
 
       const titles = {
-        dashboard: ['Dashboard e-ASTRA', 'Sistem Pengurusan Stok Cawangan Terengganu.'],
-        transactions: ['Transaksi Stok', 'Rekod log keluar, masuk dan pelarasan.'],
-        items: ['Data Induk Item', 'Katalog pengurusan item stok.'],
-        umrahForm: ['Kursus Umrah', 'Pendaftaran & senarai borang kursus umrah cawangan.']
+        dashboard: ['Ringkasan Operasi', 'Paparan metrik dan status operasi cawangan semasa.'],
+        transactions: ['Log Transaksi Stok', 'Rekod terperinci pergerakan masuk, keluar dan pelarasan stok.'],
+        items: ['Katalog Inventori', 'Senarai pangkalan data dan had simpanan item cawangan.'],
+        umrahForm: ['Pusat Kursus Umrah', 'Penjanaan dan arkib pautan borang digital jemaah cawangan.']
       };
       document.getElementById('viewTitle').textContent = titles[tab][0];
       document.getElementById('viewSubtitle').textContent = titles[tab][1];
 
-      if (tab === 'umrahForm') {
+      // KAWAL BUTANG CETAK QR & BUTANG TERAPUNG (FAB)
+      const isUmrahTab = (tab === 'umrahForm');
+      const qrBtn = document.getElementById('btnStockQR');
+      const fabBtn = document.getElementById('mainFabBtn');
+      
+      if (qrBtn) qrBtn.classList.toggle('hidden', isUmrahTab);
+      if (fabBtn) fabBtn.classList.toggle('hidden', isUmrahTab);
+
+      if (isUmrahTab) {
         fetchUmrahFormsList();
       }
 
       window.scrollTo({ top: 0, behavior: 'instant' });
     }
 
-    function showLoading(show, msg = 'Memuatkan data...', isUpdateMode = false, subMsg = '') {
+    function refreshCurrentView() {
+      if (appState.activeTab === 'umrahForm') {
+        fetchUmrahFormsList();
+        showToast('Senarai borang dikemas kini.');
+      } else {
+        loadData();
+      }
+    }
+
+    function showLoading(show, msg = 'Memproses data...', isUpdateMode = false, subMsg = '') {
       const overlay = document.getElementById('loading');
       if (!show) {
         overlay.classList.add('hidden');
@@ -2014,7 +2044,7 @@
       showLoading(true);
       fetch(`${SCRIPT_URL}?action=getAppData`, { method: 'GET', redirect: 'follow' })
       .then(res => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}: Gagal menyambung ke pelayan`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}: Rangkaian terputus`);
         return res.json();
       })
       .then(res => {
@@ -2028,7 +2058,7 @@
       })
       .catch(err => {
         showLoading(false);
-        showToast(err.message || 'Ralat memuatkan data. Sila semak sambungan.', true);
+        showToast(err.message || 'Gagal memuatkan data. Sila semak sambungan.', true);
       });
     }
 
@@ -2036,25 +2066,25 @@
       appState.statusFilter = status;
       renderDashboard();
       document.getElementById('btnClearFilter').classList.remove('hidden');
-      document.getElementById('attentionHeader').textContent = `Status: [${status}]`;
+      document.getElementById('attentionHeader').textContent = `Status Item: ${status}`;
     }
 
     function resetDashboardFilter() {
       appState.statusFilter = null;
       renderDashboard();
       document.getElementById('btnClearFilter').classList.add('hidden');
-      document.getElementById('attentionHeader').textContent = 'Item Perlu Perhatian';
+      document.getElementById('attentionHeader').textContent = 'Perhatian Inventori';
     }
 
     function renderDashboard() {
       const d = appState.data.dashboard;
       const cards = [
-        { label: 'Jumlah Item', val: d.totalItems, sub: 'Katalog Aktif', fn: null },
-        { label: 'Jumlah Unit', val: d.totalStock, sub: 'Baki Keseluruhan', fn: null },
-        { label: 'Stok Sedia', val: d.okStock, sub: 'Status OK', fn: () => filterDashboard('OK') },
-        { label: 'Low Stock', val: d.lowStock, sub: 'Perlu Ditambah', fn: () => filterDashboard('LOW STOCK') },
-        { label: 'Habis', val: d.emptyStock, sub: 'Paras Sifar', fn: () => filterDashboard('HABIS') },
-        { label: 'Hari Ini', val: d.keluarHariIni, sub: `Masuk: ${d.masukHariIni}`, fn: null }
+        { label: 'Jumlah Katalog', val: d.totalItems, sub: 'SKU Berdaftar', fn: null },
+        { label: 'Unit Keseluruhan', val: d.totalStock, sub: 'Baki Fizikal', fn: null },
+        { label: 'Stok Sedia', val: d.okStock, sub: 'Kuantiti Optimum', fn: () => filterDashboard('OK') },
+        { label: 'Paras Rendah', val: d.lowStock, sub: 'Perlu Tambahan', fn: () => filterDashboard('LOW STOCK') },
+        { label: 'Kehabisan Stok', val: d.emptyStock, sub: 'Kuantiti Sifar', fn: () => filterDashboard('HABIS') },
+        { label: 'Aktiviti Hari Ini', val: d.keluarHariIni, sub: `Masuk: ${d.masukHariIni} unit`, fn: null }
       ];
 
       document.getElementById('metricsCards').innerHTML = cards.map((c, i) => `
@@ -2077,8 +2107,8 @@
       const mCards = document.getElementById('attentionMobileCards');
 
       if (!items.length) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:18px; color:#64748b;">Tiada item ditemui.</td></tr>`;
-        mCards.innerHTML = `<div style="text-align:center; padding:16px; color:#64748b; font-size:12px;">Tiada item ditemui.</div>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:18px; color:#64748b;">Semua item berada pada paras mencukupi.</td></tr>`;
+        mCards.innerHTML = `<div style="text-align:center; padding:16px; color:#64748b; font-size:12px;">Semua item berada pada paras mencukupi.</div>`;
       } else {
         tbody.innerHTML = items.map(i => `
           <tr>
@@ -2102,7 +2132,7 @@
               <span class="badge badge-${i.status === 'OK' ? 'ok' : (i.status === 'HABIS' ? 'empty' : 'low')}">${i.status}</span>
             </div>
             <div class="card-row-bottom">
-              <span>Baki: <strong style="color:var(--primary); font-size:13px;">${i.currentStock} unit</strong></span>
+              <span>Baki Semasa: <strong style="color:var(--primary); font-size:13px;">${i.currentStock} unit</strong></span>
               <span style="color:#64748b;">Min: ${i.minimum}</span>
             </div>
           </div>
@@ -2225,7 +2255,7 @@
         },
         onScanSuccess
       ).catch(err => {
-        showToast('Kamera gagal dimulakan: ' + (err.message || err), true);
+        showToast('Akses kamera gagal dimulakan.', true);
         closeScannerModal();
       });
     }
@@ -2293,7 +2323,7 @@
 
       if (!matched) {
         playFeedback();
-        showScannerOverlay('Item tidak dijumpai: ' + decodedText, true);
+        showScannerOverlay('Item tidak ditemui: ' + decodedText, true);
         setTimeout(() => { isProcessingScan = false; }, 1500);
         return;
       }
@@ -2334,17 +2364,17 @@
       const mCards = document.getElementById('logsMobileCards');
 
       if (!logs.length) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:18px; color:#64748b;">Tiada rekod transaksi ditemui.</td></tr>`;
-        mCards.innerHTML = `<div style="text-align:center; padding:16px; color:#64748b; font-size:12px;">Tiada rekod transaksi ditemui.</div>`;
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:18px; color:#64748b;">Tiada rekod transaksi direkodkan.</td></tr>`;
+        mCards.innerHTML = `<div style="text-align:center; padding:16px; color:#64748b; font-size:12px;">Tiada rekod transaksi direkodkan.</div>`;
         return;
       }
 
-      tbody.innerHTML = logs.map((l, index) => {
+      tbody.innerHTML = logs.map((l) => {
         const isAudit = l.note && l.note.includes('[Audit Fizikal');
         const auditIndicator = isAudit ? `<span style="font-size:10px; color:#b45309; font-weight:800; margin-left:4px;">● Audit</span>` : '';
 
         return `
-          <tr class="clickable-row" onclick='openLogDetailModal(${JSON.stringify(l).replace(/'/g, "&apos;")})' title="Tekan untuk lihat perincian penuh">
+          <tr class="clickable-row" onclick='openLogDetailModal(${JSON.stringify(l).replace(/'/g, "&apos;")})' title="Pilih untuk perincian penuh">
             <td>${l.date}</td>
             <td><strong>${l.sku || ''}</strong></td>
             <td>${l.item} ${auditIndicator}</td>
@@ -2362,7 +2392,7 @@
         const auditIndicator = isAudit ? `<span style="font-size:10px; color:#b45309; font-weight:800; background:#fef3c7; padding:1px 6px; border-radius:4px; margin-left:4px;">Audit</span>` : '';
 
         return `
-          <div class="card-row clickable-row" onclick='openLogDetailModal(${JSON.stringify(l).replace(/'/g, "&apos;")})' title="Tekan untuk perincian">
+          <div class="card-row clickable-row" onclick='openLogDetailModal(${JSON.stringify(l).replace(/'/g, "&apos;")})' title="Pilih untuk perincian">
             <div class="card-row-top">
               <div>
                 <div class="card-title">${l.item} ${auditIndicator}</div>
@@ -2394,7 +2424,7 @@
           <td><span class="badge badge-${i.status === 'OK' ? 'ok' : (i.status === 'HABIS' ? 'empty' : 'low')}">${i.status}</span></td>
           <td>${i.location}</td>
           <td style="text-align:center;">
-            <button class="btn btn-secondary" style="padding: 3px 10px; font-size: 11px; min-height: 28px;" onclick='populateEditItem(${JSON.stringify(i).replace(/'/g, "&apos;")})'>Edit</button>
+            <button class="btn btn-secondary" style="padding: 3px 10px; font-size: 11px; min-height: 28px;" onclick='populateEditItem(${JSON.stringify(i).replace(/'/g, "&apos;")})'>Kemaskini</button>
           </td>
         </tr>
       `).join('');
@@ -2409,8 +2439,8 @@
             <span class="badge badge-${i.status === 'OK' ? 'ok' : (i.status === 'HABIS' ? 'empty' : 'low')}">${i.status}</span>
           </div>
           <div class="card-row-bottom">
-            <span>Baki: <strong>${i.currentStock} unit</strong></span>
-            <button class="btn btn-secondary" style="padding: 2px 8px; font-size: 11px; min-height: 26px;" onclick='populateEditItem(${JSON.stringify(i).replace(/'/g, "&apos;")})'>Edit</button>
+            <span>Baki Semasa: <strong>${i.currentStock} unit</strong></span>
+            <button class="btn btn-secondary" style="padding: 2px 8px; font-size: 11px; min-height: 26px;" onclick='populateEditItem(${JSON.stringify(i).replace(/'/g, "&apos;")})'>Kemaskini</button>
           </div>
         </div>
       `).join('');
@@ -2451,7 +2481,7 @@
         items
       };
 
-      showLoading(true, 'Menyimpan rekod...');
+      showLoading(true, 'Menyimpan transaksi...');
 
       fetch(SCRIPT_URL, {
         method: 'POST',
@@ -2463,13 +2493,13 @@
         })
       })
       .then(res => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}: Gagal menyambung ke Apps Script`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}: Rangkaian terputus`);
         return res.json();
       })
       .then(res => {
         showLoading(false);
         if (!res.ok) throw new Error(res.message);
-        showToast(res.message);
+        showToast('Transaksi berjaya didaftarkan.');
         closeTxModal();
         appState.data = res.data;
         renderDashboard();
@@ -2496,7 +2526,7 @@
       document.getElementById('itMin').value = item.minimum;
       document.getElementById('itNote').value = item.note || '';
 
-      document.getElementById('itemFormTitle').textContent = `Kemaskini: ${item.sku || item.itemId}`;
+      document.getElementById('itemFormTitle').textContent = `Kemaskini Item: ${item.sku || item.itemId}`;
       document.getElementById('btnDeleteItem').classList.remove('hidden');
       document.getElementById('itemModal').classList.remove('hidden');
       lockBodyScroll();
@@ -2506,13 +2536,13 @@
       appState.selectedItem = null;
       document.getElementById('itemForm').reset();
       document.getElementById('itSku').readOnly = false;
-      document.getElementById('itemFormTitle').textContent = 'Daftar Item Baharu';
+      document.getElementById('itemFormTitle').textContent = 'Pendaftaran Item Baharu';
       document.getElementById('btnDeleteItem').classList.add('hidden');
     }
 
     function submitItem(e) {
       e.preventDefault();
-      showLoading(true, 'Menyimpan item...');
+      showLoading(true, 'Menyimpan maklumat...');
 
       const skuVal = document.getElementById('itSku').value.trim();
 
@@ -2535,13 +2565,13 @@
         })
       })
       .then(res => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}: Gagal menyambung ke Apps Script`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}: Rangkaian terputus`);
         return res.json();
       })
       .then(res => {
         showLoading(false);
         if (!res.ok) throw new Error(res.message);
-        showToast(res.message);
+        showToast('Maklumat item disimpan.');
         closeItemModal();
         appState.data = res.data;
         renderDashboard();
@@ -2550,15 +2580,15 @@
       })
       .catch(err => {
         showLoading(false);
-        showToast(err.message || 'Gagal menyimpan item.', true);
+        showToast(err.message || 'Gagal menyimpan maklumat.', true);
       });
     }
 
     function deleteItemHandler() {
       if (!appState.selectedItem) return;
-      if (!confirm(`Adakah anda pasti mahu memadam item ${appState.selectedItem}?`)) return;
+      if (!confirm(`Sahkan untuk memadamkan rekod item ${appState.selectedItem}?`)) return;
 
-      showLoading(true, 'Memadam item...');
+      showLoading(true, 'Memadamkan item...');
       fetch(SCRIPT_URL, {
         method: 'POST',
         redirect: 'follow',
@@ -2569,13 +2599,13 @@
         })
       })
       .then(res => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}: Gagal menyambung ke Apps Script`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}: Rangkaian terputus`);
         return res.json();
       })
       .then(res => {
         showLoading(false);
         if (!res.ok) throw new Error(res.message);
-        showToast(res.message);
+        showToast('Item telah dipadamkan.');
         closeItemModal();
         appState.data = res.data;
         renderDashboard();
@@ -2584,12 +2614,12 @@
       })
       .catch(err => {
         showLoading(false);
-        showToast(err.message || 'Gagal memadam item.', true);
+        showToast(err.message || 'Gagal memadamkan item.', true);
       });
     }
 
     /* ========================================================
-       MODUL KURSUS UMRAH UI & LOGIK
+       MODUL KURSUS UMRAH (LOGIK PENJANAAN & ARKIB)
        ======================================================== */
     function saveLocalUmrahForm(formObj) {
       let localForms = JSON.parse(localStorage.getItem('eastra_umrah_forms') || '[]');
@@ -2613,7 +2643,7 @@
       const noTel = document.getElementById('ufNoTel').value.trim();
       const fileInput = document.getElementById('ufPosterFile');
 
-      showLoading(true, 'Menduplikasi Master Form (Kekal Bold & Tema Asal)...');
+      showLoading(true, 'Menduplikasi templat borang...');
 
       let posterBase64 = '';
       let posterType = '';
@@ -2654,7 +2684,6 @@
         document.getElementById('linkEditBtn').href = res.editUrl;
 
         document.getElementById('umrahFormResult').classList.remove('hidden');
-        showToast('Borang kursus umrah berjaya dijana!');
 
         const newFormObj = {
           id: res.formUrl,
@@ -2670,6 +2699,8 @@
         } else {
           renderUmrahFormsList(getLocalUmrahForms());
         }
+
+        showToast('Borang kursus berjaya dijana.');
       })
       .catch(err => {
         showLoading(false);
@@ -2684,7 +2715,7 @@
       if (localForms.length) {
         renderUmrahFormsList(localForms);
       } else {
-        container.innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center; padding:16px;">Memuatkan senarai borang...</p>';
+        container.innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px;">Memuatkan arkib borang...</p>';
       }
 
       fetch(`${SCRIPT_URL}?action=getUmrahFormsList`, { method: 'GET', redirect: 'follow' })
@@ -2695,12 +2726,12 @@
           localStorage.setItem('eastra_umrah_forms', JSON.stringify(res.forms));
           renderUmrahFormsList(res.forms);
         } else if (!localForms.length) {
-          container.innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center; padding:16px;">Tiada borang kursus umrah dijumpai dalam folder Drive.</p>';
+          container.innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px;">Tiada rekod borang kursus ditemui.</p>';
         }
       })
       .catch(err => {
         if (!localForms.length) {
-          container.innerHTML = '<p style="font-size:12px; color:#ef4444; text-align:center; padding:16px;">Gagal memuatkan senarai dari Drive.</p>';
+          container.innerHTML = '<p style="font-size:12px; color:#ef4444; text-align:center; padding:20px;">Gagal memuat turun arkib borang.</p>';
         }
       });
     }
@@ -2708,7 +2739,7 @@
     function renderUmrahFormsList(forms) {
       const container = document.getElementById('umrahFormsListContainer');
       if (!forms || !forms.length) {
-        container.innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center; padding:16px;">Tiada borang kursus umrah dijumpai.</p>';
+        container.innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px;">Tiada rekod borang kursus ditemui.</p>';
         return;
       }
 
@@ -2716,12 +2747,12 @@
         <div class="form-item-row">
           <div class="form-item-info">
             <span class="form-item-title">${f.name}</span>
-            <span class="form-item-date">Dijana pada: ${f.dateCreated}</span>
+            <span class="form-item-date">Tarikh Dijana: ${f.dateCreated}</span>
           </div>
           <div class="form-item-actions">
-            <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 32px;" onclick="copyDirectText('${f.liveUrl}')">Salin Link</button>
-            <a href="${f.liveUrl}" target="_blank" class="btn btn-primary" style="padding: 4px 12px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Live</a>
-            <a href="${f.editUrl}" target="_blank" class="btn btn-secondary" style="padding: 4px 12px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Edit</a>
+            <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 32px;" onclick="copyDirectText('${f.liveUrl}')">Salin Pautan</button>
+            <a href="${f.liveUrl}" target="_blank" class="btn btn-primary" style="padding: 4px 14px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Pautan Awam</a>
+            <a href="${f.editUrl}" target="_blank" class="btn btn-secondary" style="padding: 4px 14px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Editor</a>
           </div>
         </div>
       `).join('');
@@ -2729,7 +2760,7 @@
 
     function copyDirectText(text) {
       navigator.clipboard.writeText(text).then(() => {
-        showToast('Pautan disalin!');
+        showToast('Pautan disalin ke papan keratan.');
       }).catch(() => {
         showToast('Gagal menyalin pautan.', true);
       });
@@ -2752,7 +2783,7 @@
       copyText.select();
       copyText.setSelectionRange(0, 99999);
       navigator.clipboard.writeText(copyText.value).then(() => {
-        showToast('Pautan disalin!');
+        showToast('Pautan disalin.');
       }).catch(() => {
         showToast('Gagal menyalin pautan.', true);
       });
