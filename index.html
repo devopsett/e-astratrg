@@ -824,7 +824,7 @@
       <div class="update-title">Versi Baharu Sedia Dipasang</div>
       <div class="update-details-box">
         <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Nota Keluaran:</strong>
-        <span id="updateChangelogText">Penambahbaikan sidebar desktop auto-close dan sokongan dropdown Kursus Umrah.</span>
+        <span id="updateChangelogText">Penyesuaian label menu Ringkasan & Semakan Pengurusan Jemaah.</span>
       </div>
       <div class="update-action-row">
         <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
@@ -1021,13 +1021,13 @@
           </button>
           
           <ul id="subJemaahMenu" class="sub-nav-list hidden">
-            <li><button id="subBtnJemaahList" class="sub-nav-btn" type="button" onclick="switchTab('jemaahList'); switchJemaahSubTab('list');"><span class="sub-nav-dot"></span><span>Senarai & Status</span></button></li>
+            <li><button id="subBtnJemaahList" class="sub-nav-btn" type="button" onclick="switchTab('jemaahList'); switchJemaahSubTab('list');"><span class="sub-nav-dot"></span><span>Ringkasan</span></button></li>
             <li><button id="subBtnJemaahAdd" class="sub-nav-btn" type="button" onclick="switchTab('jemaahList'); switchJemaahSubTab('add');"><span class="sub-nav-dot"></span><span>Daftar Jemaah</span></button></li>
-            <li><button id="subBtnJemaahEdit" class="sub-nav-btn" type="button" onclick="switchTab('jemaahList'); switchJemaahSubTab('edit');"><span class="sub-nav-dot"></span><span>Semak & Kemaskini</span></button></li>
+            <li><button id="subBtnJemaahEdit" class="sub-nav-btn" type="button" onclick="switchTab('jemaahList'); switchJemaahSubTab('edit');"><span class="sub-nav-dot"></span><span>Semakan</span></button></li>
           </ul>
         </li>
 
-        <!-- 3. KURSUS UMRAH (DENGAN DROPDOWN DESKTOP) -->
+        <!-- 3. KURSUS UMRAH -->
         <li>
           <button id="btnNavUmrah" class="nav-btn" type="button" onclick="handleDesktopMenuToggle('umrah')">
             <div class="nav-btn-content">
@@ -1239,9 +1239,9 @@
         <div class="panel" style="margin-bottom: 16px;">
           <div class="panel-body" style="padding: 10px 14px;">
             <div class="filter-pills-bar">
-              <button type="button" id="pillJemaahList" class="pill-btn active" onclick="switchJemaahSubTab('list')">Senarai & Status</button>
+              <button type="button" id="pillJemaahList" class="pill-btn active" onclick="switchJemaahSubTab('list')">Ringkasan</button>
               <button type="button" id="pillJemaahAdd" class="pill-btn" onclick="switchJemaahSubTab('add')">Daftar Jemaah</button>
-              <button type="button" id="pillJemaahEdit" class="pill-btn" onclick="switchJemaahSubTab('edit')">Semak & Kemaskini</button>
+              <button type="button" id="pillJemaahEdit" class="pill-btn" onclick="switchJemaahSubTab('edit')">Semakan</button>
             </div>
           </div>
         </div>
@@ -1362,7 +1362,7 @@
                       <label>Salinan Pasport</label>
                       <div class="file-dropzone-compact" onclick="document.getElementById('regFileSalinan').click()">
                         <div class="file-dropzone-left">
-                          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 6.5 2z"></path></svg>
                           <span id="label_regFileSalinan" class="file-dropzone-text">Pilih salinan pasport</span>
                         </div>
                         <span class="file-btn-browse">Pilih Fail</span>
