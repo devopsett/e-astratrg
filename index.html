@@ -824,7 +824,7 @@
       <div class="update-title">Versi Baharu Sedia Dipasang</div>
       <div class="update-details-box">
         <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Nota Keluaran:</strong>
-        <span id="updateChangelogText">Penambahbaikan sistem pembacaan Sejarah Transaksi.</span>
+        <span id="updateChangelogText">Penambahbaikan sistem pembacaan log transaksi secara langsung dari Sejarah Transaksi.</span>
       </div>
       <div class="update-action-row">
         <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
@@ -1404,7 +1404,7 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
                         <span id="label_regFileResit" class="file-dropzone-text">Pilih slip resit bayaran</span>
                       </div>
-                      <span class="file-btn-browse">Pilih Fail</span>
+                      <span class="file-btn-browse">Pilih</span>
                     </div>
                     <input type="file" id="regFileResit" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_regFileResit')">
                   </div>
@@ -1816,9 +1816,18 @@
 
     /* PENGENDALIAN DATA STOK */
     function loadData() {
-      // Bersihkan cache lama supaya data segar diambil dari sheet Sejarah Transaksi
-      localStorage.removeItem('eastra_cached_stok');
-      showLoading(true, 'Memuatkan data...');
+      const cached = localStorage.getItem('eastra_cached_stok');
+      if (cached) {
+        try {
+          appState.data = JSON.parse(cached);
+          renderDashboard();
+          renderDropdowns();
+          renderLogs();
+          renderItems();
+        } catch (e) {}
+      } else {
+        showLoading(true, 'Memuatkan data...');
+      }
 
       fetch(`${SCRIPT_URL}?action=getAppData`, { method: 'GET', redirect: 'follow' })
       .then(res => res.json())
@@ -1841,7 +1850,6 @@
       .catch(err => {
         showLoading(false);
         console.error(err);
-        showToast('Gagal memuatkan data.', true);
       });
     }
 
@@ -2791,7 +2799,7 @@
           <div class="form-item-actions">
             <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 32px;" onclick="copyDirectText('${f.liveUrl}')">Salin Pautan</button>
             <a href="${f.liveUrl}" target="_blank" class="btn btn-primary" style="padding: 4px 14px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Pautan Awam</a>
-            <a href="${f.editUrl}" target="_blank" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Editor</a>
+            <a href="${f.editUrl}" target="_blank" class="btn btn-secondary" style="padding: 4px 14px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Editor</a>
           </div>
         </div>
       `).join('');
