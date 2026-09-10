@@ -802,17 +802,17 @@
     <ul class="nav-list">
       <!-- 1. STOK & INVENTORI -->
       <li>
-        <button id="mDrawerBtnStock" class="nav-btn" type="button" onclick="toggleStockMenu()">
+        <button id="mDrawerBtnStock" class="nav-btn active" type="button" onclick="toggleStockMenu()">
           <div class="nav-btn-content">
             <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
             <span>Stok & Inventori</span>
           </div>
-          <svg id="mDrawerChevronStock" class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          <svg id="mDrawerChevronStock" class="chevron-icon open" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
         </button>
-        <ul id="mDrawerSubStock" class="sub-nav-list hidden">
-          <li><button class="sub-nav-btn" onclick="switchTabMobile('dashboard')"><span class="sub-nav-dot"></span><span>Ringkasan Stok</span></button></li>
-          <li><button class="sub-nav-btn" onclick="switchTabMobile('transactions')"><span class="sub-nav-dot"></span><span>Log Transaksi</span></button></li>
-          <li><button class="sub-nav-btn" onclick="switchTabMobile('items')"><span class="sub-nav-dot"></span><span>Katalog Inventori</span></button></li>
+        <ul id="mDrawerSubStock" class="sub-nav-list">
+          <li><button class="sub-nav-btn" onclick="switchTabMobile('dashboard'); switchStokSubTab('summary');"><span class="sub-nav-dot"></span><span>Ringkasan Stok</span></button></li>
+          <li><button class="sub-nav-btn" onclick="switchTabMobile('dashboard'); switchStokSubTab('logs');"><span class="sub-nav-dot"></span><span>Log Transaksi</span></button></li>
+          <li><button class="sub-nav-btn" onclick="switchTabMobile('dashboard'); switchStokSubTab('items');"><span class="sub-nav-dot"></span><span>Katalog Inventori</span></button></li>
         </ul>
       </li>
 
@@ -826,9 +826,9 @@
           <svg id="mDrawerChevronJemaah" class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
         </button>
         <ul id="mDrawerSubJemaah" class="sub-nav-list hidden">
-          <li><button class="sub-nav-btn" onclick="switchTabMobile('jemaahList')"><span class="sub-nav-dot"></span><span>Senarai & Status</span></button></li>
-          <li><button class="sub-nav-btn" onclick="switchTabMobile('jemaahAdd')"><span class="sub-nav-dot"></span><span>Daftar Jemaah</span></button></li>
-          <li><button class="sub-nav-btn" onclick="switchTabMobile('jemaahEdit')"><span class="sub-nav-dot"></span><span>Semak & Kemaskini</span></button></li>
+          <li><button class="sub-nav-btn" onclick="switchTabMobile('jemaahList'); switchJemaahSubTab('list');"><span class="sub-nav-dot"></span><span>Senarai & Status</span></button></li>
+          <li><button class="sub-nav-btn" onclick="switchTabMobile('jemaahList'); switchJemaahSubTab('add');"><span class="sub-nav-dot"></span><span>Daftar Jemaah</span></button></li>
+          <li><button class="sub-nav-btn" onclick="switchTabMobile('jemaahList'); switchJemaahSubTab('edit');"><span class="sub-nav-dot"></span><span>Semak & Kemaskini</span></button></li>
         </ul>
       </li>
 
@@ -1032,9 +1032,9 @@
           </button>
           
           <ul id="subStockMenu" class="sub-nav-list">
-            <li><button id="subBtnDashboard" class="sub-nav-btn active" type="button" onclick="switchTab('dashboard')"><span class="sub-nav-dot"></span><span>Ringkasan Stok</span></button></li>
-            <li><button id="subBtnTransactions" class="sub-nav-btn" type="button" onclick="switchTab('transactions')"><span class="sub-nav-dot"></span><span>Log Transaksi</span></button></li>
-            <li><button id="subBtnItems" class="sub-nav-btn" type="button" onclick="switchTab('items')"><span class="sub-nav-dot"></span><span>Katalog Inventori</span></button></li>
+            <li><button id="subBtnDashboard" class="sub-nav-btn active" type="button" onclick="switchTab('dashboard'); switchStokSubTab('summary');"><span class="sub-nav-dot"></span><span>Ringkasan Stok</span></button></li>
+            <li><button id="subBtnTransactions" class="sub-nav-btn" type="button" onclick="switchTab('dashboard'); switchStokSubTab('logs');"><span class="sub-nav-dot"></span><span>Log Transaksi</span></button></li>
+            <li><button id="subBtnItems" class="sub-nav-btn" type="button" onclick="switchTab('dashboard'); switchStokSubTab('items');"><span class="sub-nav-dot"></span><span>Katalog Inventori</span></button></li>
           </ul>
         </li>
 
@@ -1049,9 +1049,9 @@
           </button>
           
           <ul id="subJemaahMenu" class="sub-nav-list hidden">
-            <li><button id="subBtnJemaahList" class="sub-nav-btn" type="button" onclick="switchTab('jemaahList')"><span class="sub-nav-dot"></span><span>Senarai & Status</span></button></li>
-            <li><button id="subBtnJemaahAdd" class="sub-nav-btn" type="button" onclick="switchTab('jemaahAdd')"><span class="sub-nav-dot"></span><span>Daftar Jemaah</span></button></li>
-            <li><button id="subBtnJemaahEdit" class="sub-nav-btn" type="button" onclick="switchTab('jemaahEdit')"><span class="sub-nav-dot"></span><span>Semak & Kemaskini</span></button></li>
+            <li><button id="subBtnJemaahList" class="sub-nav-btn" type="button" onclick="switchTab('jemaahList'); switchJemaahSubTab('list');"><span class="sub-nav-dot"></span><span>Senarai & Status</span></button></li>
+            <li><button id="subBtnJemaahAdd" class="sub-nav-btn" type="button" onclick="switchTab('jemaahList'); switchJemaahSubTab('add');"><span class="sub-nav-dot"></span><span>Daftar Jemaah</span></button></li>
+            <li><button id="subBtnJemaahEdit" class="sub-nav-btn" type="button" onclick="switchTab('jemaahList'); switchJemaahSubTab('edit');"><span class="sub-nav-dot"></span><span>Semak & Kemaskini</span></button></li>
           </ul>
         </li>
 
@@ -1495,79 +1495,78 @@
                         <input type="file" id="editFileBorang" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_editFileBorang')">
                       </div>
 
-                      <div>
-                        <label>Ganti Gambar Pasport</label>
-                        <div class="file-dropzone-compact" onclick="document.getElementById('editFileGambar').click()">
-                          <div class="file-dropzone-left">
-                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-                            <span id="label_editFileGambar" class="file-dropzone-text">Pilih gambar baharu</span>
-                          </div>
-                          <span class="file-btn-browse">Pilih</span>
+                    <div>
+                      <label>Ganti Gambar Pasport</label>
+                      <div class="file-dropzone-compact" onclick="document.getElementById('editFileGambar').click()">
+                        <div class="file-dropzone-left">
+                          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                          <span id="label_editFileGambar" class="file-dropzone-text">Pilih gambar baharu</span>
                         </div>
-                        <input type="file" id="editFileGambar" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_editFileGambar')">
+                        <span class="file-btn-browse">Pilih</span>
                       </div>
-                    </div>
-
-                    <div class="input-row" style="margin-top: 8px;">
-                      <div>
-                        <label>Ganti Salinan Pasport</label>
-                        <div class="file-dropzone-compact" onclick="document.getElementById('editFileSalinan').click()">
-                          <div class="file-dropzone-left">
-                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-                            <span id="label_editFileSalinan" class="file-dropzone-text">Pilih pasport baharu</span>
-                          </div>
-                          <span class="file-btn-browse">Pilih</span>
-                        </div>
-                        <input type="file" id="editFileSalinan" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_editFileSalinan')">
-                      </div>
-
-                      <div>
-                        <label>Ganti Biometrik</label>
-                        <div class="file-dropzone-compact" onclick="document.getElementById('editFileBio').click()">
-                          <div class="file-dropzone-left">
-                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"></circle></svg>
-                            <span id="label_editFileBio" class="file-dropzone-text">Pilih biometrik baharu</span>
-                          </div>
-                          <span class="file-btn-browse">Pilih</span>
-                        </div>
-                        <input type="file" id="editFileBio" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_editFileBio')">
-                      </div>
-                    </div>
-
-                    <div class="input-row" style="margin-top: 8px;">
-                      <div>
-                        <label>Ganti Tiket HHR</label>
-                        <div class="file-dropzone-compact" onclick="document.getElementById('editFileHHR').click()">
-                          <div class="file-dropzone-left">
-                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="16" rx="2"></rect></svg>
-                            <span id="label_editFileHHR" class="file-dropzone-text">Pilih tiket baharu</span>
-                          </div>
-                          <span class="file-btn-browse">Pilih</span>
-                        </div>
-                        <input type="file" id="editFileHHR" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_editFileHHR')">
-                      </div>
-
-                      <div>
-                        <label>Tambah Resit Bayaran</label>
-                        <div class="file-dropzone-compact" onclick="document.getElementById('editFileResit').click()">
-                          <div class="file-dropzone-left">
-                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line></svg>
-                            <span id="label_editFileResit" class="file-dropzone-text">Muat naik resit</span>
-                          </div>
-                          <span class="file-btn-browse">Pilih</span>
-                        </div>
-                        <input type="file" id="editFileResit" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_editFileResit')">
-                      </div>
+                      <input type="file" id="editFileGambar" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_editFileGambar')">
                     </div>
                   </div>
 
-                  <button type="submit" class="btn btn-primary" style="width: 100%; min-height: 44px; margin-top: 8px;">Simpan Perubahan</button>
-                </div>
-              </form>
+                  <div class="input-row" style="margin-top: 8px;">
+                    <div>
+                      <label>Ganti Salinan Pasport</label>
+                      <div class="file-dropzone-compact" onclick="document.getElementById('editFileSalinan').click()">
+                        <div class="file-dropzone-left">
+                          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                          <span id="label_editFileSalinan" class="file-dropzone-text">Pilih pasport baharu</span>
+                        </div>
+                        <span class="file-btn-browse">Pilih</span>
+                      </div>
+                      <input type="file" id="editFileSalinan" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_editFileSalinan')">
+                    </div>
 
-              <div style="margin-top: 30px; border-top: 1px solid #fee2e2; padding-top: 18px; text-align: center;">
-                <button type="button" class="btn btn-danger" onclick="sahkanPadamJemaah()">Padam & Arkibkan Rekod Jemaah Ini</button>
+                    <div>
+                      <label>Ganti Biometrik</label>
+                      <div class="file-dropzone-compact" onclick="document.getElementById('editFileBio').click()">
+                        <div class="file-dropzone-left">
+                          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"></circle></svg>
+                          <span id="label_editFileBio" class="file-dropzone-text">Pilih biometrik baharu</span>
+                        </div>
+                        <span class="file-btn-browse">Pilih</span>
+                      </div>
+                      <input type="file" id="editFileBio" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_editFileBio')">
+                    </div>
+                  </div>
+
+                  <div class="input-row" style="margin-top: 8px;">
+                    <div>
+                      <label>Ganti Tiket HHR</label>
+                      <div class="file-dropzone-compact" onclick="document.getElementById('editFileHHR').click()">
+                        <div class="file-dropzone-left">
+                          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="16" rx="2"></rect></svg>
+                          <span id="label_editFileHHR" class="file-dropzone-text">Pilih tiket baharu</span>
+                        </div>
+                        <span class="file-btn-browse">Pilih</span>
+                      </div>
+                      <input type="file" id="editFileHHR" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_editFileHHR')">
+                    </div>
+
+                    <div>
+                      <label>Tambah Resit Bayaran</label>
+                      <div class="file-dropzone-compact" onclick="document.getElementById('editFileResit').click()">
+                        <div class="file-dropzone-left">
+                          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line></svg>
+                          <span id="label_editFileResit" class="file-dropzone-text">Muat naik resit</span>
+                        </div>
+                        <span class="file-btn-browse">Pilih</span>
+                      </div>
+                      <input type="file" id="editFileResit" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_editFileResit')">
+                    </div>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; min-height: 44px; margin-top: 8px;">Simpan Perubahan</button>
               </div>
+            </form>
+
+            <div style="margin-top: 30px; border-top: 1px solid #fee2e2; padding-top: 18px; text-align: center;">
+              <button type="button" class="btn btn-danger" onclick="sahkanPadamJemaah()">Padam & Arkibkan Rekod Jemaah Ini</button>
             </div>
           </div>
         </div>
@@ -1634,9 +1633,12 @@
       dateInput.value = defaultDate.toISOString().split('T')[0];
 
       addBatchRow();
+      
+      // Pemuatan data berperingkat untuk kestabilan pelayan
       loadData();
-      fetchUmrahFormsList();
+      setTimeout(fetchUmrahFormsList, 800);
       setTimeout(loadDataJemaah, 1500);
+
       setTimeout(checkAutoSystemUpdate, 3000);
     });
 
@@ -1809,10 +1811,19 @@
 
     /* PENGENDALIAN DATA STOK */
     function loadData() {
-      fetch(`${SCRIPT_URL}?action=getAppData`, { method: 'GET', redirect: 'follow' })
-      .then(res => res.json())
+      showLoading(true, 'Memuatkan data...');
+      
+      fetch(`${SCRIPT_URL}?action=getAppData`, { 
+        method: 'GET', 
+        redirect: 'follow' 
+      })
       .then(res => {
-        if (!res.ok) throw new Error(res.message);
+        if (!res.ok) throw new Error(`HTTP Ralat ${res.status}`);
+        return res.json();
+      })
+      .then(res => {
+        if (!res.ok && res.message) throw new Error(res.message);
+
         const payload = res.data ? res.data : res;
         appState.data = {
           dashboard: payload.dashboard || {},
@@ -1820,24 +1831,43 @@
           logs: Array.isArray(payload.logs) ? payload.logs : [],
           lists: payload.lists || { pic: [], lokasi: [], kategori: [] }
         };
-        try { renderDashboard(); renderDropdowns(); renderLogs(); renderItems(); } catch (e) {}
-      }).catch(() => {});
+
+        try { renderDashboard(); } catch (e) { console.error('Ralat renderDashboard:', e); }
+        try { renderDropdowns(); } catch (e) { console.error('Ralat renderDropdowns:', e); }
+        try { renderLogs(); } catch (e) { console.error('Ralat renderLogs:', e); }
+        try { renderItems(); } catch (e) { console.error('Ralat renderItems:', e); }
+      })
+      .catch(err => {
+        console.error('Gagal loadData:', err);
+        showToast(err.message || 'Gagal memuat turun data stok.', true);
+        
+        document.getElementById('attentionTbody').innerHTML = `<tr><td colspan="7" style="text-align:center; padding:24px; color:#ef4444;">Gagal memuatkan rekod: ${err.message}</td></tr>`;
+        document.getElementById('logsTbody').innerHTML = `<tr><td colspan="8" style="text-align:center; padding:24px; color:#ef4444;">Gagal memuatkan log transaksi.</td></tr>`;
+        document.getElementById('itemsTbody').innerHTML = `<tr><td colspan="8" style="text-align:center; padding:24px; color:#ef4444;">Gagal memuatkan katalog item.</td></tr>`;
+      })
+      .finally(() => {
+        showLoading(false);
+      });
     }
 
     function setInventoryFilter(filterType) {
       appState.inventoryFilter = filterType;
+      
       const pills = ['ALL', 'ATTN', 'LOW STOCK', 'HABIS', 'OK'];
       const pillIds = ['pillAll', 'pillAttn', 'pillLow', 'pillEmpty', 'pillOk'];
+      
       pills.forEach((p, idx) => {
         const el = document.getElementById(pillIds[idx]);
         if (el) el.classList.toggle('active', p === filterType);
       });
+
       renderDashboardTableOnly();
     }
 
     function renderDashboard() {
       const d = appState.data.dashboard || {};
       const allItems = appState.data.items || [];
+      
       const countAttn = allItems.filter(i => i.status !== 'OK').length;
       const countLow = allItems.filter(i => i.status === 'LOW STOCK').length;
       const countEmpty = allItems.filter(i => i.status === 'HABIS').length;
@@ -1866,16 +1896,23 @@
         </div>
       `).join('');
       window.cards = cards;
+
       renderDashboardTableOnly();
     }
 
     function renderDashboardTableOnly() {
       const allItems = appState.data.items || [];
       let filtered = allItems;
-      if (appState.inventoryFilter === 'ATTN') filtered = allItems.filter(i => i.status !== 'OK');
-      else if (appState.inventoryFilter === 'LOW STOCK') filtered = allItems.filter(i => i.status === 'LOW STOCK');
-      else if (appState.inventoryFilter === 'HABIS') filtered = allItems.filter(i => i.status === 'HABIS');
-      else if (appState.inventoryFilter === 'OK') filtered = allItems.filter(i => i.status === 'OK');
+
+      if (appState.inventoryFilter === 'ATTN') {
+        filtered = allItems.filter(i => i.status !== 'OK');
+      } else if (appState.inventoryFilter === 'LOW STOCK') {
+        filtered = allItems.filter(i => i.status === 'LOW STOCK');
+      } else if (appState.inventoryFilter === 'HABIS') {
+        filtered = allItems.filter(i => i.status === 'HABIS');
+      } else if (appState.inventoryFilter === 'OK') {
+        filtered = allItems.filter(i => i.status === 'OK');
+      }
 
       const tbody = document.getElementById('attentionTbody');
       const mCards = document.getElementById('attentionMobileCards');
@@ -1997,23 +2034,39 @@
       const logs = appState.data?.logs || [];
       const tbody = document.getElementById('logsTbody');
       const mCards = document.getElementById('logsMobileCards');
+
       if (!logs.length) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:18px; color:#64748b;">Tiada rekod transaksi.</td></tr>`;
-        mCards.innerHTML = `<div style="text-align:center; padding:16px; color:#64748b; font-size:12px;">Tiada rekod transaksi.</div>`;
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:24px; color:#64748b;">Tiada rekod transaksi direkodkan.</td></tr>`;
+        mCards.innerHTML = `<div style="text-align:center; padding:16px; color:#64748b; font-size:12px;">Tiada rekod transaksi direkodkan.</div>`;
         return;
       }
+
       tbody.innerHTML = logs.map((l, idx) => `
-        <tr class="clickable-row" onclick="openLogDetailModalByIndex(${idx})">
-          <td>${l.date || '-'}</td><td><strong>${l.sku || '-'}</strong></td><td>${l.item || '-'}</td>
+        <tr class="clickable-row" onclick="openLogDetailModalByIndex(${idx})" title="Pilih untuk perincian penuh">
+          <td>${l.date || '-'}</td>
+          <td><strong>${l.sku || '-'}</strong></td>
+          <td>${l.item || '-'}</td>
           <td><span class="badge ${l.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}">${l.type}</span></td>
-          <td style="text-align:right; font-weight:800;">${l.qty}</td><td style="text-align:right;">${l.balanceAfter}</td>
-          <td>${l.pic || '-'}</td><td>${l.location || '-'}</td>
+          <td style="text-align:right; font-weight:800;">${l.qty}</td>
+          <td style="text-align:right;">${l.balanceAfter}</td>
+          <td>${l.pic || '-'}</td>
+          <td>${l.location || '-'}</td>
         </tr>
       `).join('');
+
       mCards.innerHTML = logs.map((l, idx) => `
         <div class="card-row clickable-row" onclick="openLogDetailModalByIndex(${idx})">
-          <div class="card-row-top"><div><div class="card-title">${l.item || 'Item'}</div><div class="card-sub">${l.sku ? l.sku + ' • ' : ''}${l.date} • ${l.pic || 'TIADA'}</div></div><span class="badge ${l.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}">${l.type}</span></div>
-          <div class="card-row-bottom"><span>Kuantiti: <strong>${l.qty} unit</strong></span><span style="color:#64748b;">Baki: ${l.balanceAfter}</span></div>
+          <div class="card-row-top">
+            <div>
+              <div class="card-title">${l.item || 'Item'}</div>
+              <div class="card-sub">${l.sku ? l.sku + ' • ' : ''}${l.date} • ${l.pic || 'Tiada PIC'}</div>
+            </div>
+            <span class="badge ${l.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}">${l.type}</span>
+          </div>
+          <div class="card-row-bottom">
+            <span>Kuantiti: <strong>${l.qty} unit</strong></span>
+            <span style="color:#64748b;">Baki: ${l.balanceAfter}</span>
+          </div>
         </div>
       `).join('');
     }
@@ -2021,6 +2074,7 @@
     function openLogDetailModalByIndex(index) {
       const log = (appState.data?.logs || [])[index];
       if (!log) return;
+      
       document.getElementById('dtlType').textContent = log.type;
       document.getElementById('dtlType').className = `badge ${log.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}`;
       document.getElementById('dtlItem').textContent = log.item || '-';
@@ -2031,6 +2085,7 @@
       document.getElementById('dtlPic').textContent = log.pic || '-';
       document.getElementById('dtlLocation').textContent = log.location || '-';
       document.getElementById('dtlNote').textContent = log.note || 'Tiada catatan direkodkan.';
+      
       document.getElementById('logDetailModal').classList.remove('hidden');
       lockBodyScroll();
     }
@@ -2039,11 +2094,13 @@
       const items = appState.data?.items || [];
       const tbody = document.getElementById('itemsTbody');
       const mCards = document.getElementById('itemsMobileCards');
+
       if (!items.length) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:24px; color:#64748b;">Tiada item.</td></tr>`;
-        mCards.innerHTML = `<div style="text-align:center; padding:16px; color:#64748b; font-size:12px;">Tiada item.</div>`;
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:24px; color:#64748b;">Tiada item dalam pangkalan data.</td></tr>`;
+        mCards.innerHTML = `<div style="text-align:center; padding:16px; color:#64748b; font-size:12px;">Tiada item dalam pangkalan data.</div>`;
         return;
       }
+
       tbody.innerHTML = items.map(i => `
         <tr>
           <td><strong>${i.sku || i.itemId}</strong></td><td><strong>${i.item}</strong></td><td>${i.category}</td>
@@ -2052,6 +2109,7 @@
           <td style="text-align:center;"><button class="btn btn-secondary" style="padding:3px 10px; font-size:11px; min-height:28px;" onclick='populateEditItem(${JSON.stringify(i).replace(/'/g, "&apos;")})'>Kemaskini</button></td>
         </tr>
       `).join('');
+
       mCards.innerHTML = items.map(i => `
         <div class="card-row">
           <div class="card-row-top"><div><div class="card-title">${i.item}</div><div class="card-sub">${i.sku || i.itemId} • ${i.category}</div></div><span class="badge badge-${i.status === 'OK' ? 'ok' : (i.status === 'HABIS' ? 'empty' : 'low')}">${i.status}</span></div>
