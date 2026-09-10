@@ -1814,20 +1814,11 @@
       }
     }
 
-    /* PENGENDALIAN DATA STOK */
+   /* PENGENDALIAN DATA STOK - DENGAN CONSOLE LOGGING */
     function loadData() {
-      const cached = localStorage.getItem('eastra_cached_stok');
-      if (cached) {
-        try {
-          appState.data = JSON.parse(cached);
-          renderDashboard();
-          renderDropdowns();
-          renderLogs();
-          renderItems();
-        } catch (e) {}
-      } else {
-        showLoading(true, 'Memuatkan data...');
-      }
+      // Padamkan cache log lama supaya browser tidak memaparkan cache kosong
+      localStorage.removeItem('eastra_cached_stok');
+      showLoading(true, 'Memuatkan data...');
 
       fetch(`${SCRIPT_URL}?action=getAppData`, { method: 'GET', redirect: 'follow' })
       .then(res => res.json())
@@ -1835,13 +1826,17 @@
         showLoading(false);
         if (!res.ok) throw new Error(res.message);
         const payload = res.data ? res.data : res;
+        
+        console.log("DATA APP DITERIMA:", payload);
+        console.log("JUMLAH LOG:", payload.logs ? payload.logs.length : 0);
+
         appState.data = {
           dashboard: payload.dashboard || {},
           items: Array.isArray(payload.items) ? payload.items : [],
           logs: Array.isArray(payload.logs) ? payload.logs : [],
           lists: payload.lists || { pic: [], lokasi: [], kategori: [] }
         };
-        localStorage.setItem('eastra_cached_stok', JSON.stringify(appState.data));
+        
         renderDashboard(); 
         renderDropdowns(); 
         renderLogs(); 
@@ -1849,8 +1844,58 @@
       })
       .catch(err => {
         showLoading(false);
-        console.error(err);
+        console.error("RALAT LOAD DATA:", err);
+        showToast('Gagal memuatkan data.', true);
       });
+    }
+
+    function renderLogs() {
+      const logs = appState.data?.logs || [];
+      const tbody = document.getElementById('logsTbody');
+      const mCards = document.getElementById('logsMobileCards');
+
+      console.log("RENDERING LOGS:", logs);
+
+      if (!logs || !logs.length) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:18px; color:#64748b;">Tiada rekod transaksi.</td></tr>`;
+        mCards.innerHTML = `<div style="text-align:center; padding:16px; color:#64748b; font-size:12px;">Tiada rekod transaksi.</div>`;
+        return;
+      }
+
+      tbody.innerHTML = logs.map((l, idx) => {
+        const isMasuk = String(l.type).toLowerCase().includes('masuk');
+        return `
+          <tr class="clickable-row" onclick="openLogDetailModalByIndex(${idx})">
+            <td>${l.date || '-'}</td>
+            <td><strong>${l.sku || '-'}</strong></td>
+            <td>${l.item || '-'}</td>
+            <td><span class="badge ${isMasuk ? 'badge-ok' : 'badge-empty'}">${l.type}</span></td>
+            <td style="text-align:right; font-weight:800;">${l.qty}</td>
+            <td style="text-align:right;">${l.balanceAfter}</td>
+            <td>${l.pic || '-'}</td>
+            <td>${l.location || '-'}</td>
+          </tr>
+        `;
+      }).join('');
+
+      mCards.innerHTML = logs.map((l, idx) => {
+        const isMasuk = String(l.type).toLowerCase().includes('masuk');
+        return `
+          <div class="card-row clickable-row" onclick="openLogDetailModalByIndex(${idx})">
+            <div class="card-row-top">
+              <div>
+                <div class="card-title">${l.item || 'Item'}</div>
+                <div class="card-sub">${l.sku ? l.sku + ' • ' : ''}${l.date} • ${l.pic || 'TIADA'}</div>
+              </div>
+              <span class="badge ${isMasuk ? 'badge-ok' : 'badge-empty'}">${l.type}</span>
+            </div>
+            <div class="card-row-bottom">
+              <span>Kuantiti: <strong>${l.qty} unit</strong></span>
+              <span style="color:#64748b;">Baki: ${l.balanceAfter}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
     }
 
     function setInventoryFilter(filterType) {
