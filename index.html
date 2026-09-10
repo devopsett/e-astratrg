@@ -22,7 +22,6 @@
   
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <!-- Pustaka Penjana Kod QR untuk Cetakan -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <style>
@@ -828,7 +827,7 @@
       <div class="update-title">Versi Baharu Sedia Dipasang</div>
       <div class="update-details-box">
         <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Nota Keluaran:</strong>
-        <span id="updateChangelogText">Penambahan kaunter imbasan langsung dan cetakan kod QR sebenar pada PDF.</span>
+        <span id="updateChangelogText">Papar pautan pendek khas (Shortlink) automatik di UI menggantikan pautan panjang.</span>
       </div>
       <div class="update-action-row">
         <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
@@ -853,7 +852,7 @@
     <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
   </button>
 
-  <!-- MODAL PENGIMBAS KAMERA DENGAN KAUNTER -->
+  <!-- MODAL PENGIMBAS KAMERA -->
   <div id="scannerModal" class="modal-overlay hidden">
     <div class="scanner-dialog">
       <div class="modal-header">
@@ -977,7 +976,7 @@
     </div>
   </div>
 
-  <!-- MODAL PAPARAN PERINCIAN JEMAAH (MOBILE VIEW) -->
+  <!-- MODAL PAPARAN PERINCIAN JEMAAH -->
   <div id="jemaahDetailModal" class="modal-overlay hidden" onclick="closeModalOnBackdrop(event, 'jemaahDetailModal')">
     <div class="modal-dialog">
       <div class="modal-header">
@@ -1205,20 +1204,21 @@
               </div>
             </form>
 
+            <!-- PAPARAN KEPUTUSAN PENJANAAN BORANG DENGAN SHORTLINK -->
             <div id="umrahFormResult" class="result-card-umrah hidden">
               <h4 style="color: var(--primary); font-size: 14px; font-weight: 800; margin-bottom: 4px;">Borang Telah Berjaya Dijana</h4>
               <p id="resultFormName" style="font-size: 12px; color: #047857; margin-bottom: 12px; font-weight: 700;"></p>
               <div style="display: grid; gap: 12px;">
                 <div>
-                  <label style="font-size: 11.5px; color: #065f46;">Pautan Awam (Peserta):</label>
+                  <label style="font-size: 11.5px; color: #065f46; font-weight: 800;">Pautan Pendek Khas (Shortlink Awam):</label>
                   <div style="display: flex; gap: 8px;">
-                    <input type="text" id="resLiveUrl" readonly style="background: #ffffff; font-size: 12px; color: #047857; font-weight: 700;">
+                    <input type="text" id="resLiveUrl" readonly style="background: #ffffff; font-size: 12.5px; color: #047857; font-weight: 800;">
                     <button type="button" class="btn btn-secondary" style="min-height: 42px;" onclick="copyResultLink('resLiveUrl')">Salin</button>
                     <a id="linkLiveBtn" href="#" target="_blank" class="btn btn-primary" style="text-decoration: none; min-height: 42px;">Buka</a>
                   </div>
                 </div>
                 <div>
-                  <label style="font-size: 11.5px; color: #065f46;">Pautan Pentadbir (Editor):</label>
+                  <label style="font-size: 11.5px; color: #065f46;">Pautan Pentadbir (Editor Asal):</label>
                   <div style="display: flex; gap: 8px;">
                     <input type="text" id="resEditUrl" readonly style="background: #ffffff; font-size: 12px;">
                     <button type="button" class="btn btn-secondary" style="min-height: 42px;" onclick="copyResultLink('resEditUrl')">Salin</button>
@@ -1599,7 +1599,7 @@
     let isProcessingScan = false;
     let toastTimer = null;
     let globalAudioCtx = null;
-    let sessionScanCount = 0; // Kaunter imbasan sesi
+    let sessionScanCount = 0;
 
     function getAudioContext() {
       if (!globalAudioCtx) {
@@ -2244,7 +2244,7 @@
 
     function openScannerModal() {
       getAudioContext();
-      sessionScanCount = 0; // Reset kaunter setiap kali buka pengimbas
+      sessionScanCount = 0;
       updateScanCounterUI();
 
       document.getElementById('scannerModal').classList.remove('hidden');
@@ -2319,8 +2319,6 @@
       }
 
       playFeedback();
-      
-      // Tambah bilangan kaunter imbasan sesi
       sessionScanCount++;
       updateScanCounterUI();
 
@@ -2846,7 +2844,7 @@
       const bulanText = getBulanKursusMelayu(rawDate);
       const fileInput = document.getElementById('ufPosterFile');
 
-      showLoading(true, 'Menduplikasi templat borang...');
+      showLoading(true, 'Menduplikasi templat borang & jana shortlink...');
       let posterBase64 = '', posterType = '';
       if (fileInput.files && fileInput.files[0]) {
         const file = fileInput.files[0];
@@ -2892,7 +2890,7 @@
 
         if (res.formsList && res.formsList.length) renderUmrahFormsList(res.formsList);
         else renderUmrahFormsList(localForms);
-        showToast('Borang kursus berjaya dijana.');
+        showToast('Borang & shortlink berjaya dijana.');
       })
       .catch(err => {
         showLoading(false);
