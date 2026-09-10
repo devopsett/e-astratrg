@@ -824,7 +824,7 @@
       <div class="update-title">Versi Baharu Sedia Dipasang</div>
       <div class="update-details-box">
         <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Nota Keluaran:</strong>
-        <span id="updateChangelogText">Penyesuaian label menu Ringkasan & Semakan Pengurusan Jemaah.</span>
+        <span id="updateChangelogText">Penambahbaikan paparan log transaksi dan struktur menu pengurusan jemaah.</span>
       </div>
       <div class="update-action-row">
         <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
@@ -1362,7 +1362,7 @@
                       <label>Salinan Pasport</label>
                       <div class="file-dropzone-compact" onclick="document.getElementById('regFileSalinan').click()">
                         <div class="file-dropzone-left">
-                          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
                           <span id="label_regFileSalinan" class="file-dropzone-text">Pilih salinan pasport</span>
                         </div>
                         <span class="file-btn-browse">Pilih Fail</span>
@@ -1379,7 +1379,7 @@
                           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"></circle></svg>
                           <span id="label_regFileBio" class="file-dropzone-text">Pilih slip biometrik</span>
                         </div>
-                        <span class="file-btn-browse">Pilih</span>
+                        <span class="file-btn-browse">Pilih Fail</span>
                       </div>
                       <input type="file" id="regFileBio" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_regFileBio')">
                     </div>
@@ -1391,7 +1391,7 @@
                           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="16" rx="2"></rect></svg>
                           <span id="label_regFileHHR" class="file-dropzone-text">Pilih tiket penerbangan/HHR</span>
                         </div>
-                        <span class="file-btn-browse">Pilih</span>
+                        <span class="file-btn-browse">Pilih Fail</span>
                       </div>
                       <input type="file" id="regFileHHR" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_regFileHHR')">
                     </div>
@@ -1486,7 +1486,7 @@
                       <label>Ganti Salinan Pasport</label>
                       <div class="file-dropzone-compact" onclick="document.getElementById('editFileSalinan').click()">
                         <div class="file-dropzone-left">
-                          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
                           <span id="label_editFileSalinan" class="file-dropzone-text">Pilih pasport baharu</span>
                         </div>
                         <span class="file-btn-browse">Pilih</span>
@@ -2479,7 +2479,7 @@
       if (j.resit) {
         d_resit = j.resit.split(' | ').map(r => {
           const p = r.split(': ');
-          return p.length === 2 ? `<a href="${p[1]}" target="_blank" class="badge badge-ok">${p[0]}</a>` : `<a href="${r}" target="_blank" class="badge badge-ok">Resit</a>`;
+          return p.length === 2 ? `<a href="${p[1]}" target="_blank" class="badge badge-ok">${p[0]}</a>` : `<a href="${r}" target="_blank" class="badge badge-ok">Resit Pembayaran</a>`;
         }).join(' ');
       }
 
