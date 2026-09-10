@@ -4,6 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <title>e-ASTRA | Hab Operasi Cawangan</title>
   
   <link rel="manifest" href="manifest.json">
@@ -2318,22 +2319,138 @@
       setTimeout(() => isProcessingScan = false, 1500);
     }
 
+    // Helper untuk menjana imej QR Code DataURL secara asynchronously
+    function generateQRDataUrl(text) {
+      return new Promise((resolve) => {
+        const tempDiv = document.createElement('div');
+        tempDiv.style.display = 'none';
+        document.body.appendChild(tempDiv);
+
+        new QRCode(tempDiv, {
+          text: String(text).trim(),
+          width: 128,
+          height: 128,
+          correctLevel: QRCode.CorrectLevel.M
+        });
+
+        // Tunggu imej QR siap dirender dalam elemen <canvas> atau <img>
+        setTimeout(() => {
+          const canvas = tempDiv.querySelector('canvas');
+          let dataUrl = '';
+          if (canvas) {
+            dataUrl = canvas.toDataURL('image/png');
+          } else {
+            const img = tempDiv.querySelector('img');
+            if (img) dataUrl = img.src;
+          }
+          document.body.removeChild(tempDiv);
+          resolve(dataUrl);
+        }, 60);
+      });
+    }
+
     async function generateQRPdf1Page() {
       const items = appState.data?.items || [];
-      if (!items.length) { showToast('Tiada rekod inventori untuk cetakan.', true); return; }
-      showLoading(true, 'Menjana dokumen PDF...');
+      if (!items.length) { 
+        showToast('Tiada rekod inventori untuk cetakan.', true); 
+        return; 
+      }
+
+      showLoading(true, 'Menjana kod QR & dokumen PDF...');
+
       try {
         const { jsPDF } = window.jspdf;
-        const doc = new jsPDF('p', 'mm', 'a4');
+        const doc = new jsPDF('p', 'mm', 'a4'); // Saiz A4: 210mm x 297mm
+
+        // Tajuk Dokumen
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(13);
-        doc.text('LABEL KOD QR PRODUK - CAWANGAN TERENGGANU', 105, 14, { align: 'center' });
-        doc.save(`eASTRA_Label_QR_${new Date().toISOString().slice(0,10)}.pdf`);
+        doc.setTextColor(11, 56, 24);
+        doc.text('LABEL KOD QR INVENTORI - CAWANGAN TERENGGANU', 105, 12, { align: 'center' });
+
+        doc.setFontSize(8);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(100, 116, 139);
+        const tarikhCetak = new Date().toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' });
+        doc.text(`Tarikh Cetakan: ${tarikhCetak} | Jumlah Item: ${items.length}`, 105, 17, { align: 'center' });
+
+        // Tetapan Grid Label (3 Lajur)
+        const startX = 14;
+        const startY = 22;
+        const cardW = 58;
+        const cardH = 34;
+        const gapX = 4;
+        const gapY = 4;
+        const cols = 3;
+        const rowsPerPage = 7;
+        const itemsPerPage = cols * rowsPerPage; // 21 label setiap muka surat
+
+        for (let i = 0; i < items.length; i++) {
+          const itm = items[i];
+          const pageIndex = i % itemsPerPage;
+
+          // Tambah muka surat baharu jika melebihi had muka surat
+          if (i > 0 && pageIndex === 0) {
+            doc.addPage();
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(10);
+            doc.setTextColor(11, 56, 24);
+            doc.text('LABEL KOD QR INVENTORI (SAMBUNGAN)', 105, 12, { align: 'center' });
+          }
+
+          const col = pageIndex % cols;
+          const row = Math.floor(pageIndex / cols);
+
+          const x = startX + col * (cardW + gapX);
+          const y = startY + row * (cardH + gapY);
+
+          // Kotak Garisan Label
+          doc.setDrawColor(226, 232, 240);
+          doc.setFillColor(255, 255, 255);
+          doc.roundedRect(x, y, cardW, cardH, 2, 2, 'FD');
+
+          // Jana Kod QR berdasarkan Kod SKU atau ID Item
+          const qrText = String(itm.sku || itm.itemId || 'TIADA').trim();
+          const qrDataUrl = await generateQRDataUrl(qrText);
+
+          // Lukis Imej Kod QR di sebelah kiri kad
+          if (qrDataUrl) {
+            doc.addImage(qrDataUrl, 'PNG', x + 2.5, y + 4.5, 25, 25);
+          }
+
+          // Perincian Teks di sebelah kanan kod QR
+          const textX = x + 29;
+          
+          // Nama Item (Potong jika terlalu panjang)
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(8);
+          doc.setTextColor(15, 23, 42);
+          const splitTitle = doc.splitTextToSize(itm.item || 'Item', cardW - 31);
+          doc.text(splitTitle.slice(0, 2), textX, y + 8);
+
+          // Kod SKU
+          doc.setFontSize(7.5);
+          doc.setTextColor(11, 56, 24);
+          doc.text(`SKU: ${qrText}`, textX, y + 17);
+
+          // Kategori & Lokasi
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(6.5);
+          doc.setTextColor(100, 116, 139);
+          doc.text(`Kat: ${itm.category || 'Umum'}`, textX, y + 22);
+          doc.text(`Min: ${itm.minimum || 0} unit`, textX, y + 26);
+        }
+
+        // Muat Turun Fail PDF
+        const fileName = `eASTRA_Label_QR_${new Date().toISOString().slice(0, 10)}.pdf`;
+        doc.save(fileName);
+
         showLoading(false);
-        showToast('Dokumen PDF berjaya dimuat turun.');
+        showToast('Dokumen PDF Kod QR berjaya dijana.');
       } catch (err) {
         showLoading(false);
-        showToast('Gagal menjana PDF: ' + err.message, true);
+        console.error("Ralat cetak QR:", err);
+        showToast('Gagal menjana fail PDF: ' + err.message, true);
       }
     }
 
