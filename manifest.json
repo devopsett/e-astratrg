@@ -1,24 +1,15 @@
 {
-  "name": "e-ASTRA",
   "short_name": "e-ASTRA",
-  "start_url": "./index.html",
-  "scope": "./",
-  "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#0b3818",
-  "theme_color": "#0b3818",
+  "name": "e-ASTRA Hab Operasi Cawangan",
   "icons": [
     {
       "src": "Logo%20Azzuha.png",
-      "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "Logo%20Azzuha.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "sizes": "192x192"
     }
-  ]
+  ],
+  "start_url": "?mode=standalone",
+  "background_color": "#0b3818",
+  "theme_color": "#0b3818",
+  "display": "standalone"
 }
