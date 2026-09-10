@@ -377,7 +377,6 @@
     .panel-header h3 { font-size: 15px; font-weight: 800; color: var(--text); }
     .panel-body { padding: 20px; }
 
-    /* PIL TAB HEADER SEJAJAR & BOLEH DISKROL SECARA MENDATAR */
     .filter-pills-bar {
       display: flex;
       gap: 8px;
@@ -482,7 +481,6 @@
       overflow: hidden;
     }
 
-    /* BARIS ITEM BATCH */
     .batch-item-row {
       display: flex;
       flex-direction: column;
@@ -496,11 +494,7 @@
 
     .batch-item-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
     
-    .item-select-col { 
-      width: 100%; 
-      max-width: 100%; 
-      min-width: 0; 
-    }
+    .item-select-col { width: 100%; max-width: 100%; min-width: 0; }
     .item-select-col select { width: 100%; font-size: 13.5px; font-weight: 600; color: var(--text); }
 
     .item-bottom-bar { 
@@ -568,7 +562,6 @@
     .detail-value { font-size: 13.5px; font-weight: 700; color: var(--text); }
     .detail-note-box { width: 100%; padding: 10px 12px; background: #ffffff; border-radius: 6px; border: 1px dashed var(--border); font-size: 13px; color: var(--text); line-height: 1.4; white-space: pre-wrap; }
 
-    /* MODAL */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -636,7 +629,6 @@
     .hidden { display: none !important; }
     .mobile-cards { display: none; }
 
-    /* Modul Kursus Umrah & Jemaah Shared Styles */
     .umrah-container { display: grid; grid-template-columns: 1fr; gap: 22px; align-items: start; width: 100%; }
     .umrah-card { background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow-sm); }
     .umrah-header { border-bottom: 1px solid var(--border); padding-bottom: 14px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
@@ -662,7 +654,6 @@
     .form-item-date { font-size: 11px; color: var(--text-muted); font-weight: 600; }
     .form-item-actions { display: flex; align-items: center; gap: 6px; border-top: 1px dashed var(--border); padding-top: 10px; flex-wrap: wrap; }
 
-    /* KAD UPLOAD FILE JEMAAH */
     .file-dropzone-compact {
       border: 1.5px dashed #cbd5e1;
       background: #f8fafc;
@@ -731,7 +722,6 @@
     .jemaah-status-box { background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 20px; }
     .jemaah-status-item { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px dashed var(--border); font-size: 12.5px; }
 
-    /* MOBILE NAVIGATION BAR BAWAH */
     .mobile-nav {
       display: none;
       position: fixed;
@@ -824,7 +814,7 @@
       <div class="update-title">Versi Baharu Sedia Dipasang</div>
       <div class="update-details-box">
         <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Nota Keluaran:</strong>
-        <span id="updateChangelogText">Penambahbaikan fungsi pemetaan lajur log transaksi secara automatik.</span>
+        <span id="updateChangelogText">Penambahbaikan fungsi pemaparan log transaksi secara langsung.</span>
       </div>
       <div class="update-action-row">
         <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
@@ -1379,7 +1369,7 @@
                           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"></circle></svg>
                           <span id="label_regFileBio" class="file-dropzone-text">Pilih slip biometrik</span>
                         </div>
-                        <span class="file-btn-browse">Pilih Fail</span>
+                        <span class="file-btn-browse">Pilih</span>
                       </div>
                       <input type="file" id="regFileBio" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_regFileBio')">
                     </div>
@@ -1391,7 +1381,7 @@
                           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="16" rx="2"></rect></svg>
                           <span id="label_regFileHHR" class="file-dropzone-text">Pilih tiket penerbangan/HHR</span>
                         </div>
-                        <span class="file-btn-browse">Pilih Fail</span>
+                        <span class="file-btn-browse">Pilih</span>
                       </div>
                       <input type="file" id="regFileHHR" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_regFileHHR')">
                     </div>
@@ -1404,7 +1394,7 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
                         <span id="label_regFileResit" class="file-dropzone-text">Pilih slip resit bayaran</span>
                       </div>
-                      <span class="file-btn-browse">Pilih Fail</span>
+                      <span class="file-btn-browse">Pilih</span>
                     </div>
                     <input type="file" id="regFileResit" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_regFileResit')">
                   </div>
@@ -1607,15 +1597,12 @@
       if (dateInput) dateInput.value = defaultDate.toISOString().split('T')[0];
 
       addBatchRow();
-      
-      // Pemuatan data
       loadData();
       setTimeout(checkAutoSystemUpdate, 3500);
     });
 
     window.addEventListener('focus', () => { checkAutoSystemUpdate(); });
 
-    /* KAWALAN SIDEBAR AKORDION DESKTOP (AUTO-CLOSE LAIN-LAIN MENU) */
     function handleDesktopMenuToggle(targetMenu) {
       if (targetMenu === 'stock') {
         appState.stockMenuOpen = !appState.stockMenuOpen;
@@ -1640,7 +1627,6 @@
     }
 
     function updateSidebarAccordionUI() {
-      // 1. Stok Submenu
       const subStock = document.getElementById('subStockMenu');
       const chevStock = document.getElementById('chevronStock');
       if (subStock && chevStock) {
@@ -1648,7 +1634,6 @@
         chevStock.classList.toggle('open', appState.stockMenuOpen);
       }
 
-      // 2. Jemaah Submenu
       const subJemaah = document.getElementById('subJemaahMenu');
       const chevJemaah = document.getElementById('chevronJemaah');
       if (subJemaah && chevJemaah) {
@@ -1656,7 +1641,6 @@
         chevJemaah.classList.toggle('open', appState.jemaahMenuOpen);
       }
 
-      // 3. Umrah Submenu
       const subUmrah = document.getElementById('subUmrahMenu');
       const chevUmrah = document.getElementById('chevronUmrah');
       if (subUmrah && chevUmrah) {
@@ -1665,7 +1649,6 @@
       }
     }
 
-    /* SUB-TAB STOK & INVENTORI */
     function switchStokSubTab(sub) {
       const isSum = (sub === 'summary');
       const isLog = (sub === 'logs');
@@ -1675,7 +1658,6 @@
       document.getElementById('subTabDashLogs').classList.toggle('active', isLog);
       document.getElementById('subTabDashItems').classList.toggle('active', isItem);
 
-      // Kemaskini sidebar desktop
       document.getElementById('subBtnDashboard').classList.toggle('active', isSum);
       document.getElementById('subBtnTransactions').classList.toggle('active', isLog);
       document.getElementById('subBtnItems').classList.toggle('active', isItem);
@@ -1685,13 +1667,11 @@
       document.getElementById('subSectionItems').classList.toggle('hidden', !isItem);
     }
 
-    /* SUB-TAB KURSUS UMRAH */
     function switchUmrahSubTab(subTab) {
       const isGen = (subTab === 'generate');
       document.getElementById('pillUmrahGen').classList.toggle('active', isGen);
       document.getElementById('pillUmrahArchive').classList.toggle('active', !isGen);
 
-      // Kemaskini sidebar desktop
       document.getElementById('subBtnUmrahGen').classList.toggle('active', isGen);
       document.getElementById('subBtnUmrahArchive').classList.toggle('active', !isGen);
 
@@ -1700,7 +1680,6 @@
       if (!isGen) fetchUmrahFormsList();
     }
 
-    /* SUB-TAB PENGURUSAN JEMAAH */
     function switchJemaahSubTab(sub) {
       const isList = (sub === 'list');
       const isAdd = (sub === 'add');
@@ -1710,7 +1689,6 @@
       document.getElementById('pillJemaahAdd').classList.toggle('active', isAdd);
       document.getElementById('pillJemaahEdit').classList.toggle('active', isEdit);
 
-      // Kemaskini sidebar desktop
       document.getElementById('subBtnJemaahList').classList.toggle('active', isList);
       document.getElementById('subBtnJemaahAdd').classList.toggle('active', isAdd);
       document.getElementById('subBtnJemaahEdit').classList.toggle('active', isEdit);
@@ -1722,7 +1700,6 @@
       if (isList) loadDataJemaah();
     }
 
-    /* KEMASKINI LABEL NAMA FAIL SELEPAS PILIH */
     function updateFileLabel(inputEl, labelId) {
       const label = document.getElementById(labelId);
       if (inputEl.files && inputEl.files[0]) {
@@ -1743,7 +1720,6 @@
       const isJemaahTab = ['jemaahList', 'jemaahAdd', 'jemaahEdit'].includes(tab);
       const isUmrahTab = (tab === 'umrahForm');
 
-      // Selaraskan state dropdown accordion desktop
       if (isStockTab) {
         appState.stockMenuOpen = true;
         appState.jemaahMenuOpen = false;
@@ -1786,7 +1762,6 @@
       const fabBtn = document.getElementById('mainFabBtn');
       if (fabBtn) fabBtn.classList.toggle('hidden', !isStockTab);
 
-      // Lazy Loading
       if (isUmrahTab && (!appState.umrahForms || appState.umrahForms.length === 0)) {
         fetchUmrahFormsList();
       }
@@ -1814,10 +1789,8 @@
       }
     }
 
-   /* PENGENDALIAN DATA STOK - DENGAN CONSOLE LOGGING */
+    /* PENGENDALIAN DATA STOK & LOG SECARA LANGSUNG */
     function loadData() {
-      // Padamkan cache log lama supaya browser tidak memaparkan cache kosong
-      localStorage.removeItem('eastra_cached_stok');
       showLoading(true, 'Memuatkan data...');
 
       fetch(`${SCRIPT_URL}?action=getAppData`, { method: 'GET', redirect: 'follow' })
@@ -1826,9 +1799,6 @@
         showLoading(false);
         if (!res.ok) throw new Error(res.message);
         const payload = res.data ? res.data : res;
-        
-        console.log("DATA APP DITERIMA:", payload);
-        console.log("JUMLAH LOG:", payload.logs ? payload.logs.length : 0);
 
         appState.data = {
           dashboard: payload.dashboard || {},
@@ -1836,7 +1806,7 @@
           logs: Array.isArray(payload.logs) ? payload.logs : [],
           lists: payload.lists || { pic: [], lokasi: [], kategori: [] }
         };
-        
+
         renderDashboard(); 
         renderDropdowns(); 
         renderLogs(); 
@@ -1844,58 +1814,9 @@
       })
       .catch(err => {
         showLoading(false);
-        console.error("RALAT LOAD DATA:", err);
-        showToast('Gagal memuatkan data.', true);
+        console.error("Ralat muat data:", err);
+        showToast('Gagal memuatkan data terkini.', true);
       });
-    }
-
-    function renderLogs() {
-      const logs = appState.data?.logs || [];
-      const tbody = document.getElementById('logsTbody');
-      const mCards = document.getElementById('logsMobileCards');
-
-      console.log("RENDERING LOGS:", logs);
-
-      if (!logs || !logs.length) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:18px; color:#64748b;">Tiada rekod transaksi.</td></tr>`;
-        mCards.innerHTML = `<div style="text-align:center; padding:16px; color:#64748b; font-size:12px;">Tiada rekod transaksi.</div>`;
-        return;
-      }
-
-      tbody.innerHTML = logs.map((l, idx) => {
-        const isMasuk = String(l.type).toLowerCase().includes('masuk');
-        return `
-          <tr class="clickable-row" onclick="openLogDetailModalByIndex(${idx})">
-            <td>${l.date || '-'}</td>
-            <td><strong>${l.sku || '-'}</strong></td>
-            <td>${l.item || '-'}</td>
-            <td><span class="badge ${isMasuk ? 'badge-ok' : 'badge-empty'}">${l.type}</span></td>
-            <td style="text-align:right; font-weight:800;">${l.qty}</td>
-            <td style="text-align:right;">${l.balanceAfter}</td>
-            <td>${l.pic || '-'}</td>
-            <td>${l.location || '-'}</td>
-          </tr>
-        `;
-      }).join('');
-
-      mCards.innerHTML = logs.map((l, idx) => {
-        const isMasuk = String(l.type).toLowerCase().includes('masuk');
-        return `
-          <div class="card-row clickable-row" onclick="openLogDetailModalByIndex(${idx})">
-            <div class="card-row-top">
-              <div>
-                <div class="card-title">${l.item || 'Item'}</div>
-                <div class="card-sub">${l.sku ? l.sku + ' • ' : ''}${l.date} • ${l.pic || 'TIADA'}</div>
-              </div>
-              <span class="badge ${isMasuk ? 'badge-ok' : 'badge-empty'}">${l.type}</span>
-            </div>
-            <div class="card-row-bottom">
-              <span>Kuantiti: <strong>${l.qty} unit</strong></span>
-              <span style="color:#64748b;">Baki: ${l.balanceAfter}</span>
-            </div>
-          </div>
-        `;
-      }).join('');
     }
 
     function setInventoryFilter(filterType) {
@@ -2073,32 +1994,55 @@
       const logs = appState.data?.logs || [];
       const tbody = document.getElementById('logsTbody');
       const mCards = document.getElementById('logsMobileCards');
-      if (!logs.length) {
+
+      if (!logs || !logs.length) {
         tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:18px; color:#64748b;">Tiada rekod transaksi.</td></tr>`;
         mCards.innerHTML = `<div style="text-align:center; padding:16px; color:#64748b; font-size:12px;">Tiada rekod transaksi.</div>`;
         return;
       }
-      tbody.innerHTML = logs.map((l, idx) => `
-        <tr class="clickable-row" onclick="openLogDetailModalByIndex(${idx})">
-          <td>${l.date || '-'}</td><td><strong>${l.sku || '-'}</strong></td><td>${l.item || '-'}</td>
-          <td><span class="badge ${l.type.toLowerCase().includes('masuk') ? 'badge-ok' : 'badge-empty'}">${l.type}</span></td>
-          <td style="text-align:right; font-weight:800;">${l.qty}</td><td style="text-align:right;">${l.balanceAfter}</td>
-          <td>${l.pic || '-'}</td><td>${l.location || '-'}</td>
-        </tr>
-      `).join('');
-      mCards.innerHTML = logs.map((l, idx) => `
-        <div class="card-row clickable-row" onclick="openLogDetailModalByIndex(${idx})">
-          <div class="card-row-top"><div><div class="card-title">${l.item || 'Item'}</div><div class="card-sub">${l.sku ? l.sku + ' • ' : ''}${l.date} • ${l.pic || 'TIADA'}</div></div><span class="badge ${l.type.toLowerCase().includes('masuk') ? 'badge-ok' : 'badge-empty'}">${l.type}</span></div>
-          <div class="card-row-bottom"><span>Kuantiti: <strong>${l.qty} unit</strong></span><span style="color:#64748b;">Baki: ${l.balanceAfter}</span></div>
-        </div>
-      `).join('');
+
+      tbody.innerHTML = logs.map((l, idx) => {
+        const isMasuk = String(l.type).toLowerCase().includes('masuk');
+        return `
+          <tr class="clickable-row" onclick="openLogDetailModalByIndex(${idx})">
+            <td>${l.date || '-'}</td>
+            <td><strong>${l.sku || '-'}</strong></td>
+            <td>${l.item || '-'}</td>
+            <td><span class="badge ${isMasuk ? 'badge-ok' : 'badge-empty'}">${l.type}</span></td>
+            <td style="text-align:right; font-weight:800;">${l.qty}</td>
+            <td style="text-align:right;">${l.balanceAfter}</td>
+            <td>${l.pic || '-'}</td>
+            <td>${l.location || '-'}</td>
+          </tr>
+        `;
+      }).join('');
+
+      mCards.innerHTML = logs.map((l, idx) => {
+        const isMasuk = String(l.type).toLowerCase().includes('masuk');
+        return `
+          <div class="card-row clickable-row" onclick="openLogDetailModalByIndex(${idx})">
+            <div class="card-row-top">
+              <div>
+                <div class="card-title">${l.item || 'Item'}</div>
+                <div class="card-sub">${l.sku ? l.sku + ' • ' : ''}${l.date} • ${l.pic || 'TIADA'}</div>
+              </div>
+              <span class="badge ${isMasuk ? 'badge-ok' : 'badge-empty'}">${l.type}</span>
+            </div>
+            <div class="card-row-bottom">
+              <span>Kuantiti: <strong>${l.qty} unit</strong></span>
+              <span style="color:#64748b;">Baki: ${l.balanceAfter}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
     }
 
     function openLogDetailModalByIndex(index) {
       const log = (appState.data?.logs || [])[index];
       if (!log) return;
+      const isMasuk = String(log.type).toLowerCase().includes('masuk');
       document.getElementById('dtlType').textContent = log.type;
-      document.getElementById('dtlType').className = `badge ${log.type.toLowerCase().includes('masuk') ? 'badge-ok' : 'badge-empty'}`;
+      document.getElementById('dtlType').className = `badge ${isMasuk ? 'badge-ok' : 'badge-empty'}`;
       document.getElementById('dtlItem').textContent = log.item || '-';
       document.getElementById('dtlSku').textContent = log.sku || '-';
       document.getElementById('dtlDate').textContent = log.date || '-';
@@ -2175,7 +2119,6 @@
         showToast('Transaksi berjaya didaftarkan.');
         closeTxModal();
         appState.data = res.data;
-        localStorage.setItem('eastra_cached_stok', JSON.stringify(appState.data));
         renderDashboard(); renderLogs(); renderItems();
         document.getElementById('txNote').value = '';
         document.getElementById('batchContainer').innerHTML = '';
@@ -2235,7 +2178,6 @@
         showToast('Maklumat item disimpan.');
         closeItemModal();
         appState.data = res.data;
-        localStorage.setItem('eastra_cached_stok', JSON.stringify(appState.data));
         renderDashboard(); renderItems(); resetItemForm();
       })
       .catch(err => { showLoading(false); showToast(err.message || 'Ralat simpan item.', true); });
@@ -2256,7 +2198,6 @@
         showToast('Item telah dipadamkan.');
         closeItemModal();
         appState.data = res.data;
-        localStorage.setItem('eastra_cached_stok', JSON.stringify(appState.data));
         renderDashboard(); renderItems(); resetItemForm();
       })
       .catch(err => { showLoading(false); showToast(err.message || 'Ralat pemadaman.', true); });
@@ -2413,14 +2354,6 @@
     }
 
     function loadDataJemaah() {
-      const cachedJemaah = localStorage.getItem('eastra_cached_jemaah');
-      if (cachedJemaah) {
-        try {
-          appState.senaraiJemaah = JSON.parse(cachedJemaah);
-          renderJemaahTable(appState.senaraiJemaah);
-        } catch (e) {}
-      }
-
       const tbody = document.getElementById('tbodyJemaah');
       const mCards = document.getElementById('mobileCardsJemaah');
       
@@ -2429,7 +2362,6 @@
       .then(res => {
         if (!res.ok && res.message) throw new Error(res.message);
         appState.senaraiJemaah = Array.isArray(res.data) ? res.data : [];
-        localStorage.setItem('eastra_cached_jemaah', JSON.stringify(appState.senaraiJemaah));
         renderJemaahTable(appState.senaraiJemaah);
       })
       .catch(err => {
@@ -2524,7 +2456,7 @@
       if (j.resit) {
         d_resit = j.resit.split(' | ').map(r => {
           const p = r.split(': ');
-          return p.length === 2 ? `<a href="${p[1]}" target="_blank" class="badge badge-ok">${p[0]}</a>` : `<a href="${r}" target="_blank" class="badge badge-ok">Resit Pembayaran</a>`;
+          return p.length === 2 ? `<a href="${p[1]}" target="_blank" class="badge badge-ok">${p[0]}</a>` : `<a href="${r}" target="_blank" class="badge badge-ok">Resit</a>`;
         }).join(' ');
       }
 
@@ -2701,7 +2633,6 @@
       });
     }
 
-    /* KURSUS UMRAH & POSTER LOGIC */
     function handlePosterSelection(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -2885,8 +2816,9 @@
     function openItemModal() { resetItemForm(); document.getElementById('itemModal').classList.remove('hidden'); lockBodyScroll(); }
     function closeItemModal() { document.getElementById('itemModal').classList.add('hidden'); resetItemForm(); unlockBodyScroll(); }
     function openLogDetailModal(log) {
+      const isMasuk = String(log.type).toLowerCase().includes('masuk');
       document.getElementById('dtlType').textContent = log.type;
-      document.getElementById('dtlType').className = `badge ${log.type.toLowerCase().includes('masuk') ? 'badge-ok' : 'badge-empty'}`;
+      document.getElementById('dtlType').className = `badge ${isMasuk ? 'badge-ok' : 'badge-empty'}`;
       document.getElementById('dtlItem').textContent = log.item;
       document.getElementById('dtlSku').textContent = log.sku || '-';
       document.getElementById('dtlDate').textContent = log.date;
