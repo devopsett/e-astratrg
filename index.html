@@ -825,7 +825,7 @@
       <div class="update-title">Versi Baharu Sedia Dipasang</div>
       <div class="update-details-box">
         <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Nota Keluaran:</strong>
-        <span id="updateChangelogText">Kemaskini teks ringkas, kedudukan butang QR dan kawalan mobile yang optimum.</span>
+        <span id="updateChangelogText">Penambahbaikan kelajuan, pemuatan data segera, dan penyelarasan mobile.</span>
       </div>
       <div class="update-action-row">
         <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
@@ -1386,7 +1386,7 @@
                           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="16" rx="2"></rect></svg>
                           <span id="label_regFileHHR" class="file-dropzone-text">Pilih tiket penerbangan/HHR</span>
                         </div>
-                        <span class="file-btn-browse">Pilih</span>
+                        <span class="file-btn-browse">Pilih Fail</span>
                       </div>
                       <input type="file" id="regFileHHR" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_regFileHHR')">
                     </div>
@@ -1598,16 +1598,13 @@
       const defaultDate = new Date();
       defaultDate.setDate(defaultDate.getDate() + ((6 - defaultDate.getDay() + 7) % 7 || 7));
       const dateInput = document.getElementById('ufTarikhInput');
-      dateInput.value = defaultDate.toISOString().split('T')[0];
+      if (dateInput) dateInput.value = defaultDate.toISOString().split('T')[0];
 
       addBatchRow();
       
-      // Pemuatan data
+      // Pemuatan data pantas melalui Cache & Tarik Data Stok Sahaja Dulu
       loadData();
-      setTimeout(fetchUmrahFormsList, 800);
-      setTimeout(loadDataJemaah, 1500);
-
-      setTimeout(checkAutoSystemUpdate, 3000);
+      setTimeout(checkAutoSystemUpdate, 3500);
     });
 
     window.addEventListener('focus', () => { checkAutoSystemUpdate(); });
@@ -1725,11 +1722,17 @@
       const fabBtn = document.getElementById('mainFabBtn');
       if (fabBtn) fabBtn.classList.toggle('hidden', !isStockTab);
 
-      if (isUmrahTab) fetchUmrahFormsList();
+      // Lazy Loading: Hanya tarik data bila tab ditekan
+      if (isUmrahTab && (!appState.umrahForms || appState.umrahForms.length === 0)) {
+        fetchUmrahFormsList();
+      }
       if (isJemaahTab) {
         if (tab === 'jemaahList') switchJemaahSubTab('list');
         else if (tab === 'jemaahAdd') switchJemaahSubTab('add');
         else if (tab === 'jemaahEdit') switchJemaahSubTab('edit');
+        if (!appState.senaraiJemaah || appState.senaraiJemaah.length === 0) {
+          loadDataJemaah();
+        }
       }
 
       window.scrollTo({ top: 0, behavior: 'instant' });
@@ -1747,11 +1750,27 @@
       }
     }
 
-    /* PENGENDALIAN DATA STOK */
+    /* PENGENDALIAN DATA STOK DENGAN CLIENT-SIDE CACHING (PANTAS) */
     function loadData() {
+      // 1. Paparkan data cache terdahulu jika ada (Serta-merta)
+      const cached = localStorage.getItem('eastra_cached_stok');
+      if (cached) {
+        try {
+          appState.data = JSON.parse(cached);
+          renderDashboard();
+          renderDropdowns();
+          renderLogs();
+          renderItems();
+        } catch (e) {}
+      } else {
+        showLoading(true, 'Memuatkan data...');
+      }
+
+      // 2. Tarik data terkini di latar belakang
       fetch(`${SCRIPT_URL}?action=getAppData`, { method: 'GET', redirect: 'follow' })
       .then(res => res.json())
       .then(res => {
+        showLoading(false);
         if (!res.ok) throw new Error(res.message);
         const payload = res.data ? res.data : res;
         appState.data = {
@@ -1760,8 +1779,16 @@
           logs: Array.isArray(payload.logs) ? payload.logs : [],
           lists: payload.lists || { pic: [], lokasi: [], kategori: [] }
         };
-        try { renderDashboard(); renderDropdowns(); renderLogs(); renderItems(); } catch (e) {}
-      }).catch(() => {});
+        localStorage.setItem('eastra_cached_stok', JSON.stringify(appState.data));
+        renderDashboard(); 
+        renderDropdowns(); 
+        renderLogs(); 
+        renderItems();
+      })
+      .catch(err => {
+        showLoading(false);
+        console.error(err);
+      });
     }
 
     function setInventoryFilter(filterType) {
@@ -2041,6 +2068,7 @@
         showToast('Transaksi berjaya didaftarkan.');
         closeTxModal();
         appState.data = res.data;
+        localStorage.setItem('eastra_cached_stok', JSON.stringify(appState.data));
         renderDashboard(); renderLogs(); renderItems();
         document.getElementById('txNote').value = '';
         document.getElementById('batchContainer').innerHTML = '';
@@ -2100,6 +2128,7 @@
         showToast('Maklumat item disimpan.');
         closeItemModal();
         appState.data = res.data;
+        localStorage.setItem('eastra_cached_stok', JSON.stringify(appState.data));
         renderDashboard(); renderItems(); resetItemForm();
       })
       .catch(err => { showLoading(false); showToast(err.message || 'Ralat simpan item.', true); });
@@ -2120,6 +2149,7 @@
         showToast('Item telah dipadamkan.');
         closeItemModal();
         appState.data = res.data;
+        localStorage.setItem('eastra_cached_stok', JSON.stringify(appState.data));
         renderDashboard(); renderItems(); resetItemForm();
       })
       .catch(err => { showLoading(false); showToast(err.message || 'Ralat pemadaman.', true); });
@@ -2276,6 +2306,14 @@
     }
 
     function loadDataJemaah() {
+      const cachedJemaah = localStorage.getItem('eastra_cached_jemaah');
+      if (cachedJemaah) {
+        try {
+          appState.senaraiJemaah = JSON.parse(cachedJemaah);
+          renderJemaahTable(appState.senaraiJemaah);
+        } catch (e) {}
+      }
+
       const tbody = document.getElementById('tbodyJemaah');
       const mCards = document.getElementById('mobileCardsJemaah');
       
@@ -2284,12 +2322,15 @@
       .then(res => {
         if (!res.ok && res.message) throw new Error(res.message);
         appState.senaraiJemaah = Array.isArray(res.data) ? res.data : [];
+        localStorage.setItem('eastra_cached_jemaah', JSON.stringify(appState.senaraiJemaah));
         renderJemaahTable(appState.senaraiJemaah);
       })
       .catch(err => {
         console.error("Gagal muat data jemaah:", err);
-        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#ef4444; padding:30px;">Gagal memuat turun rekod jemaah.</td></tr>`;
-        mCards.innerHTML = `<div style="text-align:center; color:#ef4444; padding:20px; font-size:12px;">Gagal memuat turun rekod jemaah.</div>`;
+        if (!appState.senaraiJemaah || !appState.senaraiJemaah.length) {
+          tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#ef4444; padding:30px;">Gagal memuat turun rekod jemaah.</td></tr>`;
+          mCards.innerHTML = `<div style="text-align:center; color:#ef4444; padding:20px; font-size:12px;">Gagal memuat turun rekod jemaah.</div>`;
+        }
       });
     }
 
@@ -2376,7 +2417,7 @@
       if (j.resit) {
         d_resit = j.resit.split(' | ').map(r => {
           const p = r.split(': ');
-          return p.length === 2 ? `<a href="${p[1]}" target="_blank" class="badge badge-ok">${p[0]}</a>` : `<a href="${r}" target="_blank" class="badge badge-ok">Resit</a>`;
+          return p.length === 2 ? `<a href="${p[1]}" target="_blank" class="badge badge-ok">${p[0]}</a>` : `<a href="${r}" target="_blank" class="badge badge-ok">Resit Pembayaran</a>`;
         }).join(' ');
       }
 
