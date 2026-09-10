@@ -110,7 +110,19 @@
 
     .loading-overlay { position: fixed; inset: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(8px); display: grid; place-items: center; z-index: 9999999 !important; }
     .spinner { width: 38px; height: 38px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+    .spinner-inline { width: 26px; height: 26px; border: 2.5px solid #cbd5e1; border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 8px; }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    .mobile-loading-placeholder {
+      padding: 32px 16px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 12.5px;
+      font-weight: 600;
+      background: #ffffff;
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+    }
 
     .app-layout {
       display: grid;
@@ -814,7 +826,7 @@
       <div class="update-title">Versi Baharu Sedia Dipasang</div>
       <div class="update-details-box">
         <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Nota Keluaran:</strong>
-        <span id="updateChangelogText">Penambahbaikan fungsi pemaparan log transaksi secara langsung.</span>
+        <span id="updateChangelogText">Penambahan animasi loading untuk paparan mudah alih (mobile view).</span>
       </div>
       <div class="update-action-row">
         <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
@@ -823,7 +835,7 @@
     </div>
   </div>
 
-  <!-- LOADING OVERLAY -->
+  <!-- LOADING OVERLAY UTAMA -->
   <div id="loading" class="loading-overlay hidden">
     <div style="text-align: center; padding: 24px;">
       <div class="spinner" style="margin: 0 auto 12px;"></div>
@@ -971,7 +983,6 @@
 
   <!-- APP LAYOUT -->
   <div class="app-layout">
-    <!-- SIDEBAR DESKTOP DENGAN AUTO-ACCORDION -->
     <aside class="sidebar">
       <div class="brand-box">
         <img class="brand-logo-img" src="Logo%20Azzuha.png" alt="Logo e-ASTRA">
@@ -983,7 +994,6 @@
       
       <div class="nav-section-title">Modul Cawangan</div>
       <ul class="nav-list">
-        <!-- 1. STOK & INVENTORI -->
         <li>
           <button id="btnParentStock" class="nav-btn active" type="button" onclick="handleDesktopMenuToggle('stock')">
             <div class="nav-btn-content">
@@ -1000,7 +1010,6 @@
           </ul>
         </li>
 
-        <!-- 2. PENGURUSAN JEMAAH -->
         <li>
           <button id="btnParentJemaah" class="nav-btn" type="button" onclick="handleDesktopMenuToggle('jemaah')">
             <div class="nav-btn-content">
@@ -1017,7 +1026,6 @@
           </ul>
         </li>
 
-        <!-- 3. KURSUS UMRAH -->
         <li>
           <button id="btnNavUmrah" class="nav-btn" type="button" onclick="handleDesktopMenuToggle('umrah')">
             <div class="nav-btn-content">
@@ -1086,11 +1094,13 @@
                 <table>
                   <thead><tr><th>Kod SKU</th><th>Nama Item</th><th>Kategori</th><th style="text-align: right;">Baki Semasa</th><th style="text-align: right;">Paras Minimum</th><th>Status</th><th>Lokasi</th></tr></thead>
                   <tbody id="attentionTbody">
-                    <tr><td colspan="7" style="text-align:center; padding:24px; color:var(--text-muted);">Memuatkan rekod...</td></tr>
+                    <tr><td colspan="7" style="text-align:center; padding:24px; color:var(--text-muted);"><div class="spinner-inline"></div>Memuatkan inventori...</td></tr>
                   </tbody>
                 </table>
               </div>
-              <div class="mobile-cards" id="attentionMobileCards"></div>
+              <div class="mobile-cards" id="attentionMobileCards">
+                <div class="mobile-loading-placeholder"><div class="spinner-inline"></div>Sedang memuatkan data...</div>
+              </div>
             </div>
           </div>
         </div>
@@ -1105,11 +1115,13 @@
                 <table>
                   <thead><tr><th>Tarikh</th><th>Kod SKU</th><th>Nama Item</th><th>Urusan</th><th style="text-align: right;">Kuantiti</th><th style="text-align: right;">Baki</th><th>Pegawai</th><th>Lokasi</th></tr></thead>
                   <tbody id="logsTbody">
-                    <tr><td colspan="8" style="text-align:center; padding:24px; color:var(--text-muted);">Memuatkan log...</td></tr>
+                    <tr><td colspan="8" style="text-align:center; padding:24px; color:var(--text-muted);"><div class="spinner-inline"></div>Memuatkan rekod transaksi...</td></tr>
                   </tbody>
                 </table>
               </div>
-              <div class="mobile-cards" id="logsMobileCards"></div>
+              <div class="mobile-cards" id="logsMobileCards">
+                <div class="mobile-loading-placeholder"><div class="spinner-inline"></div>Sedang memuatkan log transaksi...</div>
+              </div>
             </div>
           </div>
         </div>
@@ -1132,11 +1144,13 @@
                 <table>
                   <thead><tr><th>Kod SKU</th><th>Nama Item</th><th>Kategori</th><th style="text-align: right;">Baki Semasa</th><th style="text-align: right;">Paras Min</th><th>Status</th><th>Lokasi</th><th style="text-align: center;">Tindakan</th></tr></thead>
                   <tbody id="itemsTbody">
-                    <tr><td colspan="8" style="text-align:center; padding:24px; color:var(--text-muted);">Memuatkan katalog...</td></tr>
+                    <tr><td colspan="8" style="text-align:center; padding:24px; color:var(--text-muted);"><div class="spinner-inline"></div>Memuatkan katalog...</td></tr>
                   </tbody>
                 </table>
               </div>
-              <div class="mobile-cards" id="itemsMobileCards"></div>
+              <div class="mobile-cards" id="itemsMobileCards">
+                <div class="mobile-loading-placeholder"><div class="spinner-inline"></div>Sedang memuatkan katalog...</div>
+              </div>
             </div>
           </div>
         </div>
@@ -1153,7 +1167,6 @@
           </div>
         </div>
 
-        <!-- SUB-TAB 1: CIPTA BORANG -->
         <div id="subTabUmrahGenerate" class="umrah-container">
           <div class="umrah-card" style="max-width: 800px; margin: 0 auto; width: 100%;">
             <div class="umrah-header">
@@ -1210,7 +1223,6 @@
           </div>
         </div>
 
-        <!-- SUB-TAB 2: ARKIB BORANG -->
         <div id="subTabUmrahArchive" class="umrah-container hidden">
           <div class="umrah-card" style="max-width: 800px; margin: 0 auto; width: 100%;">
             <div class="umrah-header">
@@ -1268,11 +1280,13 @@
                     </tr>
                   </thead>
                   <tbody id="tbodyJemaah">
-                    <tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 30px;">Memuatkan data jemaah...</td></tr>
+                    <tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 30px;"><div class="spinner-inline"></div>Memuatkan data jemaah...</td></tr>
                   </tbody>
                 </table>
               </div>
-              <div class="mobile-cards" id="mobileCardsJemaah"></div>
+              <div class="mobile-cards" id="mobileCardsJemaah">
+                <div class="mobile-loading-placeholder"><div class="spinner-inline"></div>Sedang memuatkan rekod jemaah...</div>
+              </div>
             </div>
           </div>
         </div>
@@ -1381,7 +1395,7 @@
                           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="16" rx="2"></rect></svg>
                           <span id="label_regFileHHR" class="file-dropzone-text">Pilih tiket penerbangan/HHR</span>
                         </div>
-                        <span class="file-btn-browse">Pilih</span>
+                        <span class="file-btn-browse">Pilih Fail</span>
                       </div>
                       <input type="file" id="regFileHHR" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_regFileHHR')">
                     </div>
@@ -1789,8 +1803,41 @@
       }
     }
 
-    /* PENGENDALIAN DATA STOK & LOG SECARA LANGSUNG */
+    /* PENGENDALIAN DATA STOK DENGAN PLACEHOLDER LOADING UNTUK MOBILE */
+    function renderLoadingPlaceholders() {
+      // 1. Placeholder untuk Mobile Log Transaksi
+      const mLogs = document.getElementById('logsMobileCards');
+      if (mLogs) {
+        mLogs.innerHTML = `<div class="mobile-loading-placeholder"><div class="spinner-inline"></div>Sedang memuatkan log transaksi...</div>`;
+      }
+      const tLogs = document.getElementById('logsTbody');
+      if (tLogs) {
+        tLogs.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:24px; color:var(--text-muted);"><div class="spinner-inline"></div>Memuatkan rekod transaksi...</td></tr>`;
+      }
+
+      // 2. Placeholder untuk Mobile Inventori
+      const mItems = document.getElementById('itemsMobileCards');
+      if (mItems) {
+        mItems.innerHTML = `<div class="mobile-loading-placeholder"><div class="spinner-inline"></div>Sedang memuatkan katalog...</div>`;
+      }
+      const tItems = document.getElementById('itemsTbody');
+      if (tItems) {
+        tItems.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:24px; color:var(--text-muted);"><div class="spinner-inline"></div>Memuatkan katalog...</td></tr>`;
+      }
+
+      // 3. Placeholder untuk Ringkasan
+      const mAttn = document.getElementById('attentionMobileCards');
+      if (mAttn) {
+        mAttn.innerHTML = `<div class="mobile-loading-placeholder"><div class="spinner-inline"></div>Sedang memuatkan data ringkasan...</div>`;
+      }
+      const tAttn = document.getElementById('attentionTbody');
+      if (tAttn) {
+        tAttn.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:24px; color:var(--text-muted);"><div class="spinner-inline"></div>Memuatkan inventori...</td></tr>`;
+      }
+    }
+
     function loadData() {
+      renderLoadingPlaceholders();
       showLoading(true, 'Memuatkan data...');
 
       fetch(`${SCRIPT_URL}?action=getAppData`, { method: 'GET', redirect: 'follow' })
@@ -2290,7 +2337,6 @@
       }
     }
 
-    /* PENGURUSAN JEMAAH & PERINCIAN MOBILE */
     async function fileToBase64Payload(inputEl) {
       if (!inputEl || !inputEl.files || !inputEl.files[0]) return null;
       const file = inputEl.files[0];
