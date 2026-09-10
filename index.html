@@ -482,7 +482,7 @@
       overflow: hidden;
     }
 
-    /* BARIS ITEM BATCH - SUSUNAN SEJAJAR KEMAS */
+    /* BARIS ITEM BATCH */
     .batch-item-row {
       display: flex;
       flex-direction: column;
@@ -516,7 +516,6 @@
     .item-baki-badge.low { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
     .item-baki-badge.audit-hint { background: #fffbeb; color: #b45309; border-color: #fde68a; }
 
-    /* BUTANG NOMBOR & BUTANG [X] SEJAJAR */
     .item-action-controls {
       display: inline-flex;
       align-items: center;
@@ -569,7 +568,7 @@
     .detail-value { font-size: 13.5px; font-weight: 700; color: var(--text); }
     .detail-note-box { width: 100%; padding: 10px 12px; background: #ffffff; border-radius: 6px; border: 1px dashed var(--border); font-size: 13px; color: var(--text); line-height: 1.4; white-space: pre-wrap; }
 
-    /* MODAL DENGAN Z-INDEX TERTINGGI & BEBAS OVERLAP */
+    /* MODAL */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -663,7 +662,7 @@
     .form-item-date { font-size: 11px; color: var(--text-muted); font-weight: 600; }
     .form-item-actions { display: flex; align-items: center; gap: 6px; border-top: 1px dashed var(--border); padding-top: 10px; flex-wrap: wrap; }
 
-    /* KAD UPLOAD FILE JEMAAH KORPORAT BEBAS OVERLAP */
+    /* KAD UPLOAD FILE JEMAAH */
     .file-dropzone-compact {
       border: 1.5px dashed #cbd5e1;
       background: #f8fafc;
@@ -825,7 +824,7 @@
       <div class="update-title">Versi Baharu Sedia Dipasang</div>
       <div class="update-details-box">
         <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Nota Keluaran:</strong>
-        <span id="updateChangelogText">Penambahbaikan kelajuan, pemuatan data segera, dan penyelarasan mobile.</span>
+        <span id="updateChangelogText">Penambahbaikan sidebar desktop auto-close dan sokongan dropdown Kursus Umrah.</span>
       </div>
       <div class="update-action-row">
         <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
@@ -982,7 +981,7 @@
 
   <!-- APP LAYOUT -->
   <div class="app-layout">
-    <!-- SIDEBAR HANYA UNTUK PAPARAN DESKTOP -->
+    <!-- SIDEBAR DESKTOP DENGAN AUTO-ACCORDION -->
     <aside class="sidebar">
       <div class="brand-box">
         <img class="brand-logo-img" src="Logo%20Azzuha.png" alt="Logo e-ASTRA">
@@ -996,7 +995,7 @@
       <ul class="nav-list">
         <!-- 1. STOK & INVENTORI -->
         <li>
-          <button id="btnParentStock" class="nav-btn active" type="button" onclick="toggleStockMenu()">
+          <button id="btnParentStock" class="nav-btn active" type="button" onclick="handleDesktopMenuToggle('stock')">
             <div class="nav-btn-content">
               <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
               <span>Stok & Inventori</span>
@@ -1013,7 +1012,7 @@
 
         <!-- 2. PENGURUSAN JEMAAH -->
         <li>
-          <button id="btnParentJemaah" class="nav-btn" type="button" onclick="toggleJemaahMenu()">
+          <button id="btnParentJemaah" class="nav-btn" type="button" onclick="handleDesktopMenuToggle('jemaah')">
             <div class="nav-btn-content">
               <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
               <span>Pengurusan Jemaah</span>
@@ -1028,14 +1027,20 @@
           </ul>
         </li>
 
-        <!-- 3. KURSUS UMRAH -->
+        <!-- 3. KURSUS UMRAH (DENGAN DROPDOWN DESKTOP) -->
         <li>
-          <button id="btnNavUmrah" class="nav-btn" type="button" onclick="switchTab('umrahForm')">
+          <button id="btnNavUmrah" class="nav-btn" type="button" onclick="handleDesktopMenuToggle('umrah')">
             <div class="nav-btn-content">
               <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
               <span>Kursus Umrah</span>
             </div>
+            <svg id="chevronUmrah" class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </button>
+
+          <ul id="subUmrahMenu" class="sub-nav-list hidden">
+            <li><button id="subBtnUmrahGen" class="sub-nav-btn" type="button" onclick="switchTab('umrahForm'); switchUmrahSubTab('generate');"><span class="sub-nav-dot"></span><span>Cipta Borang</span></button></li>
+            <li><button id="subBtnUmrahArchive" class="sub-nav-btn" type="button" onclick="switchTab('umrahForm'); switchUmrahSubTab('archive');"><span class="sub-nav-dot"></span><span>Arkib Borang</span></button></li>
+          </ul>
         </li>
       </ul>
 
@@ -1386,7 +1391,7 @@
                           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="16" rx="2"></rect></svg>
                           <span id="label_regFileHHR" class="file-dropzone-text">Pilih tiket penerbangan/HHR</span>
                         </div>
-                        <span class="file-btn-browse">Pilih Fail</span>
+                        <span class="file-btn-browse">Pilih</span>
                       </div>
                       <input type="file" id="regFileHHR" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_regFileHHR')">
                     </div>
@@ -1399,7 +1404,7 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
                         <span id="label_regFileResit" class="file-dropzone-text">Pilih slip resit bayaran</span>
                       </div>
-                      <span class="file-btn-browse">Pilih Fail</span>
+                      <span class="file-btn-browse">Pilih</span>
                     </div>
                     <input type="file" id="regFileResit" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_regFileResit')">
                   </div>
@@ -1481,7 +1486,7 @@
                       <label>Ganti Salinan Pasport</label>
                       <div class="file-dropzone-compact" onclick="document.getElementById('editFileSalinan').click()">
                         <div class="file-dropzone-left">
-                          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 6.5 2z"></path></svg>
                           <span id="label_editFileSalinan" class="file-dropzone-text">Pilih pasport baharu</span>
                         </div>
                         <span class="file-btn-browse">Pilih</span>
@@ -1573,7 +1578,8 @@
       senaraiJemaah: [],
       currentJemaahIC: '',
       stockMenuOpen: true,
-      jemaahMenuOpen: false
+      jemaahMenuOpen: false,
+      umrahMenuOpen: false
     };
 
     let html5QrCodeScanner = null;
@@ -1602,12 +1608,62 @@
 
       addBatchRow();
       
-      // Pemuatan data pantas melalui Cache & Tarik Data Stok Sahaja Dulu
+      // Pemuatan data
       loadData();
       setTimeout(checkAutoSystemUpdate, 3500);
     });
 
     window.addEventListener('focus', () => { checkAutoSystemUpdate(); });
+
+    /* KAWALAN SIDEBAR AKORDION DESKTOP (AUTO-CLOSE LAIN-LAIN MENU) */
+    function handleDesktopMenuToggle(targetMenu) {
+      if (targetMenu === 'stock') {
+        appState.stockMenuOpen = !appState.stockMenuOpen;
+        appState.jemaahMenuOpen = false;
+        appState.umrahMenuOpen = false;
+        switchTab('dashboard');
+        switchStokSubTab('summary');
+      } else if (targetMenu === 'jemaah') {
+        appState.jemaahMenuOpen = !appState.jemaahMenuOpen;
+        appState.stockMenuOpen = false;
+        appState.umrahMenuOpen = false;
+        switchTab('jemaahList');
+        switchJemaahSubTab('list');
+      } else if (targetMenu === 'umrah') {
+        appState.umrahMenuOpen = !appState.umrahMenuOpen;
+        appState.stockMenuOpen = false;
+        appState.jemaahMenuOpen = false;
+        switchTab('umrahForm');
+        switchUmrahSubTab('generate');
+      }
+      updateSidebarAccordionUI();
+    }
+
+    function updateSidebarAccordionUI() {
+      // 1. Stok Submenu
+      const subStock = document.getElementById('subStockMenu');
+      const chevStock = document.getElementById('chevronStock');
+      if (subStock && chevStock) {
+        subStock.classList.toggle('hidden', !appState.stockMenuOpen);
+        chevStock.classList.toggle('open', appState.stockMenuOpen);
+      }
+
+      // 2. Jemaah Submenu
+      const subJemaah = document.getElementById('subJemaahMenu');
+      const chevJemaah = document.getElementById('chevronJemaah');
+      if (subJemaah && chevJemaah) {
+        subJemaah.classList.toggle('hidden', !appState.jemaahMenuOpen);
+        chevJemaah.classList.toggle('open', appState.jemaahMenuOpen);
+      }
+
+      // 3. Umrah Submenu
+      const subUmrah = document.getElementById('subUmrahMenu');
+      const chevUmrah = document.getElementById('chevronUmrah');
+      if (subUmrah && chevUmrah) {
+        subUmrah.classList.toggle('hidden', !appState.umrahMenuOpen);
+        chevUmrah.classList.toggle('open', appState.umrahMenuOpen);
+      }
+    }
 
     /* SUB-TAB STOK & INVENTORI */
     function switchStokSubTab(sub) {
@@ -1619,6 +1675,11 @@
       document.getElementById('subTabDashLogs').classList.toggle('active', isLog);
       document.getElementById('subTabDashItems').classList.toggle('active', isItem);
 
+      // Kemaskini sidebar desktop
+      document.getElementById('subBtnDashboard').classList.toggle('active', isSum);
+      document.getElementById('subBtnTransactions').classList.toggle('active', isLog);
+      document.getElementById('subBtnItems').classList.toggle('active', isItem);
+
       document.getElementById('subSectionDashboard').classList.toggle('hidden', !isSum);
       document.getElementById('subSectionTransactions').classList.toggle('hidden', !isLog);
       document.getElementById('subSectionItems').classList.toggle('hidden', !isItem);
@@ -1629,6 +1690,11 @@
       const isGen = (subTab === 'generate');
       document.getElementById('pillUmrahGen').classList.toggle('active', isGen);
       document.getElementById('pillUmrahArchive').classList.toggle('active', !isGen);
+
+      // Kemaskini sidebar desktop
+      document.getElementById('subBtnUmrahGen').classList.toggle('active', isGen);
+      document.getElementById('subBtnUmrahArchive').classList.toggle('active', !isGen);
+
       document.getElementById('subTabUmrahGenerate').classList.toggle('hidden', !isGen);
       document.getElementById('subTabUmrahArchive').classList.toggle('hidden', isGen);
       if (!isGen) fetchUmrahFormsList();
@@ -1643,6 +1709,11 @@
       document.getElementById('pillJemaahList').classList.toggle('active', isList);
       document.getElementById('pillJemaahAdd').classList.toggle('active', isAdd);
       document.getElementById('pillJemaahEdit').classList.toggle('active', isEdit);
+
+      // Kemaskini sidebar desktop
+      document.getElementById('subBtnJemaahList').classList.toggle('active', isList);
+      document.getElementById('subBtnJemaahAdd').classList.toggle('active', isAdd);
+      document.getElementById('subBtnJemaahEdit').classList.toggle('active', isEdit);
 
       document.getElementById('subSectionJemaahList').classList.toggle('hidden', !isList);
       document.getElementById('subSectionJemaahAdd').classList.toggle('hidden', !isAdd);
@@ -1665,21 +1736,6 @@
       }
     }
 
-    /* KAWALAN MENU SIDEBAR DESKTOP */
-    function toggleStockMenu() {
-      appState.stockMenuOpen = !appState.stockMenuOpen;
-      document.getElementById('subStockMenu').classList.toggle('hidden', !appState.stockMenuOpen);
-      document.getElementById('chevronStock').classList.toggle('open', appState.stockMenuOpen);
-      if (['umrahForm', 'jemaahList', 'jemaahAdd', 'jemaahEdit'].includes(appState.activeTab)) switchTab('dashboard');
-    }
-
-    function toggleJemaahMenu() {
-      appState.jemaahMenuOpen = !appState.jemaahMenuOpen;
-      document.getElementById('subJemaahMenu').classList.toggle('hidden', !appState.jemaahMenuOpen);
-      document.getElementById('chevronJemaah').classList.toggle('open', appState.jemaahMenuOpen);
-      if (!['jemaahList', 'jemaahAdd', 'jemaahEdit'].includes(appState.activeTab)) switchTab('jemaahList');
-    }
-
     function switchTab(tab) {
       appState.activeTab = tab;
 
@@ -1687,17 +1743,25 @@
       const isJemaahTab = ['jemaahList', 'jemaahAdd', 'jemaahEdit'].includes(tab);
       const isUmrahTab = (tab === 'umrahForm');
 
+      // Selaraskan state dropdown accordion desktop
+      if (isStockTab) {
+        appState.stockMenuOpen = true;
+        appState.jemaahMenuOpen = false;
+        appState.umrahMenuOpen = false;
+      } else if (isJemaahTab) {
+        appState.stockMenuOpen = false;
+        appState.jemaahMenuOpen = true;
+        appState.umrahMenuOpen = false;
+      } else if (isUmrahTab) {
+        appState.stockMenuOpen = false;
+        appState.jemaahMenuOpen = false;
+        appState.umrahMenuOpen = true;
+      }
+      updateSidebarAccordionUI();
+
       document.getElementById('btnParentStock').classList.toggle('active', isStockTab);
       document.getElementById('btnParentJemaah').classList.toggle('active', isJemaahTab);
       document.getElementById('btnNavUmrah').classList.toggle('active', isUmrahTab);
-
-      document.getElementById('subBtnDashboard').classList.toggle('active', tab === 'dashboard');
-      document.getElementById('subBtnTransactions').classList.toggle('active', tab === 'transactions');
-      document.getElementById('subBtnItems').classList.toggle('active', tab === 'items');
-
-      document.getElementById('subBtnJemaahList').classList.toggle('active', tab === 'jemaahList');
-      document.getElementById('subBtnJemaahAdd').classList.toggle('active', tab === 'jemaahAdd');
-      document.getElementById('subBtnJemaahEdit').classList.toggle('active', tab === 'jemaahEdit');
 
       document.getElementById('mBtnStock').classList.toggle('active', isStockTab);
       document.getElementById('mBtnJemaah').classList.toggle('active', isJemaahTab);
@@ -1722,7 +1786,7 @@
       const fabBtn = document.getElementById('mainFabBtn');
       if (fabBtn) fabBtn.classList.toggle('hidden', !isStockTab);
 
-      // Lazy Loading: Hanya tarik data bila tab ditekan
+      // Lazy Loading
       if (isUmrahTab && (!appState.umrahForms || appState.umrahForms.length === 0)) {
         fetchUmrahFormsList();
       }
@@ -1750,9 +1814,8 @@
       }
     }
 
-    /* PENGENDALIAN DATA STOK DENGAN CLIENT-SIDE CACHING (PANTAS) */
+    /* PENGENDALIAN DATA STOK */
     function loadData() {
-      // 1. Paparkan data cache terdahulu jika ada (Serta-merta)
       const cached = localStorage.getItem('eastra_cached_stok');
       if (cached) {
         try {
@@ -1766,7 +1829,6 @@
         showLoading(true, 'Memuatkan data...');
       }
 
-      // 2. Tarik data terkini di latar belakang
       fetch(`${SCRIPT_URL}?action=getAppData`, { method: 'GET', redirect: 'follow' })
       .then(res => res.json())
       .then(res => {
@@ -2417,7 +2479,7 @@
       if (j.resit) {
         d_resit = j.resit.split(' | ').map(r => {
           const p = r.split(': ');
-          return p.length === 2 ? `<a href="${p[1]}" target="_blank" class="badge badge-ok">${p[0]}</a>` : `<a href="${r}" target="_blank" class="badge badge-ok">Resit Pembayaran</a>`;
+          return p.length === 2 ? `<a href="${p[1]}" target="_blank" class="badge badge-ok">${p[0]}</a>` : `<a href="${r}" target="_blank" class="badge badge-ok">Resit</a>`;
         }).join(' ');
       }
 
