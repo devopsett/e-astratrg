@@ -824,7 +824,7 @@
       <div class="update-title">Versi Baharu Sedia Dipasang</div>
       <div class="update-details-box">
         <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Nota Keluaran:</strong>
-        <span id="updateChangelogText">Penambahbaikan sistem pembacaan log transaksi secara langsung dari Sejarah Transaksi.</span>
+        <span id="updateChangelogText">Penambahbaikan fungsi pembacaan log transaksi secara langsung dari Sejarah Transaksi.</span>
       </div>
       <div class="update-action-row">
         <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
@@ -1379,7 +1379,7 @@
                           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"></circle></svg>
                           <span id="label_regFileBio" class="file-dropzone-text">Pilih slip biometrik</span>
                         </div>
-                        <span class="file-btn-browse">Pilih Fail</span>
+                        <span class="file-btn-browse">Pilih</span>
                       </div>
                       <input type="file" id="regFileBio" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_regFileBio')">
                     </div>
@@ -1391,7 +1391,7 @@
                           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="16" rx="2"></rect></svg>
                           <span id="label_regFileHHR" class="file-dropzone-text">Pilih tiket penerbangan/HHR</span>
                         </div>
-                        <span class="file-btn-browse">Pilih Fail</span>
+                        <span class="file-btn-browse">Pilih</span>
                       </div>
                       <input type="file" id="regFileHHR" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_regFileHHR')">
                     </div>
@@ -2036,14 +2036,14 @@
       tbody.innerHTML = logs.map((l, idx) => `
         <tr class="clickable-row" onclick="openLogDetailModalByIndex(${idx})">
           <td>${l.date || '-'}</td><td><strong>${l.sku || '-'}</strong></td><td>${l.item || '-'}</td>
-          <td><span class="badge ${l.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}">${l.type}</span></td>
+          <td><span class="badge ${l.type.toLowerCase().includes('masuk') ? 'badge-ok' : 'badge-empty'}">${l.type}</span></td>
           <td style="text-align:right; font-weight:800;">${l.qty}</td><td style="text-align:right;">${l.balanceAfter}</td>
           <td>${l.pic || '-'}</td><td>${l.location || '-'}</td>
         </tr>
       `).join('');
       mCards.innerHTML = logs.map((l, idx) => `
         <div class="card-row clickable-row" onclick="openLogDetailModalByIndex(${idx})">
-          <div class="card-row-top"><div><div class="card-title">${l.item || 'Item'}</div><div class="card-sub">${l.sku ? l.sku + ' • ' : ''}${l.date} • ${l.pic || 'TIADA'}</div></div><span class="badge ${l.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}">${l.type}</span></div>
+          <div class="card-row-top"><div><div class="card-title">${l.item || 'Item'}</div><div class="card-sub">${l.sku ? l.sku + ' • ' : ''}${l.date} • ${l.pic || 'TIADA'}</div></div><span class="badge ${l.type.toLowerCase().includes('masuk') ? 'badge-ok' : 'badge-empty'}">${l.type}</span></div>
           <div class="card-row-bottom"><span>Kuantiti: <strong>${l.qty} unit</strong></span><span style="color:#64748b;">Baki: ${l.balanceAfter}</span></div>
         </div>
       `).join('');
@@ -2053,7 +2053,7 @@
       const log = (appState.data?.logs || [])[index];
       if (!log) return;
       document.getElementById('dtlType').textContent = log.type;
-      document.getElementById('dtlType').className = `badge ${log.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}`;
+      document.getElementById('dtlType').className = `badge ${log.type.toLowerCase().includes('masuk') ? 'badge-ok' : 'badge-empty'}`;
       document.getElementById('dtlItem').textContent = log.item || '-';
       document.getElementById('dtlSku').textContent = log.sku || '-';
       document.getElementById('dtlDate').textContent = log.date || '-';
@@ -2841,7 +2841,7 @@
     function closeItemModal() { document.getElementById('itemModal').classList.add('hidden'); resetItemForm(); unlockBodyScroll(); }
     function openLogDetailModal(log) {
       document.getElementById('dtlType').textContent = log.type;
-      document.getElementById('dtlType').className = `badge ${log.type === 'Masuk' ? 'badge-ok' : 'badge-empty'}`;
+      document.getElementById('dtlType').className = `badge ${log.type.toLowerCase().includes('masuk') ? 'badge-ok' : 'badge-empty'}`;
       document.getElementById('dtlItem').textContent = log.item;
       document.getElementById('dtlSku').textContent = log.sku || '-';
       document.getElementById('dtlDate').textContent = log.date;
