@@ -22,6 +22,7 @@
   
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- Pustaka Penjana Kod QR untuk Cetakan -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <style>
@@ -827,7 +828,7 @@
       <div class="update-title">Versi Baharu Sedia Dipasang</div>
       <div class="update-details-box">
         <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Nota Keluaran:</strong>
-        <span id="updateChangelogText">Penambahan butang khusus jana custom link selepas borang dihasilkan.</span>
+        <span id="updateChangelogText">Penambahan kaunter imbasan langsung dan cetakan kod QR sebenar pada PDF.</span>
       </div>
       <div class="update-action-row">
         <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
@@ -852,7 +853,7 @@
     <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
   </button>
 
-  <!-- MODAL PENGIMBAS KAMERA -->
+  <!-- MODAL PENGIMBAS KAMERA DENGAN KAUNTER -->
   <div id="scannerModal" class="modal-overlay hidden">
     <div class="scanner-dialog">
       <div class="modal-header">
@@ -976,7 +977,7 @@
     </div>
   </div>
 
-  <!-- MODAL PAPARAN PERINCIAN JEMAAH -->
+  <!-- MODAL PAPARAN PERINCIAN JEMAAH (MOBILE VIEW) -->
   <div id="jemaahDetailModal" class="modal-overlay hidden" onclick="closeModalOnBackdrop(event, 'jemaahDetailModal')">
     <div class="modal-dialog">
       <div class="modal-header">
@@ -1204,32 +1205,20 @@
               </div>
             </form>
 
-            <!-- PAPARAN KEPUTUSAN PENJANAAN BORANG DENGAN KOTAK CUSTOM LINK -->
             <div id="umrahFormResult" class="result-card-umrah hidden">
               <h4 style="color: var(--primary); font-size: 14px; font-weight: 800; margin-bottom: 4px;">Borang Telah Berjaya Dijana</h4>
               <p id="resultFormName" style="font-size: 12px; color: #047857; margin-bottom: 12px; font-weight: 700;"></p>
-              
-              <input type="hidden" id="resLiveOriginalUrl" value="">
-
               <div style="display: grid; gap: 12px;">
                 <div>
-                  <label style="font-size: 11.5px; color: #065f46; font-weight: 800;">Pautan Awam (Shortlink):</label>
-                  <div style="display: flex; gap: 8px; margin-bottom: 6px;">
+                  <label style="font-size: 11.5px; color: #065f46;">Pautan Awam (Peserta):</label>
+                  <div style="display: flex; gap: 8px;">
                     <input type="text" id="resLiveUrl" readonly style="background: #ffffff; font-size: 12px; color: #047857; font-weight: 700;">
                     <button type="button" class="btn btn-secondary" style="min-height: 42px;" onclick="copyResultLink('resLiveUrl')">Salin</button>
                     <a id="linkLiveBtn" href="#" target="_blank" class="btn btn-primary" style="text-decoration: none; min-height: 42px;">Buka</a>
                   </div>
-
-                  <!-- Kotak Khas untuk Custom Shortlink Selepas Jana -->
-                  <div style="display: flex; gap: 6px; align-items: center; background: #e6f4ea; padding: 8px; border-radius: 8px; border: 1px solid #ceead6;">
-                    <span style="font-size: 11.5px; font-weight: 700; color: #137333; white-space: nowrap;">tinyurl.com /</span>
-                    <input type="text" id="customAliasInput" placeholder="Taip nama tersuai (cth: UmrahSep2026)" style="background: #fff; font-size: 12px; height: 36px; padding: 4px 8px;">
-                    <button type="button" class="btn btn-primary" style="font-size: 11.5px; min-height: 36px; padding: 4px 12px;" onclick="generateCustomShortlinkAction()">Jana Custom Link</button>
-                  </div>
                 </div>
-
                 <div>
-                  <label style="font-size: 11.5px; color: #065f46;">Pautan Pentadbir (Editor Asal):</label>
+                  <label style="font-size: 11.5px; color: #065f46;">Pautan Pentadbir (Editor):</label>
                   <div style="display: flex; gap: 8px;">
                     <input type="text" id="resEditUrl" readonly style="background: #ffffff; font-size: 12px;">
                     <button type="button" class="btn btn-secondary" style="min-height: 42px;" onclick="copyResultLink('resEditUrl')">Salin</button>
@@ -1401,7 +1390,7 @@
                           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"></circle></svg>
                           <span id="label_regFileBio" class="file-dropzone-text">Pilih slip biometrik</span>
                         </div>
-                        <span class="file-btn-browse">Pilih</span>
+                        <span class="file-btn-browse">Pilih Fail</span>
                       </div>
                       <input type="file" id="regFileBio" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_regFileBio')">
                     </div>
@@ -1413,7 +1402,7 @@
                           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="16" rx="2"></rect></svg>
                           <span id="label_regFileHHR" class="file-dropzone-text">Pilih tiket penerbangan/HHR</span>
                         </div>
-                        <span class="file-btn-browse">Pilih</span>
+                        <span class="file-btn-browse">Pilih Fail</span>
                       </div>
                       <input type="file" id="regFileHHR" accept=".pdf,.jpg,.jpeg,.png" class="hidden" onchange="updateFileLabel(this, 'label_regFileHHR')">
                     </div>
@@ -1610,7 +1599,7 @@
     let isProcessingScan = false;
     let toastTimer = null;
     let globalAudioCtx = null;
-    let sessionScanCount = 0;
+    let sessionScanCount = 0; // Kaunter imbasan sesi
 
     function getAudioContext() {
       if (!globalAudioCtx) {
@@ -2255,7 +2244,7 @@
 
     function openScannerModal() {
       getAudioContext();
-      sessionScanCount = 0;
+      sessionScanCount = 0; // Reset kaunter setiap kali buka pengimbas
       updateScanCounterUI();
 
       document.getElementById('scannerModal').classList.remove('hidden');
@@ -2330,6 +2319,8 @@
       }
 
       playFeedback();
+      
+      // Tambah bilangan kaunter imbasan sesi
       sessionScanCount++;
       updateScanCounterUI();
 
@@ -2888,7 +2879,6 @@
         showLoading(false);
         if (!res.ok) throw new Error(res.message);
         document.getElementById('resultFormName').textContent = res.formTitle;
-        document.getElementById('resLiveOriginalUrl').value = res.originalUrl || res.formUrl;
         document.getElementById('resLiveUrl').value = res.formUrl;
         document.getElementById('resEditUrl').value = res.editUrl;
         document.getElementById('linkLiveBtn').href = res.formUrl;
@@ -2907,40 +2897,6 @@
       .catch(err => {
         showLoading(false);
         showToast(err.message || 'Gagal menjana borang.', true);
-      });
-    }
-
-    function generateCustomShortlinkAction() {
-      const originalUrl = document.getElementById('resLiveOriginalUrl').value;
-      const customAlias = document.getElementById('customAliasInput').value.trim();
-
-      if (!originalUrl) {
-        showToast('Tiada pautan asal dikesan.', true);
-        return;
-      }
-
-      showLoading(true, 'Menjana custom shortlink...');
-
-      fetch(SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-          action: 'generateCustomLinkOnly',
-          data: { url: originalUrl, alias: customAlias }
-        })
-      })
-      .then(res => res.json())
-      .then(res => {
-        showLoading(false);
-        if (!res.ok) throw new Error(res.message);
-
-        document.getElementById('resLiveUrl').value = res.shortUrl;
-        document.getElementById('linkLiveBtn').href = res.shortUrl;
-        showToast('Custom shortlink berjaya dihasilkan!');
-      })
-      .catch(err => {
-        showLoading(false);
-        showToast(err.message || 'Gagal menghasilkan custom link.', true);
       });
     }
 
