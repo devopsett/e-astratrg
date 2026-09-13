@@ -853,7 +853,7 @@
       <div class="update-title">Versi Baharu Sedia Dipasang</div>
       <div class="update-details-box">
         <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Nota Keluaran:</strong>
-        <span id="updateChangelogText">Format teks tebal (bold) tajuk hebahan WhatsApp diperbetulkan sepenuhnya.</span>
+        <span id="updateChangelogText">Penetapan tarikh sebenar pada mesej hebahan WhatsApp (tiada tajuk borang dipaparkan).</span>
       </div>
       <div class="update-action-row">
         <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
@@ -2996,7 +2996,7 @@
       return `${months[parseInt(parts[1], 10) - 1]} ${parts[0]}`;
     }
 
-    /* FUNGSI KONGSI HEBAHAN KE WHATSAPP (BOLD TAJUK KEDUA-DUA BARIS) */
+    /* FUNGSI KONGSI HEBAHAN KE WHATSAPP DENGAN FORMAT RASMI CAWANGAN */
     function shareToWhatsApp(tarikh, waktu, tempat, linkBorang) {
       const template = 
 `*KURSUS UMRAH TERKINI DI KUALA TERENGGANU*
@@ -3131,9 +3131,13 @@ Jom pakat mari ramai-ramai!
       }
 
       container.innerHTML = forms.map(f => {
-        const parsedEventDate = f.eventDate 
-          ? formatTarikhKursusMelayu(f.eventDate)
-          : (formatTarikhKursusMelayu(f.name) || formatTarikhKursusMelayu(f.dateCreated));
+        // Ekstrak tarikh yang sah sahaja (bukan tajuk borang)
+        let parsedEventDate = '';
+        if (f.eventDate && f.eventDate.trim().length > 0) {
+          parsedEventDate = formatTarikhKursusMelayu(f.eventDate);
+        } else if (f.dateCreated) {
+          parsedEventDate = formatTarikhKursusMelayu(f.dateCreated.split(' ')[0]);
+        }
 
         return `
           <div class="form-item-row">
