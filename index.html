@@ -151,7 +151,6 @@
       overflow: hidden;
     }
 
-    /* REKA BENTUK SIDEBAR DESKTOP YANG LEBIH KEMAS */
     .sidebar {
       background: linear-gradient(180deg, #092e14 0%, #051a0b 100%);
       color: white;
@@ -264,7 +263,6 @@
       padding-top: 18px;
     }
 
-    /* BAHAGIAN UTAMA (MAIN) */
     main { 
       padding: 26px 34px; 
       height: 100vh; 
@@ -342,6 +340,17 @@
     .btn-secondary { background: white; border-color: var(--border); color: var(--text); }
     .btn-secondary:hover { background: #f8fafc; }
     .btn-danger { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
+    
+    .btn-whatsapp {
+      background: #128c7e;
+      color: #ffffff;
+      border-color: #075e54;
+    }
+    .btn-whatsapp:hover {
+      background: #075e54;
+      color: #ffffff;
+    }
+
     .btn:disabled { opacity: 0.55; cursor: not-allowed; }
 
     .fab-btn {
@@ -849,7 +858,7 @@
       <div class="update-title">Versi Baharu Sedia Dipasang</div>
       <div class="update-details-box">
         <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Nota Keluaran:</strong>
-        <span id="updateChangelogText">Penambahbaikan UI, Skeleton Loaders &amp; Sidebar Desktop.</span>
+        <span id="updateChangelogText">Penambahan templat hebahan rasmi Kursus Umrah terus ke WhatsApp.</span>
       </div>
       <div class="update-action-row">
         <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
@@ -858,7 +867,7 @@
     </div>
   </div>
 
-  <!-- LOADING OVERLAY KECIL (PROSES SIMPAN / JANAPDF) -->
+  <!-- LOADING OVERLAY -->
   <div id="loading" class="loading-overlay hidden">
     <div style="text-align: center; padding: 24px;">
       <div class="spinner" style="margin: 0 auto 12px;"></div>
@@ -868,12 +877,12 @@
 
   <div id="toast" class="toast">Notifikasi</div>
 
-  <!-- BUTANG TERAPUNG (FAB) - HANYA MODUL STOK -->
+  <!-- BUTANG TERAPUNG (FAB) -->
   <button type="button" id="mainFabBtn" class="fab-btn" onclick="openTxModal()" title="Daftar Transaksi Stok">
     <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
   </button>
 
-  <!-- MODAL PENGIMBAS KAMERA DENGAN KAUNTER -->
+  <!-- MODAL PENGIMBAS KAMERA -->
   <div id="scannerModal" class="modal-overlay hidden">
     <div class="scanner-dialog">
       <div class="modal-header">
@@ -997,7 +1006,7 @@
     </div>
   </div>
 
-  <!-- MODAL PAPARAN PERINCIAN JEMAAH (MOBILE VIEW) -->
+  <!-- MODAL PAPARAN PERINCIAN JEMAAH -->
   <div id="jemaahDetailModal" class="modal-overlay hidden" onclick="closeModalOnBackdrop(event, 'jemaahDetailModal')">
     <div class="modal-dialog">
       <div class="modal-header">
@@ -1219,9 +1228,12 @@
               <div style="display: grid; gap: 12px;">
                 <div>
                   <label style="font-size: 11.5px; color: #065f46;">Pautan Awam (Peserta):</label>
-                  <div style="display: flex; gap: 8px;">
-                    <input type="text" id="resLiveUrl" readonly style="background: #ffffff; font-size: 12px; color: #047857; font-weight: 700;">
+                  <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <input type="text" id="resLiveUrl" readonly style="background: #ffffff; font-size: 12px; color: #047857; font-weight: 700; flex: 1; min-width: 200px;">
                     <button type="button" class="btn btn-secondary" style="min-height: 42px;" onclick="copyResultLink('resLiveUrl')">Salin</button>
+                    <button type="button" class="btn btn-whatsapp" style="min-height: 42px;" onclick="shareDirectWhatsAppResult()">
+                      <span>Kongsi WhatsApp</span>
+                    </button>
                     <a id="linkLiveBtn" href="#" target="_blank" class="btn btn-primary" style="text-decoration: none; min-height: 42px;">Buka</a>
                   </div>
                 </div>
@@ -1815,9 +1827,7 @@
       }
     }
 
-    /* FUNGSI SKELETON PLACEHOLDER (MEMBUAT PAPARAN KELIP SEMASA MUAT TURUN DATA) */
     function renderLoadingPlaceholders() {
-      // 1. Kad Metrik Skeleton
       const mCards = document.getElementById('metricsCards');
       if (mCards) {
         mCards.innerHTML = Array(6).fill(0).map(() => `
@@ -1829,7 +1839,6 @@
         `).join('');
       }
 
-      // 2. Jadual & Kad Mobile Ringkasan Inventori
       const tAttn = document.getElementById('attentionTbody');
       if (tAttn) {
         tAttn.innerHTML = Array(4).fill(0).map(() => `
@@ -1861,7 +1870,6 @@
         `).join('');
       }
 
-      // 3. Jadual & Kad Mobile Log Transaksi
       const tLogs = document.getElementById('logsTbody');
       if (tLogs) {
         tLogs.innerHTML = Array(4).fill(0).map(() => `
@@ -1894,7 +1902,6 @@
         `).join('');
       }
 
-      // 4. Jadual & Kad Mobile Inventori
       const tItems = document.getElementById('itemsTbody');
       if (tItems) {
         tItems.innerHTML = Array(4).fill(0).map(() => `
@@ -2617,7 +2624,6 @@
       const tbody = document.getElementById('tbodyJemaah');
       const mCards = document.getElementById('mobileCardsJemaah');
       
-      // Skeleton loader untuk bahagian Jemaah
       if (tbody) {
         tbody.innerHTML = Array(4).fill(0).map(() => `
           <tr>
@@ -2951,7 +2957,7 @@
       const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
       const months = ['JAN', 'FEB', 'MAC', 'APR', 'MEI', 'JUN', 'JUL', 'OGOS', 'SEP', 'OKT', 'NOV', 'DIS'];
       const days = ['AHAD', 'ISNIN', 'SELASA', 'RABU', 'KHAMIS', 'JUMAAT', 'SABTU'];
-      return `${parts[2]} ${months[d.getMonth()]} ${d.getFullYear()} (${days[d.getDay()]})`;
+      return `${days[d.getDay()]} ${parts[2]} ${months[d.getMonth()]} ${d.getFullYear()}`;
     }
 
     function getBulanKursusMelayu(dateStr) {
@@ -2959,6 +2965,41 @@
       const parts = dateStr.split('-');
       const months = ['JANUARI', 'FEBRUARI', 'MAC', 'APRIL', 'MEI', 'JUN', 'JULAI', 'OGOS', 'SEPTEMBER', 'OKTOBER', 'NOVEMBER', 'DISEMBER'];
       return `${months[parseInt(parts[1], 10) - 1]} ${parts[0]}`;
+    }
+
+    /* FUNGSI KONGSI HEBAHAN KE WHATSAPP DENGAN TEMPLAT RASMI CAWANGAN */
+    function shareToWhatsApp(tarikh, waktu, tempat, linkBorang) {
+      const template = 
+`*KURSUS UMRAH TERKINI DI KUALA TERENGGANU*
+
+*SEMUA DIJEMPUT HADIR* 🕋
+
+Ikuti kupasan menarik ibadah umrah yang perlu diketahui bakal Dhuyufurrahman serta info lain yang akan turut dikongsikan kepada jemaah semua❤️
+
+🗓️ *Tarikh:* ${tarikh || 'Sabtu'}
+🕰️ *Masa:* ${waktu || '9.00 Pagi - 12.00 Tengah Hari'}
+🕌 *Lokasi:* ${tempat || "Masjid Al-Muktafi Billah Shah, Ladang"} 👇
+https://maps.app.goo.gl/977eNNpENp1jtdPg7
+
+Tuan/Puan *DIWAJIBKAN* mendaftar melalui Google Form pada pautan di bawah untuk sahkan kehadiran dan jumlah pax yang hadir👇
+👉 ${linkBorang}
+
+Jom pakat mari ramai-ramai!
+
+#AzzuhaMenyantuniDenganHati #umrah`;
+
+      const encoded = encodeURIComponent(template);
+      window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
+    }
+
+    function shareDirectWhatsAppResult() {
+      const link = document.getElementById('resLiveUrl').value;
+      const rawDate = document.getElementById('ufTarikhInput').value;
+      const formattedDate = formatTarikhKursusMelayu(rawDate);
+      const waktu = document.getElementById('ufWaktu').value;
+      const tempat = document.getElementById('ufTempat').value;
+
+      shareToWhatsApp(formattedDate, waktu, tempat, link);
     }
 
     async function handleGenerateUmrahForm(e) {
@@ -3058,9 +3099,11 @@
           <div class="form-item-info">
             <span class="form-item-title">${f.name}</span>
             <span class="form-item-date">Tarikh Dijana: ${f.dateCreated}</span>
+            <span style="font-size: 11.5px; color: #047857; font-weight: 700; word-break: break-all; margin-top: 2px;">🔗 ${f.liveUrl}</span>
           </div>
           <div class="form-item-actions">
             <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 32px;" onclick="copyDirectText('${f.liveUrl}')">Salin Pautan</button>
+            <button type="button" class="btn btn-whatsapp" style="padding: 4px 12px; font-size: 11.5px; min-height: 32px;" onclick="shareToWhatsApp('${f.name}', '9.00 Pagi - 12.00 Tengah Hari', 'Masjid Al-Muktafi Billah Shah, Ladang', '${f.liveUrl}')">Kongsi WhatsApp</button>
             <a href="${f.liveUrl}" target="_blank" class="btn btn-primary" style="padding: 4px 14px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Pautan Awam</a>
             <a href="${f.editUrl}" target="_blank" class="btn btn-secondary" style="padding: 4px 14px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Editor</a>
           </div>
