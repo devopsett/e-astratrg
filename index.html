@@ -858,7 +858,7 @@
       <div class="update-title">Versi Baharu Sedia Dipasang</div>
       <div class="update-details-box">
         <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Nota Keluaran:</strong>
-        <span id="updateChangelogText">Penambahan templat hebahan rasmi Kursus Umrah terus ke WhatsApp.</span>
+        <span id="updateChangelogText">Penambahan perkongsian WhatsApp berserta gambar poster untuk mobile view.</span>
       </div>
       <div class="update-action-row">
         <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
@@ -2967,8 +2967,8 @@
       return `${months[parseInt(parts[1], 10) - 1]} ${parts[0]}`;
     }
 
-    /* FUNGSI KONGSI HEBAHAN KE WHATSAPP DENGAN TEMPLAT RASMI CAWANGAN */
-    function shareToWhatsApp(tarikh, waktu, tempat, linkBorang) {
+    /* FUNGSI KONGSI HEBAHAN: SERTAKAN GAMBAR POSTER JIKA PADA PERANTI MUDAH ALIH (MOBILE) */
+    async function shareToWhatsApp(tarikh, waktu, tempat, linkBorang, imageFile = null) {
       const template = 
 `*KURSUS UMRAH TERKINI DI KUALA TERENGGANU*
 
@@ -2988,6 +2988,29 @@ Jom pakat mari ramai-ramai!
 
 #AzzuhaMenyantuniDenganHati #umrah`;
 
+      const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+
+      // JIKA PADA PERANTI MUDAH ALIH & ADA GAMBAR POSTER DIMUAT NAIK
+      if (isMobile && imageFile && navigator.canShare) {
+        try {
+          const shareData = {
+            files: [imageFile],
+            text: template
+          };
+          if (navigator.canShare(shareData)) {
+            await navigator.share(shareData);
+            return;
+          }
+        } catch (err) {
+          if (err.name !== 'AbortError') {
+            console.warn('Web Share API tidak dapat berkongsi fail:', err);
+          } else {
+            return; // Dibatalkan oleh pengguna
+          }
+        }
+      }
+
+      // PAPARAN DESKTOP ATAU PELAYAR TANPA SOKONGAN FAIL: BUKA WHATSAPP TEXT
       const encoded = encodeURIComponent(template);
       window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
     }
@@ -2998,8 +3021,11 @@ Jom pakat mari ramai-ramai!
       const formattedDate = formatTarikhKursusMelayu(rawDate);
       const waktu = document.getElementById('ufWaktu').value;
       const tempat = document.getElementById('ufTempat').value;
+      
+      const fileInput = document.getElementById('ufPosterFile');
+      const imageFile = (fileInput && fileInput.files && fileInput.files[0]) ? fileInput.files[0] : null;
 
-      shareToWhatsApp(formattedDate, waktu, tempat, link);
+      shareToWhatsApp(formattedDate, waktu, tempat, link, imageFile);
     }
 
     async function handleGenerateUmrahForm(e) {
