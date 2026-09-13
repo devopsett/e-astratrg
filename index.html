@@ -853,7 +853,7 @@
       <div class="update-title">Versi Baharu Sedia Dipasang</div>
       <div class="update-details-box">
         <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Nota Keluaran:</strong>
-        <span id="updateChangelogText">Penetapan tarikh sebenar pada mesej hebahan WhatsApp (tiada tajuk borang dipaparkan).</span>
+        <span id="updateChangelogText">Penetapan tarikh sebenar program pada mesej hebahan WhatsApp cawangan.</span>
       </div>
       <div class="update-action-row">
         <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
@@ -2071,7 +2071,7 @@
             <div class="stepper">
               <button type="button" class="stepper-btn" onclick="stepQty(this, -1)">-</button>
               <input type="number" class="batch-qty stepper-input" min="0" value="${prefillQty}" oninput="updateRowHint(this)" required>
-              <button type="button" class="stepper-btn" onclick="stepQty(this, 1)">+</button>
+              <button type="button" class="stepper-btn" onclick="stepQty(1)">+</button>
             </div>
             <button type="button" class="btn-row-del" onclick="removeBatchRow(this)" title="Padam Baris">&times;</button>
           </div>
@@ -2998,9 +2998,8 @@
 
     /* FUNGSI KONGSI HEBAHAN KE WHATSAPP DENGAN FORMAT RASMI CAWANGAN */
     function shareToWhatsApp(tarikh, waktu, tempat, linkBorang) {
-      // Pastikan tarikh sentiasa sah dan bukan tajuk borang
       const tarikhPaparan = (tarikh && tarikh.trim().length > 0) ? tarikh.trim() : '19 September 2026 (Sabtu)';
-      
+
       const template = 
 `*KURSUS UMRAH TERKINI DI KUALA TERENGGANU*
 
@@ -3102,87 +3101,6 @@ Jom pakat mari ramai-ramai!
       });
     }
 
-    function renderUmrahFormsList(forms) {
-      const container = document.getElementById('umrahFormsListContainer');
-      if (!forms || !forms.length) {
-        container.innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px;">Tiada rekod borang kursus ditemui.</p>';
-        return;
-      }
-
-      container.innerHTML = forms.map(f => {
-        // Ambil terus tarikh program yang disimpan
-        let tarikhProgram = '';
-        if (f.eventDate && f.eventDate.trim().length > 0) {
-          tarikhProgram = f.eventDate.trim();
-        }
-
-        return `
-          <div class="form-item-row">
-            <div class="form-item-info">
-              <span class="form-item-title">${f.name}</span>
-              <span class="form-item-date">${tarikhProgram ? '🗓️ ' + tarikhProgram + ' &bull; ' : ''}Tarikh Dijana: ${f.dateCreated}</span>
-              <span style="font-size: 11.5px; color: #047857; font-weight: 700; word-break: break-all; margin-top: 2px;">🔗 ${f.liveUrl}</span>
-            </div>
-            <div class="form-item-actions">
-              <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 32px;" onclick="copyDirectText('${f.liveUrl}')">Salin Pautan</button>
-              <button type="button" class="btn btn-whatsapp" style="padding: 4px 12px; font-size: 11.5px; min-height: 32px;" onclick="shareToWhatsApp('${tarikhProgram}', '9.00 Pagi - 12.00 Tengah Hari', 'Masjid Al-Muktafi Billah Shah, Ladang', '${f.liveUrl}')">Kongsi WhatsApp</button>
-              <a href="${f.liveUrl}" target="_blank" class="btn btn-primary" style="padding: 4px 14px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Pautan Awam</a>
-              <a href="${f.editUrl}" target="_blank" class="btn btn-secondary" style="padding: 4px 14px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Editor</a>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-    
-      fetch(SCRIPT_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-          action: 'createKursusUmrahForm',
-          data: {
-            tarikh: rawDate,
-            tarikhFormatted: formattedDate,
-            bulan: bulanText,
-            waktu: document.getElementById('ufWaktu').value.trim(),
-            tempat: document.getElementById('ufTempat').value.trim(),
-            noTel: document.getElementById('ufNoTel').value.trim(),
-            posterBase64, posterType
-          }
-        })
-      })
-      .then(res => res.json())
-      .then(res => {
-        showLoading(false);
-        if (!res.ok) throw new Error(res.message);
-        document.getElementById('resultFormName').textContent = res.formTitle;
-        document.getElementById('resLiveUrl').value = res.formUrl;
-        document.getElementById('resEditUrl').value = res.editUrl;
-        document.getElementById('linkLiveBtn').href = res.formUrl;
-        document.getElementById('linkEditBtn').href = res.editUrl;
-        document.getElementById('umrahFormResult').classList.remove('hidden');
-
-        let localForms = JSON.parse(localStorage.getItem('eastra_umrah_forms') || '[]');
-        localForms = localForms.filter(f => f.id !== res.formUrl);
-        localForms.unshift({ 
-          id: res.formUrl, 
-          name: res.formTitle, 
-          liveUrl: res.formUrl, 
-          editUrl: res.editUrl, 
-          dateCreated: new Date().toLocaleDateString('ms-MY'),
-          eventDate: formattedDate
-        });
-        localStorage.setItem('eastra_umrah_forms', JSON.stringify(localForms));
-
-        if (res.formsList && res.formsList.length) renderUmrahFormsList(res.formsList);
-        else renderUmrahFormsList(localForms);
-        showToast('Borang kursus berjaya dijana.');
-      })
-      .catch(err => {
-        showLoading(false);
-        showToast(err.message || 'Gagal menjana borang.', true);
-      });
-    }
-
     function fetchUmrahFormsList() {
       const container = document.getElementById('umrahFormsListContainer');
       const localForms = JSON.parse(localStorage.getItem('eastra_umrah_forms') || '[]');
@@ -3215,24 +3133,21 @@ Jom pakat mari ramai-ramai!
       }
 
       container.innerHTML = forms.map(f => {
-        // Ekstrak tarikh yang sah sahaja (bukan tajuk borang)
-        let parsedEventDate = '';
+        let tarikhProgram = '';
         if (f.eventDate && f.eventDate.trim().length > 0) {
-          parsedEventDate = formatTarikhKursusMelayu(f.eventDate);
-        } else if (f.dateCreated) {
-          parsedEventDate = formatTarikhKursusMelayu(f.dateCreated.split(' ')[0]);
+          tarikhProgram = f.eventDate.trim();
         }
 
         return `
           <div class="form-item-row">
             <div class="form-item-info">
               <span class="form-item-title">${f.name}</span>
-              <span class="form-item-date">Tarikh Dijana: ${f.dateCreated}</span>
+              <span class="form-item-date">${tarikhProgram ? '🗓️ ' + tarikhProgram + ' &bull; ' : ''}Tarikh Dijana: ${f.dateCreated}</span>
               <span style="font-size: 11.5px; color: #047857; font-weight: 700; word-break: break-all; margin-top: 2px;">🔗 ${f.liveUrl}</span>
             </div>
             <div class="form-item-actions">
               <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 32px;" onclick="copyDirectText('${f.liveUrl}')">Salin Pautan</button>
-              <button type="button" class="btn btn-whatsapp" style="padding: 4px 12px; font-size: 11.5px; min-height: 32px;" onclick="shareToWhatsApp('${parsedEventDate}', '9.00 Pagi - 12.00 Tengah Hari', 'Masjid Al-Muktafi Billah Shah, Ladang', '${f.liveUrl}')">Kongsi WhatsApp</button>
+              <button type="button" class="btn btn-whatsapp" style="padding: 4px 12px; font-size: 11.5px; min-height: 32px;" onclick="shareToWhatsApp('${tarikhProgram}', '9.00 Pagi - 12.00 Tengah Hari', 'Masjid Al-Muktafi Billah Shah, Ladang', '${f.liveUrl}')">Kongsi WhatsApp</button>
               <a href="${f.liveUrl}" target="_blank" class="btn btn-primary" style="padding: 4px 14px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Pautan Awam</a>
               <a href="${f.editUrl}" target="_blank" class="btn btn-secondary" style="padding: 4px 14px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Editor</a>
             </div>
