@@ -479,6 +479,24 @@
 
     textarea { resize: vertical; min-height: 70px; }
 
+    /* Gaya input tarikh khusus dengan penunjuk DD/MM/YYYY */
+    .date-input-wrap {
+      position: relative;
+      width: 100%;
+    }
+
+    .date-input-hint {
+      display: inline-block;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--primary);
+      background: var(--primary-soft);
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-left: 6px;
+      letter-spacing: 0.4px;
+    }
+
     .type-switcher {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
@@ -858,7 +876,7 @@
       <div class="update-title">Versi Baharu Sedia Dipasang</div>
       <div class="update-details-box">
         <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Nota Keluaran:</strong>
-        <span id="updateChangelogText">Penambahan perkongsian WhatsApp berserta gambar poster untuk mobile view.</span>
+        <span id="updateChangelogText">Penambahan format tarikh WhatsApp dan input DD/MM/YYYY.</span>
       </div>
       <div class="update-action-row">
         <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
@@ -1199,7 +1217,12 @@
             <form id="generateUmrahForm" onsubmit="handleGenerateUmrahForm(event)">
               <div class="form-group">
                 <div class="input-row">
-                  <div><label>Tarikh Pelaksanaan Kursus</label><input type="date" id="ufTarikhInput" required></div>
+                  <div>
+                    <label>Tarikh Pelaksanaan Kursus <span class="date-input-hint">DD/MM/YYYY</span></label>
+                    <div class="date-input-wrap">
+                      <input type="date" id="ufTarikhInput" required placeholder="DD/MM/YYYY">
+                    </div>
+                  </div>
                   <div><label>Waktu Kursus</label><input type="text" id="ufWaktu" required value="9.00 PAGI - 12.00 TENGAHARI"></div>
                 </div>
                 <div><label>Lokasi / Premis Kursus</label><input type="text" id="ufTempat" required value="DEWAN IMAM A'ASIM, MASJID AL-MUKTAFI BILLAH SHAH (MASJID LADANG)"></div>
@@ -2951,13 +2974,25 @@
       document.getElementById('posterDropzone').classList.remove('hidden');
     }
 
+    /* FORMAT TARIKH SEPERTI: 19 September 2026 (Sabtu) */
     function formatTarikhKursusMelayu(dateStr) {
       if (!dateStr) return '';
       const parts = dateStr.split('-');
+      if (parts.length < 3) return dateStr;
+      
       const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
-      const months = ['JAN', 'FEB', 'MAC', 'APR', 'MEI', 'JUN', 'JUL', 'OGOS', 'SEP', 'OKT', 'NOV', 'DIS'];
-      const days = ['AHAD', 'ISNIN', 'SELASA', 'RABU', 'KHAMIS', 'JUMAAT', 'SABTU'];
-      return `${days[d.getDay()]} ${parts[2]} ${months[d.getMonth()]} ${d.getFullYear()}`;
+      const months = [
+        'Januari', 'Februari', 'Mac', 'April', 'Mei', 'Jun',
+        'Julai', 'Ogos', 'September', 'Oktober', 'November', 'Disember'
+      ];
+      const days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu'];
+      
+      const dayNum = String(parseInt(parts[2], 10)).padStart(2, '0');
+      const monthName = months[d.getMonth()];
+      const yearNum = parts[0];
+      const dayName = days[d.getDay()];
+
+      return `${dayNum} ${monthName} ${yearNum} (${dayName})`;
     }
 
     function getBulanKursusMelayu(dateStr) {
@@ -2967,50 +3002,27 @@
       return `${months[parseInt(parts[1], 10) - 1]} ${parts[0]}`;
     }
 
-    /* FUNGSI KONGSI HEBAHAN: SERTAKAN GAMBAR POSTER JIKA PADA PERANTI MUDAH ALIH (MOBILE) */
-    async function shareToWhatsApp(tarikh, waktu, tempat, linkBorang, imageFile = null) {
+    /* FUNGSI KONGSI HEBAHAN KE WHATSAPP DENGAN FORMAT RASMI CAWANGAN */
+    function shareToWhatsApp(tarikh, waktu, tempat, linkBorang) {
       const template = 
-`*KURSUS UMRAH TERKINI DI KUALA TERENGGANU*
+`KURSUS UMRAH TERKINI DI KUALA TERENGGANU
 
-*SEMUA DIJEMPUT HADIR* 🕋
+SEMUA DIJEMPUT HADIR  🕋
 
 Ikuti kupasan menarik ibadah umrah yang perlu diketahui bakal Dhuyufurrahman serta info lain yang akan turut dikongsikan kepada jemaah semua❤️
 
-🗓️ *Tarikh:* ${tarikh || 'Sabtu'}
-🕰️ *Masa:* ${waktu || '9.00 Pagi - 12.00 Tengah Hari'}
-🕌 *Lokasi:* ${tempat || "Masjid Al-Muktafi Billah Shah, Ladang"} 👇
+🗓️ ${tarikh || '19 September 2026 (Sabtu)'}
+🕰️ ${waktu || '9.00 Pagi - 12.00 Tengah Hari'}
+🕌 ${tempat || 'Masjid Al-Muktafi Billah Shah, Ladang'} (location) 👇
 https://maps.app.goo.gl/977eNNpENp1jtdPg7
 
-Tuan/Puan *DIWAJIBKAN* mendaftar melalui Google Form pada pautan di bawah untuk sahkan kehadiran dan jumlah pax yang hadir👇
-👉 ${linkBorang}
+Tuan/Puan DIWAJIBKAN mendaftar melalui Google Form pada pautan dibawah untuk sahkan kehadiran dan jumlah pax yang hadir👇
+${linkBorang}
 
 Jom pakat mari ramai-ramai!
 
 #AzzuhaMenyantuniDenganHati #umrah`;
 
-      const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-
-      // JIKA PADA PERANTI MUDAH ALIH & ADA GAMBAR POSTER DIMUAT NAIK
-      if (isMobile && imageFile && navigator.canShare) {
-        try {
-          const shareData = {
-            files: [imageFile],
-            text: template
-          };
-          if (navigator.canShare(shareData)) {
-            await navigator.share(shareData);
-            return;
-          }
-        } catch (err) {
-          if (err.name !== 'AbortError') {
-            console.warn('Web Share API tidak dapat berkongsi fail:', err);
-          } else {
-            return; // Dibatalkan oleh pengguna
-          }
-        }
-      }
-
-      // PAPARAN DESKTOP ATAU PELAYAR TANPA SOKONGAN FAIL: BUKA WHATSAPP TEXT
       const encoded = encodeURIComponent(template);
       window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
     }
@@ -3021,11 +3033,8 @@ Jom pakat mari ramai-ramai!
       const formattedDate = formatTarikhKursusMelayu(rawDate);
       const waktu = document.getElementById('ufWaktu').value;
       const tempat = document.getElementById('ufTempat').value;
-      
-      const fileInput = document.getElementById('ufPosterFile');
-      const imageFile = (fileInput && fileInput.files && fileInput.files[0]) ? fileInput.files[0] : null;
 
-      shareToWhatsApp(formattedDate, waktu, tempat, link, imageFile);
+      shareToWhatsApp(formattedDate, waktu, tempat, link);
     }
 
     async function handleGenerateUmrahForm(e) {
@@ -3076,7 +3085,14 @@ Jom pakat mari ramai-ramai!
 
         let localForms = JSON.parse(localStorage.getItem('eastra_umrah_forms') || '[]');
         localForms = localForms.filter(f => f.id !== res.formUrl);
-        localForms.unshift({ id: res.formUrl, name: res.formTitle, liveUrl: res.formUrl, editUrl: res.editUrl, dateCreated: new Date().toLocaleDateString('ms-MY') });
+        localForms.unshift({ 
+          id: res.formUrl, 
+          name: res.formTitle, 
+          liveUrl: res.formUrl, 
+          editUrl: res.editUrl, 
+          dateCreated: new Date().toLocaleDateString('ms-MY'),
+          eventDate: formattedDate
+        });
         localStorage.setItem('eastra_umrah_forms', JSON.stringify(localForms));
 
         if (res.formsList && res.formsList.length) renderUmrahFormsList(res.formsList);
@@ -3129,7 +3145,7 @@ Jom pakat mari ramai-ramai!
           </div>
           <div class="form-item-actions">
             <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 32px;" onclick="copyDirectText('${f.liveUrl}')">Salin Pautan</button>
-            <button type="button" class="btn btn-whatsapp" style="padding: 4px 12px; font-size: 11.5px; min-height: 32px;" onclick="shareToWhatsApp('${f.name}', '9.00 Pagi - 12.00 Tengah Hari', 'Masjid Al-Muktafi Billah Shah, Ladang', '${f.liveUrl}')">Kongsi WhatsApp</button>
+            <button type="button" class="btn btn-whatsapp" style="padding: 4px 12px; font-size: 11.5px; min-height: 32px;" onclick="shareToWhatsApp('${f.eventDate || ''}', '9.00 Pagi - 12.00 Tengah Hari', 'Masjid Al-Muktafi Billah Shah, Ladang', '${f.liveUrl}')">Kongsi WhatsApp</button>
             <a href="${f.liveUrl}" target="_blank" class="btn btn-primary" style="padding: 4px 14px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Pautan Awam</a>
             <a href="${f.editUrl}" target="_blank" class="btn btn-secondary" style="padding: 4px 14px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Editor</a>
           </div>
