@@ -77,7 +77,6 @@
       height: 100% !important;
     }
 
-    /* ANIMASI SKELETON SHIMMER */
     @keyframes shimmer {
       0% { background-position: -200% 0; }
       100% { background-position: 200% 0; }
@@ -104,7 +103,6 @@
       box-shadow: var(--shadow-sm);
     }
 
-    /* UPDATE BANNER */
     .update-banner {
       position: fixed;
       top: 16px;
@@ -141,7 +139,6 @@
     .spinner { width: 38px; height: 38px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* LAYOUT UTAMA */
     .app-layout {
       display: grid;
       grid-template-columns: 270px minmax(0, 1fr);
@@ -479,24 +476,6 @@
 
     textarea { resize: vertical; min-height: 70px; }
 
-    /* Gaya input tarikh khusus dengan penunjuk DD/MM/YYYY */
-    .date-input-wrap {
-      position: relative;
-      width: 100%;
-    }
-
-    .date-input-hint {
-      display: inline-block;
-      font-size: 10.5px;
-      font-weight: 700;
-      color: var(--primary);
-      background: var(--primary-soft);
-      padding: 1px 6px;
-      border-radius: 4px;
-      margin-left: 6px;
-      letter-spacing: 0.4px;
-    }
-
     .type-switcher {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
@@ -782,7 +761,6 @@
     .jemaah-status-box { background: #f8fafc; border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 20px; }
     .jemaah-status-item { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px dashed var(--border); font-size: 12.5px; }
 
-    /* MOBILE NAVIGATION */
     .mobile-nav {
       display: none;
       position: fixed;
@@ -817,7 +795,6 @@
     .m-btn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.2; }
     .m-btn.active { color: var(--primary); font-weight: 800; background: var(--primary-soft); }
 
-    /* RESPONSIVE STYLES */
     @media (max-width: 1200px) { .metrics-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
     @media (max-width: 960px) { .umrah-container { grid-template-columns: 1fr; } .umrah-forms-grid { max-height: none; } }
     @media (max-width: 768px) {
@@ -876,7 +853,7 @@
       <div class="update-title">Versi Baharu Sedia Dipasang</div>
       <div class="update-details-box">
         <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Nota Keluaran:</strong>
-        <span id="updateChangelogText">Penambahan format tarikh WhatsApp dan input DD/MM/YYYY.</span>
+        <span id="updateChangelogText">Format tarikh rasmi WhatsApp diselaraskan untuk semua paparan mudah alih &amp; komputer.</span>
       </div>
       <div class="update-action-row">
         <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
@@ -1218,10 +1195,8 @@
               <div class="form-group">
                 <div class="input-row">
                   <div>
-                    <label>Tarikh Pelaksanaan Kursus <span class="date-input-hint">DD/MM/YYYY</span></label>
-                    <div class="date-input-wrap">
-                      <input type="date" id="ufTarikhInput" required placeholder="DD/MM/YYYY">
-                    </div>
+                    <label>Tarikh Pelaksanaan Kursus</label>
+                    <input type="date" id="ufTarikhInput" required>
                   </div>
                   <div><label>Waktu Kursus</label><input type="text" id="ufWaktu" required value="9.00 PAGI - 12.00 TENGAHARI"></div>
                 </div>
@@ -2977,22 +2952,41 @@
     /* FORMAT TARIKH SEPERTI: 19 September 2026 (Sabtu) */
     function formatTarikhKursusMelayu(dateStr) {
       if (!dateStr) return '';
-      const parts = dateStr.split('-');
-      if (parts.length < 3) return dateStr;
       
-      const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
-      const months = [
-        'Januari', 'Februari', 'Mac', 'April', 'Mei', 'Jun',
-        'Julai', 'Ogos', 'September', 'Oktober', 'November', 'Disember'
-      ];
+      const monthsMap = {
+        '01': 'Januari', '02': 'Februari', '03': 'Mac', '04': 'April',
+        '05': 'Mei', '06': 'Jun', '07': 'Julai', '08': 'Ogos',
+        '09': 'September', '10': 'Oktober', '11': 'November', '12': 'Disember',
+        'jan': 'Januari', 'feb': 'Februari', 'mac': 'Mac', 'apr': 'April',
+        'mei': 'Mei', 'jun': 'Jun', 'jul': 'Julai', 'ogo': 'Ogos', 'ogos': 'Ogos',
+        'sep': 'September', 'sept': 'September', 'okt': 'Oktober', 'nov': 'November', 'dis': 'Disember'
+      };
       const days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu'];
-      
-      const dayNum = String(parseInt(parts[2], 10)).padStart(2, '0');
-      const monthName = months[d.getMonth()];
-      const yearNum = parts[0];
-      const dayName = days[d.getDay()];
 
-      return `${dayNum} ${monthName} ${yearNum} (${dayName})`;
+      if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr.trim())) {
+        const parts = dateStr.trim().split('-');
+        const y = parseInt(parts[0], 10);
+        const m = parseInt(parts[1], 10) - 1;
+        const d = parseInt(parts[2], 10);
+        const dObj = new Date(y, m, d);
+        const monthNames = ['Januari', 'Februari', 'Mac', 'April', 'Mei', 'Jun', 'Julai', 'Ogos', 'September', 'Oktober', 'November', 'Disember'];
+        return `${String(d).padStart(2, '0')} ${monthNames[m]} ${y} (${days[dObj.getDay()]})`;
+      }
+
+      const match = dateStr.match(/(\d{1,2})[\s\-\/]([A-Za-z]+|\d{1,2})[\s\-\/](\d{4})/);
+      if (match) {
+        const day = String(parseInt(match[1], 10)).padStart(2, '0');
+        const mRaw = match[2].toLowerCase();
+        let monthName = monthsMap[mRaw] || match[2];
+        let mIndex = Object.values(monthsMap).indexOf(monthName);
+        if (mIndex === -1 && !isNaN(parseInt(mRaw, 10))) mIndex = parseInt(mRaw, 10) - 1;
+        const year = match[3];
+        const dObj = new Date(parseInt(year, 10), mIndex >= 0 ? mIndex : 0, parseInt(day, 10));
+        const dayName = days[dObj.getDay()];
+        return `${day} ${monthName} ${year} (${dayName})`;
+      }
+
+      return dateStr;
     }
 
     function getBulanKursusMelayu(dateStr) {
@@ -3136,21 +3130,27 @@ Jom pakat mari ramai-ramai!
         return;
       }
 
-      container.innerHTML = forms.map(f => `
-        <div class="form-item-row">
-          <div class="form-item-info">
-            <span class="form-item-title">${f.name}</span>
-            <span class="form-item-date">Tarikh Dijana: ${f.dateCreated}</span>
-            <span style="font-size: 11.5px; color: #047857; font-weight: 700; word-break: break-all; margin-top: 2px;">🔗 ${f.liveUrl}</span>
+      container.innerHTML = forms.map(f => {
+        const parsedEventDate = f.eventDate 
+          ? formatTarikhKursusMelayu(f.eventDate)
+          : (formatTarikhKursusMelayu(f.name) || formatTarikhKursusMelayu(f.dateCreated));
+
+        return `
+          <div class="form-item-row">
+            <div class="form-item-info">
+              <span class="form-item-title">${f.name}</span>
+              <span class="form-item-date">Tarikh Dijana: ${f.dateCreated}</span>
+              <span style="font-size: 11.5px; color: #047857; font-weight: 700; word-break: break-all; margin-top: 2px;">🔗 ${f.liveUrl}</span>
+            </div>
+            <div class="form-item-actions">
+              <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 32px;" onclick="copyDirectText('${f.liveUrl}')">Salin Pautan</button>
+              <button type="button" class="btn btn-whatsapp" style="padding: 4px 12px; font-size: 11.5px; min-height: 32px;" onclick="shareToWhatsApp('${parsedEventDate}', '9.00 Pagi - 12.00 Tengah Hari', 'Masjid Al-Muktafi Billah Shah, Ladang', '${f.liveUrl}')">Kongsi WhatsApp</button>
+              <a href="${f.liveUrl}" target="_blank" class="btn btn-primary" style="padding: 4px 14px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Pautan Awam</a>
+              <a href="${f.editUrl}" target="_blank" class="btn btn-secondary" style="padding: 4px 14px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Editor</a>
+            </div>
           </div>
-          <div class="form-item-actions">
-            <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 32px;" onclick="copyDirectText('${f.liveUrl}')">Salin Pautan</button>
-            <button type="button" class="btn btn-whatsapp" style="padding: 4px 12px; font-size: 11.5px; min-height: 32px;" onclick="shareToWhatsApp('${f.eventDate || ''}', '9.00 Pagi - 12.00 Tengah Hari', 'Masjid Al-Muktafi Billah Shah, Ladang', '${f.liveUrl}')">Kongsi WhatsApp</button>
-            <a href="${f.liveUrl}" target="_blank" class="btn btn-primary" style="padding: 4px 14px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Pautan Awam</a>
-            <a href="${f.editUrl}" target="_blank" class="btn btn-secondary" style="padding: 4px 14px; font-size: 11.5px; min-height: 32px; text-decoration: none;">Editor</a>
-          </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     function checkAutoSystemUpdate() {
