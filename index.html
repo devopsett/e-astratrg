@@ -290,6 +290,36 @@
 
     .topbar-actions { display: flex; align-items: center; gap: 8px; }
 
+    .sync-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f1f5f9;
+      color: #64748b;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 11.5px;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      transition: all 0.2s ease;
+    }
+    .sync-badge.syncing {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border-color: #bfdbfe;
+    }
+    .sync-badge.cached {
+      background: #ecfdf5;
+      color: #047857;
+      border-color: #a7f3d0;
+    }
+    .sync-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
     .btn-icon-action {
       height: 40px;
       padding: 0 14px;
@@ -853,7 +883,7 @@
       <div class="update-title">Versi Baharu Sedia Dipasang</div>
       <div class="update-details-box">
         <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Nota Keluaran:</strong>
-        <span id="updateChangelogText">Penetapan tarikh sebenar program pada mesej hebahan WhatsApp cawangan.</span>
+        <span id="updateChangelogText">Penambahan sistem simpanan lokal segera dan penjagaan kuota pelayan.</span>
       </div>
       <div class="update-action-row">
         <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
@@ -1088,6 +1118,10 @@
           </div>
         </div>
         <div class="topbar-actions">
+          <div id="syncStatusBadge" class="sync-badge">
+            <span class="sync-dot"></span>
+            <span id="syncStatusText">Disegerakkan</span>
+          </div>
           <button class="btn-icon-action btn-icon-refresh" onclick="refreshCurrentView()" title="Segar Semula Paparan">
             <svg viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
           </button>
@@ -1252,7 +1286,7 @@
           <div class="umrah-card" style="max-width: 800px; margin: 0 auto; width: 100%;">
             <div class="umrah-header">
               <h3>Arkib Borang Pendaftaran</h3>
-              <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 30px;" onclick="fetchUmrahFormsList()">Kemaskini</button>
+              <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 30px;" onclick="fetchUmrahFormsList(true)">Kemaskini</button>
             </div>
             <div id="umrahFormsListContainer" class="umrah-forms-grid">
               <p style="font-size: 12px; color: var(--text-muted); text-align: center; padding: 20px;">Memuatkan arkib borang...</p>
@@ -1290,7 +1324,7 @@
                   <option value="Fatin">Fatin</option>
                   <option value="Fikriyah">Fikriyah</option>
                 </select>
-                <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 34px;" onclick="loadDataJemaah()">Segar Semula</button>
+                <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 34px;" onclick="loadDataJemaah(true)">Segar Semula</button>
               </div>
             </div>
             <div class="panel-body">
@@ -1426,7 +1460,7 @@
                     <label>Resit Bayaran (Deposit / Penuh)</label>
                     <div class="file-dropzone-compact" onclick="document.getElementById('regFileResit').click()">
                       <div class="file-dropzone-left">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line></svg>
                         <span id="label_regFileResit" class="file-dropzone-text">Pilih slip resit bayaran</span>
                       </div>
                       <span class="file-btn-browse">Pilih</span>
@@ -1624,6 +1658,24 @@
       return globalAudioCtx;
     }
 
+    /* PENGENDALIAN CACHE LOKAL PINTAR (STALE-WHILE-REVALIDATE) */
+    function setSyncBadge(status) {
+      const badge = document.getElementById('syncStatusBadge');
+      const txt = document.getElementById('syncStatusText');
+      if (!badge || !txt) return;
+
+      badge.classList.remove('syncing', 'cached');
+      if (status === 'syncing') {
+        badge.classList.add('syncing');
+        txt.textContent = 'Menyegerak...';
+      } else if (status === 'cached') {
+        badge.classList.add('cached');
+        txt.textContent = 'Disimpan';
+      } else {
+        txt.textContent = 'Disegerakkan';
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('txDate').valueAsDate = new Date();
       
@@ -1633,11 +1685,54 @@
       if (dateInput) dateInput.value = defaultDate.toISOString().split('T')[0];
 
       addBatchRow();
-      loadData();
+
+      // MUAT SERTA-MERTA DARIPADA LOCALSTORAGE (INSTANT BOOT)
+      loadLocalCacheImmediately();
+
+      // SEGERAK DI LATAR BELAKANG (BACKGROUND REVALIDATION)
+      loadData(false);
+
       setTimeout(checkAutoSystemUpdate, 3500);
     });
 
     window.addEventListener('focus', () => { checkAutoSystemUpdate(); });
+
+    function loadLocalCacheImmediately() {
+      try {
+        const cachedStock = localStorage.getItem('eastra_cached_stock');
+        if (cachedStock) {
+          const parsed = JSON.parse(cachedStock);
+          if (parsed && parsed.items && parsed.items.length) {
+            appState.data = parsed;
+            renderDashboard();
+            renderDropdowns();
+            renderLogs();
+            renderItems();
+            setSyncBadge('cached');
+          }
+        }
+
+        const cachedJemaah = localStorage.getItem('eastra_cached_jemaah');
+        if (cachedJemaah) {
+          const parsedJ = JSON.parse(cachedJemaah);
+          if (Array.isArray(parsedJ) && parsedJ.length) {
+            appState.senaraiJemaah = parsedJ;
+            renderJemaahTable(parsedJ);
+          }
+        }
+
+        const cachedUmrah = localStorage.getItem('eastra_umrah_forms');
+        if (cachedUmrah) {
+          const parsedU = JSON.parse(cachedUmrah);
+          if (Array.isArray(parsedU) && parsedU.length) {
+            appState.umrahForms = parsedU;
+            renderUmrahFormsList(parsedU);
+          }
+        }
+      } catch (e) {
+        console.warn("Ralat membaca cache lokal:", e);
+      }
+    }
 
     function handleDesktopMenuToggle(targetMenu) {
       if (targetMenu === 'stock') {
@@ -1713,7 +1808,7 @@
 
       document.getElementById('subTabUmrahGenerate').classList.toggle('hidden', !isGen);
       document.getElementById('subTabUmrahArchive').classList.toggle('hidden', isGen);
-      if (!isGen) fetchUmrahFormsList();
+      if (!isGen) fetchUmrahFormsList(false);
     }
 
     function switchJemaahSubTab(sub) {
@@ -1733,7 +1828,7 @@
       document.getElementById('subSectionJemaahAdd').classList.toggle('hidden', !isAdd);
       document.getElementById('subSectionJemaahEdit').classList.toggle('hidden', !isEdit);
 
-      if (isList) loadDataJemaah();
+      if (isList) loadDataJemaah(false);
     }
 
     function updateFileLabel(inputEl, labelId) {
@@ -1799,14 +1894,14 @@
       if (fabBtn) fabBtn.classList.toggle('hidden', !isStockTab);
 
       if (isUmrahTab && (!appState.umrahForms || appState.umrahForms.length === 0)) {
-        fetchUmrahFormsList();
+        fetchUmrahFormsList(false);
       }
       if (isJemaahTab) {
         if (tab === 'jemaahList') switchJemaahSubTab('list');
         else if (tab === 'jemaahAdd') switchJemaahSubTab('add');
         else if (tab === 'jemaahEdit') switchJemaahSubTab('edit');
         if (!appState.senaraiJemaah || appState.senaraiJemaah.length === 0) {
-          loadDataJemaah();
+          loadDataJemaah(false);
         }
       }
 
@@ -1815,19 +1910,17 @@
 
     function refreshCurrentView() {
       if (appState.activeTab === 'umrahForm') {
-        fetchUmrahFormsList();
-        showToast('Senarai borang kursus dikemas kini.');
+        fetchUmrahFormsList(true);
       } else if (['jemaahList', 'jemaahAdd', 'jemaahEdit'].includes(appState.activeTab)) {
-        loadDataJemaah();
-        showToast('Pangkalan data jemaah dikemas kini.');
+        loadDataJemaah(true);
       } else {
-        loadData();
+        loadData(true);
       }
     }
 
     function renderLoadingPlaceholders() {
       const mCards = document.getElementById('metricsCards');
-      if (mCards) {
+      if (mCards && (!appState.data.items || !appState.data.items.length)) {
         mCards.innerHTML = Array(6).fill(0).map(() => `
           <div class="metric-card">
             <div class="skeleton" style="height: 10px; width: 60%; margin-bottom: 8px;"></div>
@@ -1838,7 +1931,7 @@
       }
 
       const tAttn = document.getElementById('attentionTbody');
-      if (tAttn) {
+      if (tAttn && (!appState.data.items || !appState.data.items.length)) {
         tAttn.innerHTML = Array(4).fill(0).map(() => `
           <tr>
             <td><div class="skeleton skeleton-text" style="width: 80px;"></div></td>
@@ -1851,90 +1944,13 @@
           </tr>
         `).join('');
       }
-      const mAttn = document.getElementById('attentionMobileCards');
-      if (mAttn) {
-        mAttn.innerHTML = Array(3).fill(0).map(() => `
-          <div class="skeleton-card">
-            <div style="display:flex; justify-content:space-between;">
-              <div class="skeleton" style="height:14px; width:130px;"></div>
-              <div class="skeleton skeleton-badge"></div>
-            </div>
-            <div class="skeleton" style="height:11px; width:85px;"></div>
-            <div style="border-top:1px dashed #e2e8f0; padding-top:8px; display:flex; justify-content:space-between;">
-              <div class="skeleton" style="height:11px; width:70px;"></div>
-              <div class="skeleton" style="height:11px; width:45px;"></div>
-            </div>
-          </div>
-        `).join('');
-      }
-
-      const tLogs = document.getElementById('logsTbody');
-      if (tLogs) {
-        tLogs.innerHTML = Array(4).fill(0).map(() => `
-          <tr>
-            <td><div class="skeleton skeleton-text" style="width: 75px;"></div></td>
-            <td><div class="skeleton skeleton-text" style="width: 90px;"></div></td>
-            <td><div class="skeleton skeleton-text" style="width: 140px;"></div></td>
-            <td><div class="skeleton skeleton-badge"></div></td>
-            <td style="text-align:right;"><div class="skeleton skeleton-text" style="width: 35px; margin-left: auto;"></div></td>
-            <td style="text-align:right;"><div class="skeleton skeleton-text" style="width: 35px; margin-left: auto;"></div></td>
-            <td><div class="skeleton skeleton-text" style="width: 80px;"></div></td>
-            <td><div class="skeleton skeleton-text" style="width: 100px;"></div></td>
-          </tr>
-        `).join('');
-      }
-      const mLogs = document.getElementById('logsMobileCards');
-      if (mLogs) {
-        mLogs.innerHTML = Array(3).fill(0).map(() => `
-          <div class="skeleton-card">
-            <div style="display:flex; justify-content:space-between;">
-              <div class="skeleton" style="height:14px; width:130px;"></div>
-              <div class="skeleton skeleton-badge"></div>
-            </div>
-            <div class="skeleton" style="height:11px; width:100px;"></div>
-            <div style="border-top:1px dashed #e2e8f0; padding-top:8px; display:flex; justify-content:space-between;">
-              <div class="skeleton" style="height:11px; width:70px;"></div>
-              <div class="skeleton" style="height:11px; width:50px;"></div>
-            </div>
-          </div>
-        `).join('');
-      }
-
-      const tItems = document.getElementById('itemsTbody');
-      if (tItems) {
-        tItems.innerHTML = Array(4).fill(0).map(() => `
-          <tr>
-            <td><div class="skeleton skeleton-text" style="width: 85px;"></div></td>
-            <td><div class="skeleton skeleton-text" style="width: 150px;"></div></td>
-            <td><div class="skeleton skeleton-text" style="width: 80px;"></div></td>
-            <td style="text-align:right;"><div class="skeleton skeleton-text" style="width: 40px; margin-left: auto;"></div></td>
-            <td style="text-align:right;"><div class="skeleton skeleton-text" style="width: 30px; margin-left: auto;"></div></td>
-            <td><div class="skeleton skeleton-badge"></div></td>
-            <td><div class="skeleton skeleton-text" style="width: 100px;"></div></td>
-            <td style="text-align:center;"><div class="skeleton skeleton-badge" style="width:50px; margin:auto;"></div></td>
-          </tr>
-        `).join('');
-      }
-      const mItems = document.getElementById('itemsMobileCards');
-      if (mItems) {
-        mItems.innerHTML = Array(3).fill(0).map(() => `
-          <div class="skeleton-card">
-            <div style="display:flex; justify-content:space-between;">
-              <div class="skeleton" style="height:14px; width:130px;"></div>
-              <div class="skeleton skeleton-badge"></div>
-            </div>
-            <div class="skeleton" style="height:11px; width:90px;"></div>
-            <div style="border-top:1px dashed #e2e8f0; padding-top:8px; display:flex; justify-content:space-between; align-items:center;">
-              <div class="skeleton" style="height:11px; width:75px;"></div>
-              <div class="skeleton" style="height:24px; width:65px; border-radius:6px;"></div>
-            </div>
-          </div>
-        `).join('');
-      }
     }
 
-    function loadData() {
-      renderLoadingPlaceholders();
+    function loadData(forceRefresh = false) {
+      if (forceRefresh || !appState.data.items || !appState.data.items.length) {
+        renderLoadingPlaceholders();
+      }
+      setSyncBadge('syncing');
 
       fetch(`${SCRIPT_URL}?action=getAppData`, { method: 'GET', redirect: 'follow' })
       .then(res => res.json())
@@ -1949,14 +1965,22 @@
           lists: payload.lists || { pic: [], lokasi: [], kategori: [] }
         };
 
+        // SIMPAN KE LOCALSTORAGE SECARA PINTAR
+        try {
+          localStorage.setItem('eastra_cached_stock', JSON.stringify(appState.data));
+        } catch (e) {}
+
         renderDashboard(); 
         renderDropdowns(); 
         renderLogs(); 
         renderItems();
+        setSyncBadge('synced');
+        if (forceRefresh) showToast('Data stok disegerakkan.');
       })
       .catch(err => {
         console.error("Ralat muat data:", err);
-        showToast('Gagal memuatkan data terkini.', true);
+        setSyncBadge('cached');
+        if (forceRefresh) showToast('Gagal berhubung ke pelayan, memaparkan data lokal.', true);
       });
     }
 
@@ -2071,7 +2095,7 @@
             <div class="stepper">
               <button type="button" class="stepper-btn" onclick="stepQty(this, -1)">-</button>
               <input type="number" class="batch-qty stepper-input" min="0" value="${prefillQty}" oninput="updateRowHint(this)" required>
-              <button type="button" class="stepper-btn" onclick="stepQty(1)">+</button>
+              <button type="button" class="stepper-btn" onclick="stepQty(this, 1)">+</button>
             </div>
             <button type="button" class="btn-row-del" onclick="removeBatchRow(this)" title="Padam Baris">&times;</button>
           </div>
@@ -2260,6 +2284,7 @@
         showToast('Transaksi berjaya didaftarkan.');
         closeTxModal();
         appState.data = res.data;
+        try { localStorage.setItem('eastra_cached_stock', JSON.stringify(appState.data)); } catch(e){}
         renderDashboard(); renderLogs(); renderItems();
         document.getElementById('txNote').value = '';
         document.getElementById('batchContainer').innerHTML = '';
@@ -2319,6 +2344,7 @@
         showToast('Maklumat item disimpan.');
         closeItemModal();
         appState.data = res.data;
+        try { localStorage.setItem('eastra_cached_stock', JSON.stringify(appState.data)); } catch(e){}
         renderDashboard(); renderItems(); resetItemForm();
       })
       .catch(err => { showLoading(false); showToast(err.message || 'Ralat simpan item.', true); });
@@ -2339,6 +2365,7 @@
         showToast('Item telah dipadamkan.');
         closeItemModal();
         appState.data = res.data;
+        try { localStorage.setItem('eastra_cached_stock', JSON.stringify(appState.data)); } catch(e){}
         renderDashboard(); renderItems(); resetItemForm();
       })
       .catch(err => { showLoading(false); showToast(err.message || 'Ralat pemadaman.', true); });
@@ -2610,7 +2637,7 @@
           if (el) { el.textContent = 'Pilih fail dokumen...'; el.classList.remove('has-file'); }
         });
 
-        loadDataJemaah();
+        loadDataJemaah(true);
         switchJemaahSubTab('list');
       } catch (err) {
         showLoading(false);
@@ -2618,11 +2645,11 @@
       }
     }
 
-    function loadDataJemaah() {
+    function loadDataJemaah(forceRefresh = false) {
       const tbody = document.getElementById('tbodyJemaah');
       const mCards = document.getElementById('mobileCardsJemaah');
       
-      if (tbody) {
+      if ((forceRefresh || !appState.senaraiJemaah.length) && tbody) {
         tbody.innerHTML = Array(4).fill(0).map(() => `
           <tr>
             <td><div class="skeleton skeleton-text" style="width: 140px;"></div><div class="skeleton skeleton-text" style="width: 100px;"></div></td>
@@ -2632,28 +2659,15 @@
           </tr>
         `).join('');
       }
-      if (mCards) {
-        mCards.innerHTML = Array(3).fill(0).map(() => `
-          <div class="skeleton-card">
-            <div style="display:flex; justify-content:space-between;">
-              <div class="skeleton" style="height:14px; width:140px;"></div>
-              <div class="skeleton skeleton-badge"></div>
-            </div>
-            <div class="skeleton" style="height:11px; width:110px;"></div>
-            <div style="border-top:1px dashed #e2e8f0; padding-top:8px; display:flex; justify-content:space-between; align-items:center;">
-              <div class="skeleton" style="height:11px; width:120px;"></div>
-              <div class="skeleton" style="height:26px; width:80px; border-radius:6px;"></div>
-            </div>
-          </div>
-        `).join('');
-      }
 
       fetch(`${SCRIPT_URL}?action=getSenaraiJemaah`, { method: 'GET', redirect: 'follow' })
       .then(res => res.json())
       .then(res => {
         if (!res.ok && res.message) throw new Error(res.message);
         appState.senaraiJemaah = Array.isArray(res.data) ? res.data : [];
+        try { localStorage.setItem('eastra_cached_jemaah', JSON.stringify(appState.senaraiJemaah)); } catch(e){}
         renderJemaahTable(appState.senaraiJemaah);
+        if (forceRefresh) showToast('Data jemaah disegerakkan.');
       })
       .catch(err => {
         console.error("Gagal muat data jemaah:", err);
@@ -2885,7 +2899,7 @@
         if (!res.ok) throw new Error(res.message);
 
         showToast(res.message);
-        loadDataJemaah();
+        loadDataJemaah(true);
         cariJemaahRecord();
       } catch (err) {
         showLoading(false);
@@ -2916,7 +2930,7 @@
         document.getElementById('searchJemaahIC').value = '';
         document.getElementById('cariJemaahFeedback').textContent = '';
         appState.currentJemaahIC = '';
-        loadDataJemaah();
+        loadDataJemaah(true);
       })
       .catch(err => {
         showLoading(false);
@@ -2949,7 +2963,6 @@
       document.getElementById('posterDropzone').classList.remove('hidden');
     }
 
-    /* FORMAT TARIKH SEPERTI: 19 September 2026 (Sabtu) */
     function formatTarikhKursusMelayu(dateStr) {
       if (!dateStr) return '';
       
@@ -2996,7 +3009,6 @@
       return `${months[parseInt(parts[1], 10) - 1]} ${parts[0]}`;
     }
 
-    /* FUNGSI KONGSI HEBAHAN KE WHATSAPP DENGAN FORMAT RASMI CAWANGAN */
     function shareToWhatsApp(tarikh, waktu, tempat, linkBorang) {
       const tarikhPaparan = (tarikh && tarikh.trim().length > 0) ? tarikh.trim() : '19 September 2026 (Sabtu)';
 
@@ -3101,7 +3113,7 @@ Jom pakat mari ramai-ramai!
       });
     }
 
-    function fetchUmrahFormsList() {
+    function fetchUmrahFormsList(forceRefresh = false) {
       const container = document.getElementById('umrahFormsListContainer');
       const localForms = JSON.parse(localStorage.getItem('eastra_umrah_forms') || '[]');
       if (localForms.length) renderUmrahFormsList(localForms);
@@ -3113,6 +3125,7 @@ Jom pakat mari ramai-ramai!
         if (forms.length) {
           localStorage.setItem('eastra_umrah_forms', JSON.stringify(forms));
           renderUmrahFormsList(forms);
+          if (forceRefresh) showToast('Arkib borang disegerakkan.');
         } else if (!localForms.length) {
           container.innerHTML = '<p style="font-size:12px; color:var(--text-muted); text-align:center; padding:20px;">Tiada rekod borang kursus ditemui.</p>';
         }
