@@ -340,7 +340,7 @@
     .btn-icon-action:hover { background: #f8fafc; color: var(--primary); border-color: var(--primary); }
     .btn-icon-action svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 
-    /* Butang Ikon Segar Semula Bulat */
+    /* Butang Ikon Segar Semula Tunggal (Desktop Sahaja) */
     .btn-icon-refresh {
       width: 36px;
       height: 36px;
@@ -867,6 +867,9 @@
       
       .sidebar { display: none !important; }
       .mobile-nav { display: grid !important; }
+
+      /* SEMBUNYIKAN BUTANG REFRESH PADA PAPARAN MOBILE SEPENUHNYA */
+      .btn-icon-refresh { display: none !important; }
       .topbar-actions .btn-icon-refresh { display: none !important; }
 
       main { 
@@ -913,7 +916,7 @@
       <div class="update-title">Versi Baharu Sedia Dipasang</div>
       <div class="update-details-box">
         <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Nota Keluaran:</strong>
-        <span id="updateChangelogText">Deskripsi Google Form kini menggunakan HURUF BESAR sepenuhnya &amp; Butang Segar Semula diperbaharui.</span>
+        <span id="updateChangelogText">Deskripsi Google Form kini menggunakan HURUF BESAR sepenuhnya &amp; Butang Segar Semula diringkaskan.</span>
       </div>
       <div class="update-action-row">
         <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
@@ -1152,6 +1155,7 @@
             <span class="sync-dot"></span>
             <span id="syncStatusText">Disegerakkan</span>
           </div>
+          <!-- SATU-SATUNYA BUTANG REFRESH APLIKASI (DESKTOP) -->
           <button class="btn-icon-refresh" onclick="refreshCurrentView()" title="Segar Semula Semua Data">
             <svg viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
           </button>
@@ -1316,9 +1320,6 @@
           <div class="umrah-card" style="max-width: 800px; margin: 0 auto; width: 100%;">
             <div class="umrah-header">
               <h3>Arkib Borang Pendaftaran</h3>
-              <button type="button" class="btn-icon-refresh" onclick="refreshCurrentView()" title="Segar Semula Semua Data">
-                <svg viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
-              </button>
             </div>
             <div id="umrahFormsListContainer" class="umrah-forms-grid">
               <p style="font-size: 12px; color: var(--text-muted); text-align: center; padding: 20px;">Memuatkan arkib borang...</p>
@@ -1356,9 +1357,6 @@
                   <option value="Fatin">Fatin</option>
                   <option value="Fikriyah">Fikriyah</option>
                 </select>
-                <button type="button" class="btn-icon-refresh" onclick="refreshCurrentView()" title="Segar Semula Semua Data">
-                  <svg viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
-                </button>
               </div>
             </div>
             <div class="panel-body">
@@ -1936,7 +1934,6 @@
       window.scrollTo({ top: 0, behavior: 'instant' });
     }
 
-    // FUNGSI SEGAR SEMULA MENYELURUH (REFRESH SEMUA DATA)
     function refreshCurrentView() {
       showToast('Menyegerakkan semua data dari pelayan...');
       loadData(true);
