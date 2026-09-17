@@ -340,9 +340,39 @@
     .btn-icon-action:hover { background: #f8fafc; color: var(--primary); border-color: var(--primary); }
     .btn-icon-action svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 
-    .btn-icon-refresh { width: 40px; height: 40px; padding: 0; display: grid; place-items: center; }
-    .btn-icon-refresh:active svg { transform: rotate(180deg); }
-    .btn-icon-refresh svg { transition: transform 0.25s ease; }
+    /* Butang Ikon Segar Semula Bulat */
+    .btn-icon-refresh {
+      width: 36px;
+      height: 36px;
+      min-height: 36px;
+      padding: 0;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-icon-refresh:hover {
+      background: var(--primary-soft);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .btn-icon-refresh svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform 0.3s ease;
+    }
+    .btn-icon-refresh:active svg {
+      transform: rotate(180deg);
+    }
 
     .btn {
       display: inline-flex;
@@ -883,7 +913,7 @@
       <div class="update-title">Versi Baharu Sedia Dipasang</div>
       <div class="update-details-box">
         <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Nota Keluaran:</strong>
-        <span id="updateChangelogText">Penambahan sistem simpanan lokal segera dan penjagaan kuota pelayan.</span>
+        <span id="updateChangelogText">Deskripsi Google Form kini menggunakan HURUF BESAR sepenuhnya &amp; Butang Segar Semula diperbaharui.</span>
       </div>
       <div class="update-action-row">
         <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
@@ -1122,7 +1152,7 @@
             <span class="sync-dot"></span>
             <span id="syncStatusText">Disegerakkan</span>
           </div>
-          <button class="btn-icon-action btn-icon-refresh" onclick="refreshCurrentView()" title="Segar Semula Paparan">
+          <button class="btn-icon-refresh" onclick="refreshCurrentView()" title="Segar Semula Semua Data">
             <svg viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
           </button>
         </div>
@@ -1286,7 +1316,9 @@
           <div class="umrah-card" style="max-width: 800px; margin: 0 auto; width: 100%;">
             <div class="umrah-header">
               <h3>Arkib Borang Pendaftaran</h3>
-              <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 30px;" onclick="fetchUmrahFormsList(true)">Kemaskini</button>
+              <button type="button" class="btn-icon-refresh" onclick="refreshCurrentView()" title="Segar Semula Semua Data">
+                <svg viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+              </button>
             </div>
             <div id="umrahFormsListContainer" class="umrah-forms-grid">
               <p style="font-size: 12px; color: var(--text-muted); text-align: center; padding: 20px;">Memuatkan arkib borang...</p>
@@ -1317,14 +1349,16 @@
           <div class="panel">
             <div class="panel-header">
               <h3>Pangkalan Data &amp; Status Jemaah</h3>
-              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+              <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
                 <input type="text" id="cariJemaahInput" placeholder="Cari Nama / No. K/P..." style="width: 170px; min-height: 34px; padding: 4px 10px; font-size: 12px;" oninput="tapisJadualJemaah()">
                 <select id="tapisPUSelect" style="width: 130px; min-height: 34px; padding: 4px 8px; font-size: 12px;" onchange="tapisJadualJemaah()">
                   <option value="">Semua PU</option>
                   <option value="Fatin">Fatin</option>
                   <option value="Fikriyah">Fikriyah</option>
                 </select>
-                <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 11.5px; min-height: 34px;" onclick="loadDataJemaah(true)">Segar Semula</button>
+                <button type="button" class="btn-icon-refresh" onclick="refreshCurrentView()" title="Segar Semula Semua Data">
+                  <svg viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+                </button>
               </div>
             </div>
             <div class="panel-body">
@@ -1658,7 +1692,6 @@
       return globalAudioCtx;
     }
 
-    /* PENGENDALIAN CACHE LOKAL PINTAR (STALE-WHILE-REVALIDATE) */
     function setSyncBadge(status) {
       const badge = document.getElementById('syncStatusBadge');
       const txt = document.getElementById('syncStatusText');
@@ -1685,13 +1718,8 @@
       if (dateInput) dateInput.value = defaultDate.toISOString().split('T')[0];
 
       addBatchRow();
-
-      // MUAT SERTA-MERTA DARIPADA LOCALSTORAGE (INSTANT BOOT)
       loadLocalCacheImmediately();
-
-      // SEGERAK DI LATAR BELAKANG (BACKGROUND REVALIDATION)
       loadData(false);
-
       setTimeout(checkAutoSystemUpdate, 3500);
     });
 
@@ -1908,14 +1936,12 @@
       window.scrollTo({ top: 0, behavior: 'instant' });
     }
 
+    // FUNGSI SEGAR SEMULA MENYELURUH (REFRESH SEMUA DATA)
     function refreshCurrentView() {
-      if (appState.activeTab === 'umrahForm') {
-        fetchUmrahFormsList(true);
-      } else if (['jemaahList', 'jemaahAdd', 'jemaahEdit'].includes(appState.activeTab)) {
-        loadDataJemaah(true);
-      } else {
-        loadData(true);
-      }
+      showToast('Menyegerakkan semua data dari pelayan...');
+      loadData(true);
+      fetchUmrahFormsList(true);
+      loadDataJemaah(true);
     }
 
     function renderLoadingPlaceholders() {
@@ -1965,7 +1991,6 @@
           lists: payload.lists || { pic: [], lokasi: [], kategori: [] }
         };
 
-        // SIMPAN KE LOCALSTORAGE SECARA PINTAR
         try {
           localStorage.setItem('eastra_cached_stock', JSON.stringify(appState.data));
         } catch (e) {}
@@ -1975,7 +2000,7 @@
         renderLogs(); 
         renderItems();
         setSyncBadge('synced');
-        if (forceRefresh) showToast('Data stok disegerakkan.');
+        if (forceRefresh) showToast('Data stok & inventori disegerakkan.');
       })
       .catch(err => {
         console.error("Ralat muat data:", err);
@@ -3010,7 +3035,7 @@
     }
 
     function shareToWhatsApp(tarikh, waktu, tempat, linkBorang) {
-      const tarikhPaparan = (tarikh && tarikh.trim().length > 0) ? tarikh.trim() : '19 September 2026 (Sabtu)';
+      const tarikhPaparan = (tarikh && tarikh.trim().length > 0) ? tarikh.trim() : '26 September 2026 (Sabtu)';
 
       const template = 
 `*KURSUS UMRAH TERKINI DI KUALA TERENGGANU*
