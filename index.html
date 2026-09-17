@@ -3046,7 +3046,7 @@ Ikuti kupasan menarik ibadah umrah yang perlu diketahui bakal Dhuyufurrahman ser
 🕌 ${tempat || 'Masjid Al-Muktafi Billah Shah, Ladang'} (location) 👇
 https://maps.app.goo.gl/977eNNpENp1jtdPg7
 
-Tuan/Puan DIWAJIBKAN mendaftar melalui Google Form pada pautan dibawah untuk sahkan kehadiran dan jumlah pax yang hadir👇
+Tuan/Puan *DIWAJIBKAN* mendaftar melalui Google Form pada pautan dibawah untuk sahkan kehadiran dan jumlah pax yang hadir👇
 ${linkBorang}
 
 Jom pakat mari ramai-ramai!
@@ -3196,11 +3196,24 @@ Jom pakat mari ramai-ramai!
       .then(r => r.json())
       .then(commits => {
         if (!Array.isArray(commits) || !commits.length) return;
-        const sha = commits[0].sha;
+        const latestCommit = commits[0];
+        const sha = latestCommit.sha;
+        const commitMsg = latestCommit.commit && latestCommit.commit.message ? latestCommit.commit.message : '';
+        
         const saved = localStorage.getItem('eastra_current_commit_sha');
-        if (!saved) { localStorage.setItem('eastra_current_commit_sha', sha); return; }
+        if (!saved) { 
+          localStorage.setItem('eastra_current_commit_sha', sha); 
+          return; 
+        }
+
         if (saved !== sha) {
           window.pendingCommitSha = sha;
+          // Ambil mesej commit sebenar dari GitHub dan paparkan pada banner
+          const changelogEl = document.getElementById('updateChangelogText');
+          if (changelogEl && commitMsg) {
+            // Ambil baris pertama sahaja jika mesej commit panjang
+            changelogEl.textContent = commitMsg.split('\n')[0];
+          }
           document.getElementById('updateBanner').classList.remove('hidden');
         }
       }).catch(() => {});
