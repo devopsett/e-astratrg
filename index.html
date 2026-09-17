@@ -320,27 +320,6 @@
       background: currentColor;
     }
 
-    .btn-icon-action {
-      height: 40px;
-      padding: 0 14px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: #ffffff;
-      color: var(--text);
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      cursor: pointer;
-      font-size: 12.5px;
-      font-weight: 600;
-      transition: all 0.18s ease;
-      white-space: nowrap;
-    }
-
-    .btn-icon-action:hover { background: #f8fafc; color: var(--primary); border-color: var(--primary); }
-    .btn-icon-action svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-
-    /* Butang Ikon Segar Semula Tunggal (Desktop Sahaja) */
     .btn-icon-refresh {
       width: 36px;
       height: 36px;
@@ -868,7 +847,6 @@
       .sidebar { display: none !important; }
       .mobile-nav { display: grid !important; }
 
-      /* SEMBUNYIKAN BUTANG REFRESH PADA PAPARAN MOBILE SEPENUHNYA */
       .btn-icon-refresh { display: none !important; }
       .topbar-actions .btn-icon-refresh { display: none !important; }
 
@@ -916,7 +894,7 @@
       <div class="update-title">Versi Baharu Sedia Dipasang</div>
       <div class="update-details-box">
         <strong style="color: #6ee7b7; display: block; margin-bottom: 2px;">Nota Keluaran:</strong>
-        <span id="updateChangelogText">Deskripsi Google Form kini menggunakan HURUF BESAR sepenuhnya &amp; Butang Segar Semula diringkaskan.</span>
+        <span id="updateChangelogText">Penambahan perkongsian poster WhatsApp dan pemformatan mesej terkini.</span>
       </div>
       <div class="update-action-row">
         <button type="button" class="btn-update-later" onclick="dismissUpdateBanner()">Nanti</button>
@@ -1492,7 +1470,7 @@
                     <label>Resit Bayaran (Deposit / Penuh)</label>
                     <div class="file-dropzone-compact" onclick="document.getElementById('regFileResit').click()">
                       <div class="file-dropzone-left">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
                         <span id="label_regFileResit" class="file-dropzone-text">Pilih slip resit bayaran</span>
                       </div>
                       <span class="file-btn-browse">Pilih</span>
@@ -2117,7 +2095,7 @@
             <div class="stepper">
               <button type="button" class="stepper-btn" onclick="stepQty(this, -1)">-</button>
               <input type="number" class="batch-qty stepper-input" min="0" value="${prefillQty}" oninput="updateRowHint(this)" required>
-              <button type="button" class="stepper-btn" onclick="stepQty(this, 1)">+</button>
+              <button type="button" class="stepper-btn" onclick="stepQty(1)">+</button>
             </div>
             <button type="button" class="btn-row-del" onclick="removeBatchRow(this)" title="Padam Baris">&times;</button>
           </div>
@@ -2715,7 +2693,7 @@
 
       if (!data.length) {
         tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:30px;">Tiada rekod jemaah dijumpai.</td></tr>`;
-        mCards.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:20px; font-size:12px;">Tiada rekod jemaah dijumpai.</div>`;
+        mCards.innerHTML = `<div style="text-align:color:var(--text-muted); padding:20px; font-size:12px;">Tiada rekod jemaah dijumpai.</div>`;
         return;
       }
 
@@ -3031,6 +3009,7 @@
       return `${months[parseInt(parts[1], 10) - 1]} ${parts[0]}`;
     }
 
+    /* FUNGSI KONGSI HEBAHAN KE WHATSAPP BERSERTA *DIWAJIBKAN* */
     function shareToWhatsApp(tarikh, waktu, tempat, linkBorang) {
       const tarikhPaparan = (tarikh && tarikh.trim().length > 0) ? tarikh.trim() : '26 September 2026 (Sabtu)';
 
@@ -3057,14 +3036,51 @@ Jom pakat mari ramai-ramai!
       window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
     }
 
-    function shareDirectWhatsAppResult() {
+    /* SOLUSI 1: WEB SHARE API BERSERTA POSTER GAMBAR DI TELEFON PINTAR */
+    async function shareDirectWhatsAppResult() {
       const link = document.getElementById('resLiveUrl').value;
       const rawDate = document.getElementById('ufTarikhInput').value;
       const formattedDate = formatTarikhKursusMelayu(rawDate);
       const waktu = document.getElementById('ufWaktu').value;
       const tempat = document.getElementById('ufTempat').value;
+      const fileInput = document.getElementById('ufPosterFile');
 
-      shareToWhatsApp(formattedDate, waktu, tempat, link);
+      const template = 
+`*KURSUS UMRAH TERKINI DI KUALA TERENGGANU*
+
+*SEMUA DIJEMPUT HADIR 🕋*
+
+Ikuti kupasan menarik ibadah umrah yang perlu diketahui bakal Dhuyufurrahman serta info lain yang akan turut dikongsikan kepada jemaah semua❤️
+
+🗓️ ${formattedDate || '26 September 2026 (Sabtu)'}
+🕰️ ${waktu || '9.00 Pagi - 12.00 Tengah Hari'}
+🕌 ${tempat || 'Masjid Al-Muktafi Billah Shah, Ladang'} (location) 👇
+https://maps.app.goo.gl/977eNNpENp1jtdPg7
+
+Tuan/Puan *DIWAJIBKAN* mendaftar melalui Google Form pada pautan dibawah untuk sahkan kehadiran dan jumlah pax yang hadir👇
+${link}
+
+Jom pakat mari ramai-ramai!
+
+#AzzuhaMenyantuniDenganHati #umrah`;
+
+      // Jika peranti menyokong perkongsian fail (Telefon Pintar / Web Share API)
+      if (fileInput.files && fileInput.files[0] && navigator.canShare && navigator.canShare({ files: [fileInput.files[0]] })) {
+        try {
+          await navigator.share({
+            files: [fileInput.files[0]],
+            title: 'Kursus Umrah Terbuka',
+            text: template
+          });
+          return;
+        } catch (err) {
+          if (err.name === 'AbortError') return;
+        }
+      }
+
+      // Fallback bagi komputer desktop atau ketiadaan fail poster
+      const encoded = encodeURIComponent(template);
+      window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
     }
 
     async function handleGenerateUmrahForm(e) {
@@ -3191,6 +3207,7 @@ Jom pakat mari ramai-ramai!
       }).join('');
     }
 
+    /* PENGESANAN KEMAS KINI GITHUB DENGAN MESEJ COMMIT SEBENAR */
     function checkAutoSystemUpdate() {
       fetch(`https://api.github.com/repos/${GITHUB_REPO}/commits?per_page=1&_nocache=${Date.now()}`)
       .then(r => r.json())
@@ -3208,10 +3225,8 @@ Jom pakat mari ramai-ramai!
 
         if (saved !== sha) {
           window.pendingCommitSha = sha;
-          // Ambil mesej commit sebenar dari GitHub dan paparkan pada banner
           const changelogEl = document.getElementById('updateChangelogText');
           if (changelogEl && commitMsg) {
-            // Ambil baris pertama sahaja jika mesej commit panjang
             changelogEl.textContent = commitMsg.split('\n')[0];
           }
           document.getElementById('updateBanner').classList.remove('hidden');
