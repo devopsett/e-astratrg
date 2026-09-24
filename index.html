@@ -501,6 +501,55 @@
     }
 
     .btn:active { transform: scale(0.975); }
+
+    /* ===== SAIZ BUTANG PIAWAI =====
+       Guna kelas ini, JANGAN tulis inline padding/min-height/font-size.
+       .btn-xs  — butang dalam baris jadual (28px)
+       .btn-sm  — butang dalam panel header (34px)
+       .btn     — butang biasa (40px)
+       .btn-lg  — butang utama borang (46px)
+    */
+    .btn-xs {
+      padding: 3px 10px;
+      min-height: 28px;
+      font-size: var(--fs-xs);
+      border-radius: 6px;
+      gap: 4px;
+    }
+    .btn-xs svg { width: 13px; height: 13px; }
+
+    .btn-sm {
+      padding: 6px 13px;
+      min-height: 34px;
+      font-size: var(--fs-sm);
+      gap: 5px;
+    }
+    .btn-sm svg { width: 14px; height: 14px; }
+
+    .btn-lg {
+      padding: 11px 20px;
+      min-height: 46px;
+      font-size: var(--fs-md);
+    }
+    .btn-lg svg { width: 17px; height: 17px; }
+
+    /* Butang tutup modal — ikon X di penjuru */
+    .modal-x {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      border-radius: var(--radius-sm);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease;
+      flex-shrink: 0;
+    }
+    .modal-x:hover { background: var(--border-light); color: var(--text); }
+    .modal-x:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+    .modal-x svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; }
     .btn-primary {
       background: linear-gradient(180deg, #12522a 0%, var(--primary) 100%);
       color: white;
@@ -1463,7 +1512,7 @@
     <div class="modal-dialog" style="max-width:560px;">
       <div class="modal-header">
         <h4 id="leadModalTitle">Lead</h4>
-        <button type="button" class="btn btn-secondary" style="padding:4px 10px; min-height:28px; font-size: var(--fs-sm);" onclick="closeLeadModal()">Tutup</button>
+        <button type="button" class="modal-x" onclick="closeLeadModal()" aria-label="Tutup"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
       </div>
       <div class="modal-body">
         <input type="hidden" id="leadId">
@@ -1580,7 +1629,7 @@
     <div class="modal-dialog" style="max-width:520px;">
       <div class="modal-header">
         <h4 id="waModalTitle">Hantar WhatsApp</h4>
-        <button type="button" class="btn btn-secondary" style="padding:4px 10px; min-height:28px; font-size: var(--fs-sm);" onclick="closeModal('waModal')">Tutup</button>
+        <button type="button" class="modal-x" onclick="closeModal('waModal')" aria-label="Tutup"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
       </div>
       <div class="modal-body">
         <div id="waPenerima" style="background:#ecfdf5; border:1px solid #a7f3d0; border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom:16px;">
@@ -1609,24 +1658,20 @@
           </div>
         </div>
 
-        <div style="background:#f8fafc; border:1px solid var(--border); border-radius: var(--radius-sm); padding:10px 13px; margin-bottom:14px; font-size: var(--fs-xs); color:var(--text-muted); line-height:1.6;">
-          <strong style="color:var(--text);">Tag tersedia:</strong>
-          <span id="waTagSenarai"></span>
+        <div style="background:#f8fafc; border:1px solid var(--border); border-radius: var(--radius-sm); padding:9px 12px; margin-bottom:14px; font-size: var(--fs-xs); color:var(--text-muted); line-height:1.5;">
+          Tag: <span id="waTagSenarai"></span>
         </div>
 
         <label class="jemaah-toggle" for="waNaikPeringkat" style="margin-bottom:16px;">
           <input type="checkbox" id="waNaikPeringkat" checked>
           <span>
             <span class="jemaah-toggle-text">Naikkan peringkat ke "Dihubungi"</span>
-            <span class="jemaah-toggle-sub">Automatik jika lead masih berperingkat "Baru"</span>
+            <span class="jemaah-toggle-sub">Jika lead masih berperingkat "Baru"</span>
           </span>
         </label>
 
-        <div style="background:#fffbeb; border:1px solid #fde68a; border-radius: var(--radius-sm); padding:10px 13px; margin-bottom:16px; font-size: var(--fs-xs); color:#b45309; line-height:1.6;">
-          <strong>Nota:</strong> Sistem ini membuka WhatsApp dengan mesej siap. Anda perlu tekan <strong>Hantar</strong> dalam WhatsApp sendiri. Ini untuk elak nombor anda disekat kerana menghantar pukal.
-        </div>
-
-        <div style="display:flex; gap:8px; justify-content:flex-end;">
+        <div style="display:flex; gap:8px; justify-content:flex-end; align-items:center;">
+          <span style="font-size:var(--fs-xs); color:var(--text-muted); margin-right:auto;">Tekan Hantar dalam WhatsApp selepas ini.</span>
           <button type="button" class="btn btn-secondary" onclick="closeModal('waModal')">Batal</button>
           <button type="button" class="btn btn-whatsapp" id="btnWaHantar" onclick="hantarWa()">Buka WhatsApp</button>
         </div>
@@ -1639,12 +1684,12 @@
     <div class="modal-dialog" style="max-width:600px;">
       <div class="modal-header">
         <h4 id="waTemplatTitle">Templat WhatsApp</h4>
-        <button type="button" class="btn btn-secondary" style="padding:4px 10px; min-height:28px; font-size: var(--fs-sm);" onclick="closeModal('waTemplatModal')">Tutup</button>
+        <button type="button" class="modal-x" onclick="closeModal('waTemplatModal')" aria-label="Tutup"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
       </div>
       <div class="modal-body">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap:10px; flex-wrap:wrap;">
           <div style="font-size: var(--fs-sm); color:var(--text-muted);">Klik templat untuk edit. Tag seperti <code>{nama}</code> akan diganti automatik.</div>
-          <button type="button" class="btn btn-primary" style="padding:6px 13px; min-height:34px; font-size: var(--fs-sm);" onclick="bukaTambahTemplat()">+ Templat Baru</button>
+          <button type="button" class="btn btn-primary btn-sm" onclick="bukaTambahTemplat()">+ Templat Baru</button>
         </div>
         <div id="waTemplatSenarai"></div>
       </div>
@@ -1656,7 +1701,7 @@
     <div class="modal-dialog" style="max-width:520px;">
       <div class="modal-header">
         <h4 id="waTemplatEditTitle">Templat</h4>
-        <button type="button" class="btn btn-secondary" style="padding:4px 10px; min-height:28px; font-size: var(--fs-sm);" onclick="closeModal('waTemplatEditModal')">Tutup</button>
+        <button type="button" class="modal-x" onclick="closeModal('waTemplatEditModal')" aria-label="Tutup"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
       </div>
       <div class="modal-body">
         <input type="hidden" id="tmplId">
@@ -1704,12 +1749,12 @@
     <div class="modal-dialog" style="max-width:600px;">
       <div class="modal-header">
         <h4 id="pakejTitle">Senarai Pakej</h4>
-        <button type="button" class="btn btn-secondary" style="padding:4px 10px; min-height:28px; font-size: var(--fs-sm);" onclick="closeModal('pakejModal')">Tutup</button>
+        <button type="button" class="modal-x" onclick="closeModal('pakejModal')" aria-label="Tutup"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
       </div>
       <div class="modal-body">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap:10px; flex-wrap:wrap;">
           <div style="font-size: var(--fs-sm); color:var(--text-muted);">Pakej ini muncul dalam dropdown semasa tambah lead.</div>
-          <button type="button" class="btn btn-primary" style="padding:6px 13px; min-height:34px; font-size: var(--fs-sm);" onclick="bukaTambahPakej()">+ Pakej Baru</button>
+          <button type="button" class="btn btn-primary btn-sm" onclick="bukaTambahPakej()">+ Pakej Baru</button>
         </div>
         <div id="pakejSenarai"></div>
       </div>
@@ -1721,7 +1766,7 @@
     <div class="modal-dialog" style="max-width:480px;">
       <div class="modal-header">
         <h4 id="pakejEditTitle">Pakej</h4>
-        <button type="button" class="btn btn-secondary" style="padding:4px 10px; min-height:28px; font-size: var(--fs-sm);" onclick="closeModal('pakejEditModal')">Tutup</button>
+        <button type="button" class="modal-x" onclick="closeModal('pakejEditModal')" aria-label="Tutup"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
       </div>
       <div class="modal-body">
         <input type="hidden" id="pkgId">
@@ -1770,7 +1815,7 @@
     <div class="modal-dialog" style="max-width:420px;">
       <div class="modal-header">
         <h4 id="tukarJemaahTitle">Daftar Sebagai Jemaah</h4>
-        <button type="button" class="btn btn-secondary" style="padding:4px 10px; min-height:28px; font-size: var(--fs-sm);" onclick="closeModal('tukarJemaahModal')">Tutup</button>
+        <button type="button" class="modal-x" onclick="closeModal('tukarJemaahModal')" aria-label="Tutup"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
       </div>
       <div class="modal-body">
         <p style="font-size: var(--fs-base); color:var(--text-muted); line-height:1.6; margin-bottom:16px;">
@@ -1819,7 +1864,7 @@
     <div class="scanner-dialog">
       <div class="modal-header">
         <h4 style="font-size: var(--fs-base); font-weight: 700;">Pengimbas Kod Bar / QR</h4>
-        <button type="button" class="btn btn-secondary" style="padding: 4px 10px; min-height: 28px; font-size: var(--fs-sm);" onclick="closeScannerModal()">Tutup</button>
+        <button type="button" class="modal-x" onclick="closeScannerModal()" aria-label="Tutup"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
       </div>
       <div class="scanner-body">
         <div style="display: flex; justify-content: space-between; align-items: center; background: #f1f5f9; padding: 8px 12px; border-radius: 8px; margin-bottom: 10px;">
@@ -1841,7 +1886,7 @@
     <div class="modal-dialog">
       <div class="modal-header">
         <h4 id="txModalTitle">Daftar Transaksi Stok</h4>
-        <button type="button" class="btn btn-secondary" style="padding: 4px 10px; min-height: 28px; font-size: var(--fs-sm);" onclick="closeTxModal()">Tutup</button>
+        <button type="button" class="modal-x" onclick="closeTxModal()" aria-label="Tutup"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
       </div>
       <div class="modal-body">
         <form id="txForm" onsubmit="submitTransaction(event)">
@@ -1863,8 +1908,8 @@
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                 <span style="font-weight: 700; font-size: var(--fs-sm);" id="batchLabel">Senarai Item Keluar</span>
                 <div style="display: flex; gap: 6px;">
-                  <button type="button" class="btn btn-primary" style="padding: 4px 10px; font-size: var(--fs-xs); min-height: 32px;" onclick="openScannerModal()">Imbas Kod</button>
-                  <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: var(--fs-xs); min-height: 32px;" onclick="addBatchRow()">+ Tambah Item</button>
+                  <button type="button" class="btn btn-primary btn-sm" onclick="openScannerModal()">Imbas Kod</button>
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="addBatchRow()">+ Tambah Item</button>
                 </div>
               </div>
               <div id="batchContainer"></div>
@@ -1887,7 +1932,7 @@
     <div class="modal-dialog">
       <div class="modal-header">
         <h4 id="itemFormTitle">Maklumat Item</h4>
-        <button type="button" class="btn btn-secondary" style="padding: 4px 10px; min-height: 28px; font-size: var(--fs-sm);" onclick="closeItemModal()">Tutup</button>
+        <button type="button" class="modal-x" onclick="closeItemModal()" aria-label="Tutup"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
       </div>
       <div class="modal-body">
         <form id="itemForm" onsubmit="submitItem(event)">
@@ -1920,7 +1965,7 @@
     <div class="modal-dialog">
       <div class="modal-header">
         <h4>Perincian Rekod Transaksi</h4>
-        <button type="button" class="btn btn-secondary" style="padding: 4px 10px; min-height: 28px; font-size: var(--fs-sm);" onclick="closeLogDetailModal()">Tutup</button>
+        <button type="button" class="modal-x" onclick="closeLogDetailModal()" aria-label="Tutup"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
       </div>
       <div class="modal-body">
         <div class="detail-item-group">
@@ -1943,7 +1988,7 @@
     <div class="modal-dialog">
       <div class="modal-header">
         <h4 id="modalJemaahTitle">Perincian Jemaah</h4>
-        <button type="button" class="btn btn-secondary" style="padding: 4px 10px; min-height: 28px; font-size: var(--fs-sm);" onclick="closeJemaahDetailModal()">Tutup</button>
+        <button type="button" class="modal-x" onclick="closeJemaahDetailModal()" aria-label="Tutup"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
       </div>
       <div class="modal-body" id="modalJemaahBody"></div>
     </div>
@@ -1954,7 +1999,7 @@
     <div class="modal-dialog" style="max-width: 420px;">
       <div class="modal-header">
         <h4 id="confirmModalTitle">Pengesahan</h4>
-        <button type="button" class="btn btn-secondary" style="padding: 4px 10px; min-height: 28px; font-size: var(--fs-sm);" onclick="resolveConfirm(false)">Tutup</button>
+        <button type="button" class="btn btn-secondary btn-xs" onclick="resolveConfirm(false)">Tutup</button>
       </div>
       <div class="modal-body">
         <p id="confirmModalMessage" style="font-size: var(--fs-base); color: var(--text); line-height: 1.55; white-space: pre-wrap;"></p>
@@ -2131,16 +2176,6 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1 1l22 22"></path><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path><path d="M10.71 5.05A16 16 0 0 1 22.58 9"></path><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
           <span>Mod Luar Talian — memaparkan data cache. Perubahan tidak akan disimpan sehingga sambungan pulih.</span>
         </div>
-        <div class="panel" style="margin-bottom: 16px;">
-          <div class="panel-body" style="padding: 10px 14px;">
-            <div class="filter-pills-bar">
-              <button type="button" id="subTabDashSummary" class="pill-btn active" onclick="switchStokSubTab('summary')">Ringkasan</button>
-              <button type="button" id="subTabDashLogs" class="pill-btn" onclick="switchStokSubTab('logs')">Log Transaksi</button>
-              <button type="button" id="subTabDashItems" class="pill-btn" onclick="switchStokSubTab('items')">Inventori</button>
-            </div>
-          </div>
-        </div>
-
         <div id="subSectionDashboard">
           <div class="metrics-grid" id="metricsCards"></div>
           <div class="panel">
@@ -2191,11 +2226,11 @@
               <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                 <label for="tableSearch" class="sr-only">Cari item</label>
                 <input type="text" id="tableSearch" placeholder="Cari item..." style="width: 140px; min-height: 36px; padding: 4px 10px; font-size: var(--fs-sm);" oninput="filterItemsTable()">
-                <button type="button" id="btnStockQR" class="btn btn-secondary" style="padding: 6px 12px; font-size: var(--fs-sm); min-height: 36px;" onclick="generateQRPdf1Page()" title="Cetak Senarai Kod QR Produk">
+                <button type="button" id="btnStockQR" class="btn btn-secondary btn-sm" onclick="generateQRPdf1Page()" title="Cetak Senarai Kod QR Produk">
                   <svg viewBox="0 0 24 24" style="width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2.2;"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><path d="M14 14h3v3h-3z"></path></svg>
                   <span>Cetak QR</span>
                 </button>
-                <button class="btn btn-primary" style="padding: 6px 14px; font-size: var(--fs-sm); min-height: 36px;" onclick="openItemModal()">+ Item Baharu</button>
+                <button class="btn btn-primary btn-sm" onclick="openItemModal()">+ Item Baharu</button>
               </div>
             </div>
             <div class="panel-body">
@@ -2214,15 +2249,6 @@
 
       <!-- SEKSYEN 2: KURSUS UMRAH -->
       <section id="tab-umrahForm" class="hidden">
-        <div class="panel" style="margin-bottom: 16px;">
-          <div class="panel-body" style="padding: 10px 14px;">
-            <div class="filter-pills-bar">
-              <button type="button" id="pillUmrahGen" class="pill-btn active" onclick="switchUmrahSubTab('generate')">Cipta Borang</button>
-              <button type="button" id="pillUmrahArchive" class="pill-btn" onclick="switchUmrahSubTab('archive')">Arkib Borang Pendaftaran</button>
-            </div>
-          </div>
-        </div>
-
         <div id="subTabUmrahGenerate" class="umrah-container">
           <div class="umrah-card" style="max-width: 800px; margin: 0 auto; width: 100%;">
             <div class="umrah-header">
@@ -2253,7 +2279,7 @@
                     <button type="button" class="btn-remove-poster" onclick="removePosterFile()">Padam</button>
                   </div>
                 </div>
-                <button type="submit" id="btnGenForm" class="btn btn-primary" style="width: 100%; min-height: 44px; margin-top: 8px;">Jana Borang Pendaftaran</button>
+                <button type="submit" id="btnGenForm" class="btn btn-primary" style="width: 100%; margin-top: 8px;">Jana Borang Pendaftaran</button>
               </div>
             </form>
 
@@ -2265,19 +2291,19 @@
                   <label style="font-size: var(--fs-xs); color: #065f46;">Pautan Awam (Peserta):</label>
                   <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                     <input type="text" id="resLiveUrl" readonly style="background: #ffffff; font-size: var(--fs-sm); color: #047857; font-weight: 700; flex: 1; min-width: 200px;">
-                    <button type="button" class="btn btn-secondary" style="min-height: 42px;" onclick="copyResultLink('resLiveUrl')">Salin</button>
-                    <button type="button" class="btn btn-whatsapp" style="min-height: 42px;" onclick="shareDirectWhatsAppResult()">
+                    <button type="button" class="btn btn-secondary" onclick="copyResultLink('resLiveUrl')">Salin</button>
+                    <button type="button" class="btn btn-whatsapp" onclick="shareDirectWhatsAppResult()">
                       <span>Kongsi WhatsApp</span>
                     </button>
-                    <a id="linkLiveBtn" href="#" target="_blank" class="btn btn-primary" style="text-decoration: none; min-height: 42px;">Buka</a>
+                    <a id="linkLiveBtn" href="#" target="_blank" class="btn btn-primary">Buka</a>
                   </div>
                 </div>
                 <div>
                   <label style="font-size: var(--fs-xs); color: #065f46;">Pautan Pentadbir (Editor):</label>
                   <div style="display: flex; gap: 8px;">
                     <input type="text" id="resEditUrl" readonly style="background: #ffffff; font-size: var(--fs-sm);">
-                    <button type="button" class="btn btn-secondary" style="min-height: 42px;" onclick="copyResultLink('resEditUrl')">Salin</button>
-                    <a id="linkEditBtn" href="#" target="_blank" class="btn btn-secondary" style="text-decoration: none; min-height: 42px;">Buka</a>
+                    <button type="button" class="btn btn-secondary" onclick="copyResultLink('resEditUrl')">Salin</button>
+                    <a id="linkEditBtn" href="#" target="_blank" class="btn btn-secondary">Buka</a>
                   </div>
                 </div>
               </div>
@@ -2299,16 +2325,6 @@
 
       <!-- SEKSYEN 3: PENGURUSAN JEMAAH -->
       <section id="tab-jemaahList" class="hidden">
-        <div class="panel" style="margin-bottom: 16px;">
-          <div class="panel-body" style="padding: 10px 14px;">
-            <div class="filter-pills-bar">
-              <button type="button" id="pillJemaahList" class="pill-btn active" onclick="switchJemaahSubTab('list')">Ringkasan</button>
-              <button type="button" id="pillJemaahAdd" class="pill-btn" onclick="switchJemaahSubTab('add')">Daftar Jemaah</button>
-              <button type="button" id="pillJemaahEdit" class="pill-btn" onclick="switchJemaahSubTab('edit')">Semakan</button>
-            </div>
-          </div>
-        </div>
-
         <div id="subSectionJemaahList">
           <div class="metrics-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 18px;">
             <div class="metric-card"><div class="metric-title">Jumlah Jemaah</div><div id="statJumlahJemaah" class="metric-val">0</div><div class="metric-sub">Pendaftaran Keseluruhan</div></div>
@@ -2473,7 +2489,7 @@
                   </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary" style="width: 100%; min-height: 44px; margin-top: 10px;">Hantar Pendaftaran Jemaah</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Hantar Pendaftaran Jemaah</button>
               </div>
             </form>
           </div>
@@ -2597,7 +2613,7 @@
                   </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary" style="width: 100%; min-height: 44px; margin-top: 8px;">Simpan Perubahan</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 8px;">Simpan Perubahan</button>
               </div>
             </form>
 
@@ -2621,9 +2637,9 @@
               <h3>Senarai Lead</h3>
               <div style="display:flex; gap:8px; flex-wrap:wrap;">
                 <button type="button" class="btn btn-secondary hidden" id="btnUrusPakej" style="padding:6px 13px; min-height:34px; font-size: var(--fs-sm);" onclick="bukaPakejModal()">Pakej</button>
-                <button type="button" class="btn btn-secondary" style="padding:6px 13px; min-height:34px; font-size: var(--fs-sm);" onclick="bukaTemplatWa()">Templat Mesej</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="bukaTemplatWa()">Templat Mesej</button>
                 <button type="button" class="btn btn-secondary hidden" id="btnImportPukal" style="padding:6px 13px; min-height:34px; font-size: var(--fs-sm);" onclick="bukaImportLeads()">Import Pukal</button>
-                <button type="button" class="btn btn-primary" style="padding:6px 13px; min-height:34px; font-size: var(--fs-sm);" onclick="bukaTambahLead()">+ Lead Baru</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="bukaTambahLead()">+ Lead Baru</button>
               </div>
             </div>
             <div class="panel-body">
@@ -2707,7 +2723,7 @@
                     <strong id="impFailNama" style="color:var(--primary); word-break:break-all;"></strong>
                     <div id="impFailStat" style="font-size: var(--fs-xs); color:var(--text-muted); margin-top:2px;"></div>
                   </div>
-                  <button type="button" class="btn btn-secondary" style="padding:5px 12px; min-height:32px; font-size: var(--fs-xs);" onclick="buangImportFail()">Buang</button>
+                  <button type="button" class="btn btn-secondary btn-sm" onclick="buangImportFail()">Buang</button>
                 </div>
               </div>
 
@@ -3117,11 +3133,6 @@
       const isSum = (sub === 'summary');
       const isLog = (sub === 'logs');
       const isItem = (sub === 'items');
-
-      document.getElementById('subTabDashSummary').classList.toggle('active', isSum);
-      document.getElementById('subTabDashLogs').classList.toggle('active', isLog);
-      document.getElementById('subTabDashItems').classList.toggle('active', isItem);
-
       document.getElementById('subBtnDashboard').classList.toggle('active', isSum);
       document.getElementById('subBtnTransactions').classList.toggle('active', isLog);
       document.getElementById('subBtnItems').classList.toggle('active', isItem);
@@ -3142,9 +3153,6 @@
 
     function switchUmrahSubTab(subTab) {
       const isGen = (subTab === 'generate');
-      document.getElementById('pillUmrahGen').classList.toggle('active', isGen);
-      document.getElementById('pillUmrahArchive').classList.toggle('active', !isGen);
-
       document.getElementById('subBtnUmrahGen').classList.toggle('active', isGen);
       document.getElementById('subBtnUmrahArchive').classList.toggle('active', !isGen);
 
@@ -3157,11 +3165,6 @@
       const isList = (sub === 'list');
       const isAdd = (sub === 'add');
       const isEdit = (sub === 'edit');
-
-      document.getElementById('pillJemaahList').classList.toggle('active', isList);
-      document.getElementById('pillJemaahAdd').classList.toggle('active', isAdd);
-      document.getElementById('pillJemaahEdit').classList.toggle('active', isEdit);
-
       document.getElementById('subBtnJemaahList').classList.toggle('active', isList);
       document.getElementById('subBtnJemaahAdd').classList.toggle('active', isAdd);
       document.getElementById('subBtnJemaahEdit').classList.toggle('active', isEdit);
@@ -3666,7 +3669,7 @@
       if (info) {
         info.innerHTML = '<svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>' +
           '<span>Mencari "<strong>' + esc(q) + '</strong>" — ' + hasil.length + ' daripada ' + semua.length + ' item.</span>' +
-          '<button type="button" class="btn btn-secondary" style="padding:3px 10px; min-height:26px; font-size:var(--fs-xs); margin-left:auto;" onclick="setSemulaCarianItem()">Set semula</button>';
+          '<button type="button" class="btn btn-secondary btn-xs" onclick="setSemulaCarianItem()">Set semula</button>';
         info.classList.remove('hidden');
       }
     }
@@ -4313,7 +4316,7 @@
           if (puTxt) bahagian.push('PU: <strong>' + esc(document.getElementById('tapisPUSelect').value) + '</strong>');
           info.innerHTML = '<svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>' +
             '<span>Menapis ' + bahagian.join(' · ') + ' — ' + hasil.length + ' daripada ' + semua.length + ' jemaah.</span>' +
-            '<button type="button" class="btn btn-secondary" style="padding:3px 10px; min-height:26px; font-size:var(--fs-xs); margin-left:auto;" onclick="setSemulaTapisanJemaah()">Set semula</button>';
+            '<button type="button" class="btn btn-secondary btn-xs" onclick="setSemulaTapisanJemaah()">Set semula</button>';
           info.classList.remove('hidden');
         } else {
           info.classList.add('hidden');
@@ -4726,8 +4729,8 @@ Jom pakat mari ramai-ramai!
             <div class="form-item-actions">
               <button type="button" class="btn btn-secondary" data-copy-url="${esc(f.liveUrl || '')}" style="padding: 4px 10px; font-size: var(--fs-xs); min-height: 32px;">Salin Pautan</button>
               <button type="button" class="btn btn-whatsapp" data-share-index="${idx}" style="padding: 4px 12px; font-size: var(--fs-xs); min-height: 32px;">Kongsi WhatsApp</button>
-              ${liveUrl ? `<a href="${liveUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="padding: 4px 14px; font-size: var(--fs-xs); min-height: 32px; text-decoration: none;">Pautan Awam</a>` : ''}
-              ${editUrl ? `<a href="${editUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="padding: 4px 14px; font-size: var(--fs-xs); min-height: 32px; text-decoration: none;">Editor</a>` : ''}
+              ${liveUrl ? `<a href="${liveUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-sm">Pautan Awam</a>` : ''}
+              ${editUrl ? `<a href="${editUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm">Editor</a>` : ''}
             </div>
           </div>
         `;
@@ -5043,7 +5046,7 @@ Jom pakat mari ramai-ramai!
           if (appState.leadTapisan.cari) bahagian.push('Carian: "<strong>' + esc(appState.leadTapisan.cari) + '</strong>"');
           infoEl.innerHTML = '<svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>' +
             '<span>Menapis ' + bahagian.join(' · ') + ' — ' + senarai.length + ' daripada ' + (rs.jumlah || 0) + ' lead.</span>' +
-            '<button type="button" class="btn btn-secondary" style="padding:3px 10px; min-height:26px; font-size:var(--fs-xs); margin-left:auto;" onclick="kosongkanTapisanLead()">Set semula</button>';
+            '<button type="button" class="btn btn-secondary btn-xs" onclick="kosongkanTapisanLead()">Set semula</button>';
           infoEl.classList.remove('hidden');
         } else {
           infoEl.classList.add('hidden');
