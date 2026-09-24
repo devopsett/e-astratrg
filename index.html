@@ -4897,7 +4897,7 @@ Jom pakat mari ramai-ramai!
 
       const sel = document.getElementById('impPIC');
       if (sel.options.length <= 1) {
-        const senarai = (appState.data && appState.data.lists && appState.data.lists.pic) || ['Pengurus', 'PU', 'Media'];
+        const senarai = (appState.data && appState.data.lists && appState.data.lists.pic) || ['Admin', 'Fikriyah', 'Fatin'];
         sel.innerHTML = '<option value="">— Tiada —</option>' +
           senarai.map(x => '<option value="' + esc(x) + '">' + esc(x) + '</option>').join('');
       }
