@@ -2189,6 +2189,7 @@
             <div class="panel-header">
               <h3>Pangkalan Data Item</h3>
               <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                <label for="tableSearch" class="sr-only">Cari item</label>
                 <input type="text" id="tableSearch" placeholder="Cari item..." style="width: 140px; min-height: 36px; padding: 4px 10px; font-size: var(--fs-sm);" oninput="filterItemsTable()">
                 <button type="button" id="btnStockQR" class="btn btn-secondary" style="padding: 6px 12px; font-size: var(--fs-sm); min-height: 36px;" onclick="generateQRPdf1Page()" title="Cetak Senarai Kod QR Produk">
                   <svg viewBox="0 0 24 24" style="width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2.2;"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><path d="M14 14h3v3h-3z"></path></svg>
@@ -2198,6 +2199,7 @@
               </div>
             </div>
             <div class="panel-body">
+              <div id="itemsTapisanInfo" class="tapisan-info hidden" role="status"></div>
               <div class="table-container desktop-table">
                 <table>
                   <thead><tr><th>Kod SKU</th><th>Nama Item</th><th>Kategori</th><th style="text-align: right;">Baki Semasa</th><th style="text-align: right;">Paras Min</th><th>Status</th><th>Lokasi</th><th style="text-align: center;">Tindakan</th></tr></thead>
@@ -2318,7 +2320,9 @@
             <div class="panel-header">
               <h3>Pangkalan Data &amp; Status Jemaah</h3>
               <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                <label for="cariJemaahInput" class="sr-only">Cari nama atau No. K/P jemaah</label>
                 <input type="text" id="cariJemaahInput" placeholder="Cari Nama / No. K/P..." style="width: 170px; min-height: 34px; padding: 4px 10px; font-size: var(--fs-sm);" oninput="tapisJadualJemaah()">
+                <label for="tapisPUSelect" class="sr-only">Tapis ikut PU</label>
                 <select id="tapisPUSelect" style="width: 130px; min-height: 34px; padding: 4px 8px; font-size: var(--fs-sm);" onchange="tapisJadualJemaah()">
                   <option value="">Semua PU</option>
                   <option value="Fatin">Fatin</option>
@@ -2327,6 +2331,7 @@
               </div>
             </div>
             <div class="panel-body">
+              <div id="jemaahTapisanInfo" class="tapisan-info hidden" role="status"></div>
               <div class="table-container desktop-table">
                 <table>
                   <thead>
@@ -2639,7 +2644,7 @@
                 </div>
               </div>
 
-              <div class="table-container">
+              <div class="table-container desktop-table">
                 <table>
                   <thead>
                     <tr>
@@ -2656,7 +2661,7 @@
                 </table>
               </div>
 
-              <div id="leadMobileCards" style="display:none; flex-direction:column; gap:10px;"></div>
+              <div class="mobile-cards" id="leadMobileCards"></div>
 
               <div id="leadKosong" class="hidden empty-state">
                 <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
@@ -3116,6 +3121,15 @@
       document.getElementById('subSectionDashboard').classList.toggle('hidden', !isSum);
       document.getElementById('subSectionTransactions').classList.toggle('hidden', !isLog);
       document.getElementById('subSectionItems').classList.toggle('hidden', !isItem);
+
+      // Render senarai item bila sub-tab dibuka — sama corak seperti
+      // tab lain yang render senarai bila dibuka.
+      if (isItem) {
+        // Kekalkan carian semasa kalau ada.
+        const q = String((document.getElementById('tableSearch') || {}).value || '').trim();
+        if (q) filterItemsTable();
+        else renderItems();
+      }
     }
 
     function switchUmrahSubTab(subTab) {
@@ -3576,14 +3590,23 @@
     }
 
     function renderItems() {
-      const items = appState.data?.items || [];
+      renderItemsSenarai(appState.data?.items || []);
+    }
+
+    /** Render senarai item (boleh terapis). */
+    function renderItemsSenarai(items) {
       const tbody = document.getElementById('itemsTbody');
       const mCards = document.getElementById('itemsMobileCards');
+      if (!tbody || !mCards) return;
+
       if (!items.length) {
-        tbody.innerHTML = `<tr><td colspan="8" class="td-kosong">Tiada item.</td></tr>`;
-        mCards.innerHTML = `<div style="text-align:center; padding:16px; color:#64748b; font-size: var(--fs-sm);">Tiada item.</div>`;
+        const adaCarian = !!String((document.getElementById('tableSearch') || {}).value || '').trim();
+        const mesej = adaCarian ? 'Tiada item sepadan dengan carian.' : 'Belum ada item.';
+        tbody.innerHTML = '<tr><td colspan="8" class="td-kosong">' + esc(mesej) + '</td></tr>';
+        mCards.innerHTML = '<div class="td-kosong">' + esc(mesej) + '</div>';
         return;
       }
+
       tbody.innerHTML = items.map(i => {
         const id = i.sku || i.itemId;
         return `
@@ -3606,10 +3629,45 @@
       }).join('');
     }
 
+    /**
+     * Tapis senarai item. Tapis pada DATA (bukan DOM) supaya konsisten
+     * dengan cara Leads berfungsi, dan supaya kiraan boleh dipercayai.
+     */
     function filterItemsTable() {
-      const q = document.getElementById('tableSearch').value.toLowerCase();
-      document.querySelectorAll('#itemsTbody tr').forEach(tr => tr.style.display = tr.textContent.toLowerCase().includes(q) ? '' : 'none');
-      document.querySelectorAll('#itemsMobileCards .card-row').forEach(c => c.style.display = c.textContent.toLowerCase().includes(q) ? '' : 'none');
+      const q = String(document.getElementById('tableSearch').value || '').trim();
+
+      if (!q) {
+        renderItems();
+        const info = document.getElementById('itemsTapisanInfo');
+        if (info) info.classList.add('hidden');
+        return;
+      }
+
+      const semua = appState.data.items || [];
+      const ql = q.toLowerCase();
+      const hasil = semua.filter(i =>
+        (String(i.item || '') + ' ' + String(i.sku || i.itemId || '') + ' ' +
+         String(i.category || '') + ' ' + String(i.location || ''))
+          .toLowerCase().indexOf(ql) !== -1
+      );
+
+      renderItemsSenarai(hasil);
+
+      // Penunjuk X daripada Y — sama corak seperti Leads.
+      const info = document.getElementById('itemsTapisanInfo');
+      if (info) {
+        info.innerHTML = '<svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>' +
+          '<span>Mencari "<strong>' + esc(q) + '</strong>" — ' + hasil.length + ' daripada ' + semua.length + ' item.</span>' +
+          '<button type="button" class="btn btn-secondary" style="padding:3px 10px; min-height:26px; font-size:var(--fs-xs); margin-left:auto;" onclick="setSemulaCarianItem()">Set semula</button>';
+        info.classList.remove('hidden');
+      }
+    }
+
+    /** Kosongkan carian item. */
+    function setSemulaCarianItem() {
+      const el = document.getElementById('tableSearch');
+      if (el) el.value = '';
+      filterItemsTable();
     }
 
     function submitTransaction(e) {
@@ -4039,7 +4097,19 @@
     function loadDataJemaah(forceRefresh = false) {
       const tbody = document.getElementById('tbodyJemaah');
       const mCards = document.getElementById('mobileCardsJemaah');
-      
+
+      // Guna cache kalau data masih segar — elak panggilan berlebihan.
+      // Sama corak seperti loadLeads().
+      const bolehGunaCache = !forceRefresh
+        && cacheSah('jemaah', TTL_JEMAAH)
+        && appState.senaraiJemaah && appState.senaraiJemaah.length;
+
+      if (bolehGunaCache) {
+        renderJemaahTable(appState.senaraiJemaah);
+        return;
+      }
+
+      // Skeleton hanya kalau belum ada data langsung.
       if ((forceRefresh || !appState.senaraiJemaah.length) && tbody) {
         tbody.innerHTML = Array(4).fill(0).map(() => `
           <tr>
@@ -4055,6 +4125,7 @@
       .then(res => {
         if (!res.ok && res.message) throw new Error(res.message);
         appState.senaraiJemaah = Array.isArray(res.data) ? res.data : [];
+        tandaCache('jemaah');
         try { localStorage.setItem('eastra_cached_jemaah', JSON.stringify(appState.senaraiJemaah)); } catch(e){}
         renderJemaahTable(appState.senaraiJemaah);
         if (forceRefresh) showToast('Data jemaah disegerakkan.');
@@ -4062,8 +4133,8 @@
       .catch(err => {
         console.error("Gagal muat data jemaah:", err);
         if (!appState.senaraiJemaah || !appState.senaraiJemaah.length) {
-          tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#ef4444; padding:30px;">Gagal memuat turun rekod jemaah.</td></tr>`;
-          mCards.innerHTML = `<div style="text-align:center; color:#ef4444; padding:20px; font-size: var(--fs-sm);">Gagal memuat turun rekod jemaah.</div>`;
+          tbody.innerHTML = `<tr><td colspan="4" class="td-kosong" style="color:#ef4444;">Gagal memuat turun rekod jemaah.</td></tr>`;
+          mCards.innerHTML = `<div class="td-kosong" style="color:#ef4444;">Gagal memuat turun rekod jemaah.</div>`;
         }
       });
     }
@@ -4094,18 +4165,25 @@
       const tbody = document.getElementById('tbodyJemaah');
       const mCards = document.getElementById('mobileCardsJemaah');
 
+      // Statistik dari senarai KESELURUHAN, bukan senarai terapis —
+      // supaya kad metrik tidak berubah bila pengguna menapis.
+      const semua = appState.senaraiJemaah || [];
       let jumFatin = 0, jumFikriyah = 0;
-      data.forEach(j => {
+      semua.forEach(j => {
         if (j.namaPU === 'Fatin') jumFatin++;
         if (j.namaPU === 'Fikriyah') jumFikriyah++;
       });
-      document.getElementById('statJumlahJemaah').textContent = data.length;
+      document.getElementById('statJumlahJemaah').textContent = semua.length;
       document.getElementById('statFatin').textContent = jumFatin;
       document.getElementById('statFikriyah').textContent = jumFikriyah;
 
       if (!data.length) {
-        tbody.innerHTML = `<tr><td colspan="4" class="td-kosong">Tiada rekod jemaah dijumpai.</td></tr>`;
-        mCards.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:20px; font-size: var(--fs-sm);">Tiada rekod jemaah dijumpai.</div>`;
+        // Mesej berbeza: ada tapisan vs tiada data langsung.
+        const adaTapisan = !!(String((document.getElementById('cariJemaahInput') || {}).value || '').trim() ||
+                              String((document.getElementById('tapisPUSelect') || {}).value || '').trim());
+        const mesej = adaTapisan ? 'Tiada jemaah sepadan dengan tapisan.' : 'Belum ada rekod jemaah.';
+        tbody.innerHTML = '<tr><td colspan="4" class="td-kosong">' + esc(mesej) + '</td></tr>';
+        mCards.innerHTML = '<div class="td-kosong">' + esc(mesej) + '</div>';
         return;
       }
 
@@ -4199,16 +4277,49 @@
     }
 
     function tapisJadualJemaah() {
-      const cariTxt = document.getElementById('cariJemaahInput').value.toLowerCase();
-      const puTxt = document.getElementById('tapisPUSelect').value.toLowerCase();
-      const rows = document.querySelectorAll('#tbodyJemaah tr.baris-jemaah');
+      const cariTxt = String(document.getElementById('cariJemaahInput').value || '').trim().toLowerCase();
+      const puTxt = String(document.getElementById('tapisPUSelect').value || '').trim().toLowerCase();
+      const semua = appState.senaraiJemaah || [];
 
-      rows.forEach(row => {
-        const text = row.innerText.toLowerCase();
-        const matchCari = text.includes(cariTxt);
-        const matchPU = (puTxt === '') || text.includes('pu: ' + puTxt);
-        row.style.display = (matchCari && matchPU) ? '' : 'none';
-      });
+      const adaTapisan = !!(cariTxt || puTxt);
+
+      let hasil = semua;
+      if (cariTxt) {
+        hasil = hasil.filter(j =>
+          (String(j.nama || '') + ' ' + String(j.nokp || '') + ' ' + String(j.telefon || '') + ' ' + String(j.namaPU || ''))
+            .toLowerCase().indexOf(cariTxt) !== -1
+        );
+      }
+      if (puTxt) {
+        hasil = hasil.filter(j => String(j.namaPU || '').toLowerCase() === puTxt);
+      }
+
+      renderJemaahTable(hasil);
+
+      // Penunjuk X daripada Y — sama corak seperti Leads.
+      const info = document.getElementById('jemaahTapisanInfo');
+      if (info) {
+        if (adaTapisan) {
+          const bahagian = [];
+          if (cariTxt) bahagian.push('Carian: "<strong>' + esc(cariTxt) + '</strong>"');
+          if (puTxt) bahagian.push('PU: <strong>' + esc(document.getElementById('tapisPUSelect').value) + '</strong>');
+          info.innerHTML = '<svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>' +
+            '<span>Menapis ' + bahagian.join(' · ') + ' — ' + hasil.length + ' daripada ' + semua.length + ' jemaah.</span>' +
+            '<button type="button" class="btn btn-secondary" style="padding:3px 10px; min-height:26px; font-size:var(--fs-xs); margin-left:auto;" onclick="setSemulaTapisanJemaah()">Set semula</button>';
+          info.classList.remove('hidden');
+        } else {
+          info.classList.add('hidden');
+        }
+      }
+    }
+
+    /** Set semula carian dan tapisan jemaah. */
+    function setSemulaTapisanJemaah() {
+      const c = document.getElementById('cariJemaahInput');
+      const p = document.getElementById('tapisPUSelect');
+      if (c) c.value = '';
+      if (p) p.value = '';
+      tapisJadualJemaah();
     }
 
     function cariJemaahRecord() {
@@ -4758,8 +4869,9 @@ Jom pakat mari ramai-ramai!
     const TTL_LEADS = 60000;      // 1 minit
     const TTL_PAKEJ = 600000;     // 10 minit (jarang berubah)
     const TTL_TEMPLAT = 600000;   // 10 minit
+    const TTL_JEMAAH = 60000;     // 1 minit (sama seperti leads)
 
-    appState.cache = { leads: 0, pakej: 0, templat: 0 };
+    appState.cache = { leads: 0, pakej: 0, templat: 0, jemaah: 0 };
 
     function cacheSah(kunci, ttl) {
       return (Date.now() - (appState.cache[kunci] || 0)) < ttl;
@@ -4771,7 +4883,7 @@ Jom pakat mari ramai-ramai!
 
     function kosongkanCache(kunci) {
       if (kunci) appState.cache[kunci] = 0;
-      else appState.cache = { leads: 0, pakej: 0, templat: 0 };
+      else appState.cache = { leads: 0, pakej: 0, templat: 0, jemaah: 0 };
     }
 
     async function loadLeads(paksa) {
@@ -4784,6 +4896,10 @@ Jom pakat mari ramai-ramai!
         terapkanTapisanLead();
         return;
       }
+
+      // Tunjuk skeleton hanya kalau belum ada data langsung.
+      const adaData = appState.leadsSemua && appState.leadsSemua.length;
+      if (!adaData) renderSkeletonLeads();
 
       try {
         // Hanya tapisan PIC dihantar ke pelayan (kawalan akses).
@@ -4798,7 +4914,57 @@ Jom pakat mari ramai-ramai!
 
         terapkanTapisanLead();
       } catch (err) {
+        // Buang skeleton supaya keadaan kosong/ralat boleh muncul.
+        const tbody = document.getElementById('leadTbody');
+        const cards = document.getElementById('leadMobileCards');
+        if (tbody) tbody.innerHTML = '';
+        if (cards) cards.innerHTML = '';
         showToast('Gagal memuat leads: ' + err.message, true);
+      }
+    }
+
+    /** Skeleton semasa muat pertama — sama corak seperti Stok & Jemaah. */
+    function renderSkeletonLeads() {
+      const tbody = document.getElementById('leadTbody');
+      if (tbody) {
+        tbody.innerHTML = Array(5).fill(0).map(() =>
+          '<tr>' +
+            '<td><div class="skeleton skeleton-text" style="width:120px;"></div></td>' +
+            '<td><div class="skeleton skeleton-text" style="width:80px;"></div></td>' +
+            '<td><div class="skeleton skeleton-text" style="width:60px;"></div></td>' +
+            '<td><div class="skeleton skeleton-badge"></div></td>' +
+            '<td><div class="skeleton skeleton-text" style="width:90px;"></div></td>' +
+            '<td><div class="skeleton skeleton-text" style="width:70px;"></div></td>' +
+            '<td><div class="skeleton skeleton-text" style="width:50px; margin:0 auto;"></div></td>' +
+          '</tr>'
+        ).join('');
+      }
+
+      const cards = document.getElementById('leadMobileCards');
+      if (cards) {
+        cards.innerHTML = Array(3).fill(0).map(() =>
+          '<div class="lead-kad">' +
+            '<div class="card-row-top">' +
+              '<div style="flex:1;">' +
+                '<div class="skeleton skeleton-text" style="width:60%; margin-bottom:6px;"></div>' +
+                '<div class="skeleton skeleton-text" style="width:80%;"></div>' +
+              '</div>' +
+              '<div class="skeleton skeleton-badge"></div>' +
+            '</div>' +
+          '</div>'
+        ).join('');
+      }
+
+      // Kosongkan metrik supaya tidak tunjuk angka lama.
+      const metrik = document.getElementById('leadMetrik');
+      if (metrik && (!appState.leadRingkasanSemua)) {
+        metrik.innerHTML = Array(4).fill(0).map(() =>
+          '<div class="metric-card">' +
+            '<div class="skeleton" style="height:10px; width:60%; margin-bottom:8px;"></div>' +
+            '<div class="skeleton" style="height:26px; width:45%; margin-bottom:6px;"></div>' +
+            '<div class="skeleton" style="height:10px; width:70%;"></div>' +
+          '</div>'
+        ).join('');
       }
     }
 
