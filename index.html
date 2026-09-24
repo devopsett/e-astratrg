@@ -2825,8 +2825,16 @@
       return { 'Content-Type': 'text/plain;charset=utf-8' };
     }
 
+    /**
+     * Bina badan permintaan POST.
+     * Sertakan token API DAN sesi log masuk — supaya semua panggilan POST
+     * yang menggunakan apiBody() berfungsi tanpa perlu tambah sesi manual.
+     */
     function apiBody(payload) {
       if (API_TOKEN) payload.token = API_TOKEN;
+      // Sesi log masuk hanya jika ada dan belum ditetapkan.
+      if (appState.sesi && payload.sesi === undefined) payload.sesi = appState.sesi;
+      // Untuk logMasuk/logKeluar, sesi tidak perlu dan tidak sepatutnya dihantar.
       return JSON.stringify(payload);
     }
 
