@@ -533,8 +533,7 @@
     }
     .btn-lg svg { width: 17px; height: 17px; }
 
-    /* Butang tutup modal — ikon X di penjuru */
-    .modal-x {
+    /* Butang tutup modal — ikon X di penjuru */    .modal-x {
       width: 32px;
       height: 32px;
       border: none;
@@ -550,6 +549,49 @@
     .modal-x:hover { background: var(--border-light); color: var(--text); }
     .modal-x:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
     .modal-x svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; }
+
+    /* ===== SUB-NAV MOBILE =====
+       Sidebar disembunyikan pada telefon, jadi sub-menu (Ringkasan/Inventori dll)
+       mesti ada tempat lain. Baris ini muncul di atas kandungan. */
+    .mobile-sub-nav {
+      display: none;
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: calc(62px + env(safe-area-inset-bottom, 0px));
+      background: #ffffff;
+      border-top: 1px solid var(--border);
+      padding: 8px 12px;
+      gap: 7px;
+      overflow-x: auto;
+      z-index: var(--z-mobile-nav);
+      box-shadow: 0 -2px 8px rgba(15, 23, 42, 0.05);
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .mobile-sub-nav::-webkit-scrollbar { display: none; }
+
+    .mobile-sub-btn {
+      flex-shrink: 0;
+      padding: 7px 15px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border);
+      background: #ffffff;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: var(--fs-sm);
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .mobile-sub-btn.active {
+      background: linear-gradient(180deg, #12522a 0%, var(--primary) 100%);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 3px 10px -3px rgba(11, 56, 24, 0.45);
+    }
+    .mobile-sub-btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
     .btn-primary {
       background: linear-gradient(180deg, #12522a 0%, var(--primary) 100%);
       color: white;
@@ -1437,14 +1479,15 @@
       
       .sidebar { display: none !important; }
       .mobile-nav { display: grid !important; }
+      .mobile-sub-nav { display: flex !important; }
 
       .btn-icon-refresh { display: none !important; }
       .topbar-actions .btn-icon-refresh { display: none !important; }
 
       main { 
         padding: 14px 16px; 
-        /* Ruang untuk nav mobile (62px) + sedikit jarak */
-        padding-bottom: 88px !important; 
+        /* Ruang untuk nav mobile (62px) + sub-nav (48px) + sedikit jarak */
+        padding-bottom: 132px !important; 
         height: auto !important; 
         overflow: visible !important;
         width: 100vw; 
@@ -2812,6 +2855,9 @@
         <span>Leads</span>
       </button>
     </nav>
+
+    <!-- SUB-TAB MOBILE — muncul pada telefon sahaja (sidebar tiada di mobile) -->
+    <div id="mobileSubNav" class="mobile-sub-nav" role="tablist" aria-label="Sub-menu"></div>
   </div>
 
   <script>
@@ -3149,6 +3195,9 @@
         if (q) filterItemsTable();
         else renderItems();
       }
+
+      // Penunjuk sub-tab untuk mobile.
+      setMobileSubAktif(isSum ? 'dashboard' : (isLog ? 'transactions' : 'items'));
     }
 
     function switchUmrahSubTab(subTab) {
@@ -3159,6 +3208,8 @@
       document.getElementById('subTabUmrahGenerate').classList.toggle('hidden', !isGen);
       document.getElementById('subTabUmrahArchive').classList.toggle('hidden', isGen);
       if (!isGen) fetchUmrahFormsList(false);
+
+      setMobileSubAktif(isGen ? 'generate' : 'archive');
     }
 
     function switchJemaahSubTab(sub) {
@@ -3174,6 +3225,8 @@
       document.getElementById('subSectionJemaahEdit').classList.toggle('hidden', !isEdit);
 
       if (isList) loadDataJemaah(false);
+
+      setMobileSubAktif(isList ? 'jemaahList' : (isAdd ? 'jemaahAdd' : 'jemaahEdit'));
     }
 
     function updateFileLabel(inputEl, labelId) {
@@ -3191,6 +3244,68 @@
         label.textContent = 'Pilih fail dokumen...';
         label.classList.remove('has-file');
       }
+    }
+
+    /**
+     * Sub-nav mobile — gantikan sub-menu sidebar yang tersembunyi pada telefon.
+     * Setiap tab ada senarai sub-tab sendiri.
+     */
+    function renderMobileSubNav() {
+      const el = document.getElementById('mobileSubNav');
+      if (!el) return;
+
+      const tab = appState.activeTab || 'dashboard';
+      const isStockTab = ['dashboard', 'transactions', 'items'].includes(tab);
+      const isJemaahTab = ['jemaahList', 'jemaahAdd', 'jemaahEdit'].includes(tab);
+      const isUmrahTab = (tab === 'umrahForm');
+      const isLeadsTab = (tab === 'leads');
+
+      let items = [];
+
+      if (isStockTab) {
+        items = [
+          { k: 'dashboard', label: 'Ringkasan', fn: "switchTab('dashboard')" },
+          { k: 'transactions', label: 'Log Transaksi', fn: "switchTab('transactions')" },
+          { k: 'items', label: 'Inventori', fn: "switchTab('items')" }
+        ];
+      } else if (isJemaahTab) {
+        items = [
+          { k: 'jemaahList', label: 'Ringkasan', fn: "switchTab('jemaahList')" },
+          { k: 'jemaahAdd', label: 'Daftar Jemaah', fn: "switchTab('jemaahAdd')" },
+          { k: 'jemaahEdit', label: 'Semakan', fn: "switchTab('jemaahEdit')" }
+        ];
+      } else if (isUmrahTab) {
+        items = [
+          { k: 'generate', label: 'Cipta Borang', fn: "switchUmrahSubTab('generate')" },
+          { k: 'archive', label: 'Arkib Borang', fn: "switchUmrahSubTab('archive')" }
+        ];
+      } else if (isLeadsTab) {
+        items = [
+          { k: 'senarai', label: 'Senarai Lead', fn: "switchLeadsSubTab('senarai')" }
+        ];
+        // Import pukal: admin sahaja.
+        if (isAdmin()) {
+          items.push({ k: 'import', label: 'Import Pukal', fn: "switchLeadsSubTab('import')" });
+        }
+      }
+
+      if (!items.length) {
+        el.innerHTML = '';
+        el.classList.add('hidden');
+        return;
+      }
+
+      el.classList.remove('hidden');
+      el.innerHTML = items.map(it =>
+        '<button type="button" class="mobile-sub-btn' + (appState.mobileSubAktif === it.k ? ' active' : '') +
+        '" onclick="' + it.fn + '" role="tab">' + esc(it.label) + '</button>'
+      ).join('');
+    }
+
+    /** Tanda sub-tab aktif untuk penunjuk mobile. */
+    function setMobileSubAktif(kunci) {
+      appState.mobileSubAktif = kunci;
+      renderMobileSubNav();
     }
 
     function switchTab(tab) {
@@ -3254,6 +3369,13 @@
       const fabBtn = document.getElementById('mainFabBtn');
       if (fabBtn) fabBtn.classList.toggle('hidden', !isStockTab);
 
+      // Sub-tab Stok: dashboard / transactions / items
+      if (isStockTab) {
+        if (tab === 'dashboard') switchStokSubTab('summary');
+        else if (tab === 'transactions') switchStokSubTab('logs');
+        else if (tab === 'items') switchStokSubTab('items');
+      }
+
       if (isUmrahTab && (!appState.umrahForms || appState.umrahForms.length === 0)) {
         fetchUmrahFormsList(false);
       }
@@ -3268,6 +3390,10 @@
       if (isLeadsTab) {
         switchLeadsSubTab('senarai');
       }
+
+      // Kemas kini sub-nav mobile supaya pengguna boleh capai sub-tab
+      // (sidebar tersembunyi pada telefon).
+      renderMobileSubNav();
 
       window.scrollTo({ top: 0, behavior: 'instant' });
     }
@@ -5167,6 +5293,8 @@ Jom pakat mari ramai-ramai!
 
       if (senarai) loadLeads();
       else isiBorangImport();
+
+      setMobileSubAktif(senarai ? 'senarai' : 'import');
     }
 
     /* ===== BORANG LEAD ===== */
@@ -5986,6 +6114,7 @@ Jom pakat mari ramai-ramai!
     const SESI_KEY = 'eastra_sesi';
 
     appState.sesi = null;
+    appState.mobileSubAktif = '';
     appState.sesiPengguna = null;
 
     function simpanSesi(token, pengguna, luput) {
@@ -6015,6 +6144,7 @@ Jom pakat mari ramai-ramai!
 
     function buangSesi() {
       appState.sesi = null;
+    appState.mobileSubAktif = '';
       appState.sesiPengguna = null;
       try { localStorage.removeItem(SESI_KEY); } catch (e) {}
     }
@@ -6080,6 +6210,7 @@ Jom pakat mari ramai-ramai!
       document.getElementById('appShell').classList.remove('hidden');
       renderChipPengguna();
       terapkanSkopPengguna();
+      renderMobileSubNav();
 
       document.getElementById('txDate').valueAsDate = new Date();
       const defaultDate = new Date();
