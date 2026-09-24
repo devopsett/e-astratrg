@@ -22,6 +22,7 @@
   
   <script defer src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js" integrity="sha384-c9d8RFSL+u3exBOJ4Yp3HUJXS4znl9f+z66d1y54ig+ea249SpqR+w1wyvXz/lk+" crossorigin="anonymous"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha384-JcnsjUPPylna1s1fvi1u12X5qjY5OL56iySh75FdtrwhO/SWXgMjoVqcKyIIWOLk" crossorigin="anonymous"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" integrity="sha384-vtjasyidUo0kW94K5MXDXntzOJpQgBKXmE7e2Ga4LG0skTTLeBi97eFAXsqewJjw" crossorigin="anonymous"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha384-3zSEDfvllQohrq0PHL1fOXJuC/jSOO34H46t6UQfobFOmxE5BpjjaIJY5F2/bMnU" crossorigin="anonymous"></script>
 
   <style>
@@ -58,6 +59,7 @@
       --z-modal: 1200;
       --z-scanner: 1300;
       --z-loading: 1400;
+      --z-login: 5000;
     }
 
     * { 
@@ -775,6 +777,224 @@
     .badge-low { background: var(--status-low-bg); color: var(--status-low-text); }
     .badge-empty { background: var(--status-empty-bg); color: var(--status-empty-text); }
 
+    /* ===== LEADS ===== */
+    .peringkat-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      white-space: nowrap;
+      border: 1px solid transparent;
+    }
+    .peringkat-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+    .peringkat-badge.p-baru { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+    .peringkat-badge.p-dihubungi { background: #fffbeb; color: #b45309; border-color: #fde68a; }
+    .peringkat-badge.p-berjaya { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
+    .peringkat-badge.p-tolak { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+
+    .lead-nama { font-weight: 700; color: var(--text); font-size: 13.5px; }
+    .lead-sub { font-size: 11.5px; color: var(--text-muted); margin-top: 1px; }
+    .lead-susulan-lewat { color: #b91c1c; font-weight: 800; }
+    .lead-susulan-hari { color: #b45309; font-weight: 800; }
+
+    .lead-kad {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 14px 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+    .lead-kad-atas { display: flex; justify-content: space-between; align-items: flex-start; gap: 9px; }
+    .lead-kad-bawah {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding-top: 9px;
+      border-top: 1px solid var(--border-light);
+      font-size: 12px;
+      flex-wrap: wrap;
+    }
+
+    .aktiviti-row {
+      display: flex;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--border-light);
+      font-size: 12px;
+    }
+    .aktiviti-row:last-child { border-bottom: none; }
+    .aktiviti-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--primary);
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+
+    .import-hasil-box {
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+    .import-hasil-box.ok { background: #ecfdf5; border-color: #a7f3d0; }
+    .import-hasil-box.amaran { background: #fffbeb; border-color: #fde68a; }
+    .import-hasil-box.ralat { background: #fef2f2; border-color: #fecaca; }
+
+    /* ===== SKRIN LOG MASUK ===== */
+    .login-screen {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(168deg, #0d3f1d 0%, #082713 55%, #04150a 100%);
+      z-index: var(--z-login);
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .login-screen::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 15%, rgba(110, 231, 183, 0.16), transparent 55%);
+      pointer-events: none;
+    }
+    .login-box {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 32px 28px 26px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.5);
+      position: relative;
+      animation: fadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .login-brand { text-align: center; margin-bottom: 26px; }
+    .login-logo {
+      width: 60px;
+      height: 60px;
+      border-radius: 16px;
+      object-fit: cover;
+      background: #0b3818;
+      border: 2px solid #a7f3d0;
+      box-shadow: 0 6px 18px -4px rgba(11, 56, 24, 0.35);
+    }
+    .login-title {
+      font-size: 23px;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -0.5px;
+      margin-top: 13px;
+    }
+    .login-sub {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.9px;
+      margin-top: 3px;
+    }
+    .login-mata {
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 34px;
+      height: 34px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+    }
+    .login-mata svg { width: 17px; height: 17px; fill: none; stroke: var(--text-muted); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .login-mata:hover svg { stroke: var(--primary); }
+    .login-ralat {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #b91c1c;
+      border-radius: 9px;
+      padding: 10px 13px;
+      font-size: 12.5px;
+      font-weight: 700;
+      margin-top: 14px;
+      line-height: 1.5;
+    }
+    .login-nota {
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-light);
+      line-height: 1.5;
+    }
+
+    /* ===== BADGE PENGGUNA DALAM TOPBAR ===== */
+    .user-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 7px 13px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      max-width: 220px;
+    }
+    .user-chip:hover { border-color: var(--primary); background: var(--primary-soft); color: var(--primary); }
+    .user-chip:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+    .user-nama { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .user-peranan {
+      font-size: 9.5px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 5px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      flex-shrink: 0;
+    }
+    .user-peranan.admin { background: #fef3c7; color: #b45309; }
+
+    .skop-banner {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary-soft);
+      border: 1px solid #a7f3d0;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 14px;
+    }
+    .skop-banner svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; flex-shrink: 0; }
+    .skop-banner.admin { background: #fffbeb; border-color: #fde68a; color: #b45309; }
+
     .detail-item-group { display: grid; gap: 12px; padding: 4px 0; }
     .detail-item { display: flex; justify-content: space-between; align-items: center; padding: 9px 12px; background: #f8fafc; border-radius: 8px; border: 1px solid var(--border); }
     .detail-item.column { flex-direction: column; align-items: flex-start; gap: 6px; }
@@ -1059,6 +1279,347 @@
     </div>
   </div>
 
+  <!-- MODAL: LEAD -->
+  <div id="leadModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="leadModalTitle" onclick="closeModalOnBackdrop(event, 'leadModal')">
+    <div class="modal-dialog" style="max-width:560px;">
+      <div class="modal-header">
+        <h4 id="leadModalTitle">Lead</h4>
+        <button type="button" class="btn btn-secondary" style="padding:4px 10px; min-height:28px; font-size:12px;" onclick="closeLeadModal()">Tutup</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="leadId">
+
+        <div class="input-row" style="grid-template-columns: 1fr 1fr;">
+          <div>
+            <label for="leadNama">Nama *</label>
+            <input type="text" id="leadNama" maxlength="120" placeholder="Nama penuh">
+          </div>
+          <div>
+            <label for="leadTelefon">Telefon</label>
+            <input type="tel" id="leadTelefon" maxlength="20" placeholder="0123456789">
+          </div>
+        </div>
+
+        <div class="input-row" style="grid-template-columns: 1fr 1fr; margin-top:14px;">
+          <div>
+            <label for="leadEmel">Emel</label>
+            <input type="email" id="leadEmel" maxlength="120" placeholder="nama@emel.com">
+          </div>
+          <div>
+            <label for="leadSumber">Sumber</label>
+            <select id="leadSumber">
+              <option value="WhatsApp">WhatsApp</option>
+              <option value="Telefon">Telefon</option>
+              <option value="Facebook">Facebook</option>
+              <option value="Instagram">Instagram</option>
+              <option value="TikTok">TikTok</option>
+              <option value="Walk-in">Walk-in</option>
+              <option value="Rujukan">Rujukan</option>
+              <option value="Pameran">Pameran</option>
+              <option value="Lain-lain">Lain-lain</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="input-row" style="grid-template-columns: 1fr 1fr 1fr; margin-top:14px;">
+          <div>
+            <label for="leadPeringkat">Peringkat</label>
+            <select id="leadPeringkat">
+              <option value="Baru">Baru</option>
+              <option value="Dihubungi">Dihubungi</option>
+              <option value="Berjaya">Berjaya</option>
+              <option value="Tolak">Tolak</option>
+            </select>
+          </div>
+          <div>
+            <label for="leadBilPax">Bil. Pax</label>
+            <input type="number" id="leadBilPax" min="0" max="999" value="1">
+          </div>
+          <div>
+            <label for="leadNilai">Anggaran (RM)</label>
+            <input type="number" id="leadNilai" min="0" step="100" value="0">
+          </div>
+        </div>
+
+        <div class="input-row" style="grid-template-columns: 1fr 1fr; margin-top:14px;">
+          <div>
+            <label for="leadPakej">Pakej Diminati</label>
+            <select id="leadPakej" onchange="onPakejLeadChange()">
+              <option value="">— Tiada —</option>
+            </select>
+            <input type="text" id="leadPakejLain" class="hidden" maxlength="120" placeholder="Nyatakan pakej" style="margin-top:7px;">
+          </div>
+          <div>
+            <label for="leadPIC">PIC</label>
+            <select id="leadPIC">
+              <option value="">— Tiada —</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="input-row" style="grid-template-columns: 1fr 1fr; margin-top:14px;">
+          <div>
+            <label for="leadTarikhMasuk">Tarikh Masuk</label>
+            <input type="date" id="leadTarikhMasuk">
+          </div>
+          <div>
+            <label for="leadSusulan">Tarikh Susulan</label>
+            <input type="date" id="leadSusulan">
+          </div>
+        </div>
+
+        <div style="margin-top:14px;">
+          <label for="leadNota">Nota</label>
+          <textarea id="leadNota" maxlength="1000" placeholder="Catatan perbualan, keperluan pelanggan..."></textarea>
+        </div>
+
+        <div id="leadAktivitiWrap" class="hidden" style="margin-top:18px; border-top:1px dashed var(--border); padding-top:14px;">
+          <label>Sejarah Aktiviti</label>
+          <div id="leadAktivitiList"></div>
+        </div>
+
+        <div style="display:flex; gap:8px; justify-content:space-between; margin-top:20px; flex-wrap:wrap;">
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button type="button" class="btn btn-whatsapp hidden" id="btnWaLead" onclick="bukaWaUntukLead()">
+              <svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+              WhatsApp
+            </button>
+            <button type="button" class="btn btn-danger hidden" id="btnPadamLead" onclick="padamLeadSemasa()">Padam</button>
+            <button type="button" class="btn btn-secondary hidden" id="btnTukarJemaah" onclick="bukaTukarJemaah()">Jadikan Jemaah</button>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button type="button" class="btn btn-secondary" onclick="closeLeadModal()">Batal</button>
+            <button type="button" class="btn btn-primary" id="btnSimpanLead" onclick="simpanLeadSemasa()">Simpan</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: HANTAR WHATSAPP -->
+  <div id="waModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="waModalTitle">
+    <div class="modal-dialog" style="max-width:520px;">
+      <div class="modal-header">
+        <h4 id="waModalTitle">Hantar WhatsApp</h4>
+        <button type="button" class="btn btn-secondary" style="padding:4px 10px; min-height:28px; font-size:12px;" onclick="closeModal('waModal')">Tutup</button>
+      </div>
+      <div class="modal-body">
+        <div id="waPenerima" style="background:#ecfdf5; border:1px solid #a7f3d0; border-radius:10px; padding:11px 14px; margin-bottom:16px;">
+          <div style="font-size:11px; font-weight:800; color:var(--primary); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:3px;">Penerima</div>
+          <div id="waPenerimaNama" style="font-size:13.5px; font-weight:700;"></div>
+          <div id="waPenerimaTel" style="font-size:12px; color:var(--text-muted); margin-top:1px;"></div>
+        </div>
+
+        <div id="waTelSkipWrap" class="hidden" style="background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:11px 14px; margin-bottom:16px; font-size:12.5px; color:#b45309; font-weight:700;">
+          Lead ini tiada nombor telefon. Sila masukkan nombor dalam medan Telefon dahulu.
+        </div>
+
+        <div class="field" style="margin-bottom:14px;">
+          <label for="waTemplatPilih">Templat Mesej</label>
+          <select id="waTemplatPilih" onchange="gunakanWaTemplat()">
+            <option value="">— Tulis sendiri —</option>
+          </select>
+        </div>
+
+        <div class="field" style="margin-bottom:8px;">
+          <label for="waMesej">Mesej</label>
+          <textarea id="waMesej" rows="8" maxlength="3000" placeholder="Taip mesej atau pilih templat di atas..."></textarea>
+          <div style="display:flex; justify-content:space-between; margin-top:5px; font-size:11px; color:var(--text-muted);">
+            <span id="waKiraAksara">0 / 3000</span>
+            <span id="waKiraTag"></span>
+          </div>
+        </div>
+
+        <div style="background:#f8fafc; border:1px solid var(--border); border-radius:9px; padding:10px 13px; margin-bottom:14px; font-size:11.5px; color:var(--text-muted); line-height:1.6;">
+          <strong style="color:var(--text);">Tag tersedia:</strong>
+          <span id="waTagSenarai"></span>
+        </div>
+
+        <label class="jemaah-toggle" for="waNaikPeringkat" style="margin-bottom:16px;">
+          <input type="checkbox" id="waNaikPeringkat" checked>
+          <span>
+            <span class="jemaah-toggle-text">Naikkan peringkat ke "Dihubungi"</span>
+            <span class="jemaah-toggle-sub">Automatik jika lead masih berperingkat "Baru"</span>
+          </span>
+        </label>
+
+        <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:9px; padding:10px 13px; margin-bottom:16px; font-size:11.5px; color:#b45309; line-height:1.6;">
+          <strong>Nota:</strong> Sistem ini membuka WhatsApp dengan mesej siap. Anda perlu tekan <strong>Hantar</strong> dalam WhatsApp sendiri. Ini untuk elak nombor anda disekat kerana menghantar pukal.
+        </div>
+
+        <div style="display:flex; gap:8px; justify-content:flex-end;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('waModal')">Batal</button>
+          <button type="button" class="btn btn-whatsapp" id="btnWaHantar" onclick="hantarWa()">Buka WhatsApp</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: PENGURUS TEMPLAT WHATSAPP -->
+  <div id="waTemplatModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="waTemplatTitle" onclick="closeModalOnBackdrop(event, 'waTemplatModal')">
+    <div class="modal-dialog" style="max-width:600px;">
+      <div class="modal-header">
+        <h4 id="waTemplatTitle">Templat WhatsApp</h4>
+        <button type="button" class="btn btn-secondary" style="padding:4px 10px; min-height:28px; font-size:12px;" onclick="closeModal('waTemplatModal')">Tutup</button>
+      </div>
+      <div class="modal-body">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap:10px; flex-wrap:wrap;">
+          <div style="font-size:12.5px; color:var(--text-muted);">Klik templat untuk edit. Tag seperti <code>{nama}</code> akan diganti automatik.</div>
+          <button type="button" class="btn btn-primary" style="padding:6px 13px; min-height:34px; font-size:12px;" onclick="bukaTambahTemplat()">+ Templat Baru</button>
+        </div>
+        <div id="waTemplatSenarai"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: EDIT TEMPLAT WHATSAPP -->
+  <div id="waTemplatEditModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="waTemplatEditTitle">
+    <div class="modal-dialog" style="max-width:520px;">
+      <div class="modal-header">
+        <h4 id="waTemplatEditTitle">Templat</h4>
+        <button type="button" class="btn btn-secondary" style="padding:4px 10px; min-height:28px; font-size:12px;" onclick="closeModal('waTemplatEditModal')">Tutup</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="tmplId">
+        <div class="input-row" style="grid-template-columns: 2fr 1fr;">
+          <div>
+            <label for="tmplNama">Nama Templat *</label>
+            <input type="text" id="tmplNama" maxlength="100" placeholder="cth: Susulan Mesra">
+          </div>
+          <div>
+            <label for="tmplKategori">Kategori</label>
+            <select id="tmplKategori">
+              <option value="Susulan">Susulan</option>
+              <option value="Tawaran">Tawaran</option>
+              <option value="Peringatan">Peringatan</option>
+              <option value="Terima Kasih">Terima Kasih</option>
+              <option value="Lain-lain">Lain-lain</option>
+            </select>
+          </div>
+        </div>
+        <div class="field" style="margin-top:14px;">
+          <label for="tmplMesej">Mesej *</label>
+          <textarea id="tmplMesej" rows="8" maxlength="3000" placeholder="Assalamualaikum {nama}, ..."></textarea>
+          <div style="margin-top:5px; font-size:11px; color:var(--text-muted);" id="tmplKira"></div>
+        </div>
+        <label class="jemaah-toggle" for="tmplAktif" style="margin-top:14px;">
+          <input type="checkbox" id="tmplAktif" checked>
+          <span>
+            <span class="jemaah-toggle-text">Templat Aktif</span>
+            <span class="jemaah-toggle-sub">Templat tidak aktif tidak muncul dalam senarai pilihan</span>
+          </span>
+        </label>
+        <div style="display:flex; gap:8px; justify-content:space-between; margin-top:20px; flex-wrap:wrap;">
+          <button type="button" class="btn btn-danger hidden" id="btnPadamTemplat" onclick="padamTemplatSemasa()">Padam</button>
+          <div style="display:flex; gap:8px; margin-left:auto;">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('waTemplatEditModal')">Batal</button>
+            <button type="button" class="btn btn-primary" id="btnSimpanTemplat" onclick="simpanTemplatSemasa()">Simpan</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: PENGURUS PAKEJ (ADMIN) -->
+  <div id="pakejModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="pakejTitle" onclick="closeModalOnBackdrop(event, 'pakejModal')">
+    <div class="modal-dialog" style="max-width:600px;">
+      <div class="modal-header">
+        <h4 id="pakejTitle">Senarai Pakej</h4>
+        <button type="button" class="btn btn-secondary" style="padding:4px 10px; min-height:28px; font-size:12px;" onclick="closeModal('pakejModal')">Tutup</button>
+      </div>
+      <div class="modal-body">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; gap:10px; flex-wrap:wrap;">
+          <div style="font-size:12.5px; color:var(--text-muted);">Pakej ini muncul dalam dropdown semasa tambah lead.</div>
+          <button type="button" class="btn btn-primary" style="padding:6px 13px; min-height:34px; font-size:12px;" onclick="bukaTambahPakej()">+ Pakej Baru</button>
+        </div>
+        <div id="pakejSenarai"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: EDIT PAKEJ -->
+  <div id="pakejEditModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="pakejEditTitle">
+    <div class="modal-dialog" style="max-width:480px;">
+      <div class="modal-header">
+        <h4 id="pakejEditTitle">Pakej</h4>
+        <button type="button" class="btn btn-secondary" style="padding:4px 10px; min-height:28px; font-size:12px;" onclick="closeModal('pakejEditModal')">Tutup</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="pkgId">
+        <div class="field" style="margin-bottom:14px;">
+          <label for="pkgNama">Nama Pakej *</label>
+          <input type="text" id="pkgNama" maxlength="120" placeholder="cth: Safwah + Dubai">
+        </div>
+        <div class="field" style="margin-bottom:14px;">
+          <label for="pkgKeterangan">Keterangan</label>
+          <input type="text" id="pkgKeterangan" maxlength="300" placeholder="cth: Umrah bersama lawatan Dubai">
+        </div>
+        <div class="input-row" style="grid-template-columns: 1fr 1fr; margin-bottom:14px;">
+          <div>
+            <label for="pkgHarga">Harga (RM)</label>
+            <input type="number" id="pkgHarga" min="0" step="100" value="0">
+          </div>
+          <div>
+            <label for="pkgHari">Bil. Hari</label>
+            <input type="number" id="pkgHari" min="0" max="365" value="0">
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:14px;">
+          <label for="pkgSusunan">Susunan</label>
+          <input type="number" id="pkgSusunan" min="0" value="0">
+        </div>
+        <label class="jemaah-toggle" for="pkgAktif">
+          <input type="checkbox" id="pkgAktif" checked>
+          <span>
+            <span class="jemaah-toggle-text">Pakej Aktif</span>
+            <span class="jemaah-toggle-sub">Pakej tidak aktif tidak muncul dalam dropdown</span>
+          </span>
+        </label>
+        <div style="display:flex; gap:8px; justify-content:space-between; margin-top:20px; flex-wrap:wrap;">
+          <button type="button" class="btn btn-danger hidden" id="btnPadamPakej" onclick="padamPakejSemasa()">Padam</button>
+          <div style="display:flex; gap:8px; margin-left:auto;">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('pakejEditModal')">Batal</button>
+            <button type="button" class="btn btn-primary" id="btnSimpanPakej" onclick="simpanPakejSemasa()">Simpan</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: TUKAR LEAD KE JEMAAH -->
+  <div id="tukarJemaahModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="tukarJemaahTitle">
+    <div class="modal-dialog" style="max-width:420px;">
+      <div class="modal-header">
+        <h4 id="tukarJemaahTitle">Daftar Sebagai Jemaah</h4>
+        <button type="button" class="btn btn-secondary" style="padding:4px 10px; min-height:28px; font-size:12px;" onclick="closeModal('tukarJemaahModal')">Tutup</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:13px; color:var(--text-muted); line-height:1.6; margin-bottom:16px;">
+          Lead ini akan didaftarkan sebagai jemaah. Nama dan telefon akan disalin. Masukkan No. Kad Pengenalan untuk lengkapkan pendaftaran.
+        </p>
+        <div>
+          <label for="tjNama">Nama Jemaah</label>
+          <input type="text" id="tjNama" readonly style="background:#f8fafc; color:var(--text-muted);">
+        </div>
+        <div style="margin-top:14px;">
+          <label for="tjNokp">No. Kad Pengenalan (12 digit) *</label>
+          <input type="text" id="tjNokp" maxlength="12" inputmode="numeric" placeholder="900101011234">
+        </div>
+        <div style="margin-top:14px;">
+          <label for="tjPU">Pegawai (PU)</label>
+          <select id="tjPU">
+            <option value="Fatin">Fatin</option>
+            <option value="Fikriyah">Fikriyah</option>
+          </select>
+        </div>
+        <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:20px;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('tukarJemaahModal')">Batal</button>
+          <button type="button" class="btn btn-primary" id="btnTukarJemaahSah" onclick="sahkanTukarJemaah()">Daftar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- LOADING OVERLAY -->
   <div id="loading" class="loading-overlay hidden">
     <div style="text-align: center; padding: 24px;">
@@ -1230,8 +1791,45 @@
     </div>
   </div>
 
+  <!-- SKRIN LOG MASUK -->
+  <div id="loginScreen" class="login-screen">
+    <div class="login-box">
+      <div class="login-brand">
+        <img src="Logo%20Azzuha.png" alt="Logo e-ASTRA" class="login-logo">
+        <div class="login-title">e-ASTRA</div>
+        <div class="login-sub">Hab Operasi Cawangan</div>
+      </div>
+
+      <form id="loginForm" onsubmit="hantarLogMasuk(event)">
+        <div class="field" style="margin-bottom:14px;">
+          <label for="loginId">ID Pengguna</label>
+          <input type="text" id="loginId" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="cth: fatin">
+        </div>
+        <div class="field" style="margin-bottom:8px;">
+          <label for="loginPassword">Kata Laluan</label>
+          <div style="position:relative;">
+            <input type="password" id="loginPassword" autocomplete="current-password" placeholder="********" style="padding-right:44px;">
+            <button type="button" class="login-mata" onclick="tunjukPassword()" aria-label="Tunjuk kata laluan" tabindex="-1">
+              <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </button>
+          </div>
+        </div>
+
+        <div id="loginRalat" class="login-ralat hidden" role="alert"></div>
+
+        <button type="submit" class="btn btn-primary btn-block" id="btnLogMasuk" style="margin-top:16px; min-height:46px; font-size:14.5px;">
+          Log Masuk
+        </button>
+      </form>
+
+      <div class="login-nota">
+        Lupa kata laluan? Hubungi pentadbir sistem.
+      </div>
+    </div>
+  </div>
+
   <!-- APP LAYOUT -->
-  <div class="app-layout">
+  <div class="app-layout hidden" id="appShell">
     <aside class="sidebar">
       <div class="brand-box">
         <img class="brand-logo-img" src="Logo%20Azzuha.png" alt="Logo e-ASTRA">
@@ -1289,6 +1887,21 @@
             <li><button id="subBtnUmrahArchive" class="sub-nav-btn" type="button" onclick="switchTab('umrahForm'); switchUmrahSubTab('archive');"><span class="sub-nav-dot"></span><span>Arkib Borang</span></button></li>
           </ul>
         </li>
+
+        <li>
+          <button id="btnParentLeads" class="nav-btn" type="button" onclick="handleDesktopMenuToggle('leads')">
+            <div class="nav-btn-content">
+              <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+              <span>Leads</span>
+            </div>
+            <svg id="chevronLeads" class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+
+          <ul id="subLeadsMenu" class="sub-nav-list hidden">
+            <li><button id="subBtnLeadsSenarai" class="sub-nav-btn" type="button" onclick="switchTab('leads'); switchLeadsSubTab('senarai');"><span class="sub-nav-dot"></span><span>Senarai Lead</span></button></li>
+            <li><button id="subBtnLeadsImport" class="sub-nav-btn" type="button" onclick="switchTab('leads'); switchLeadsSubTab('import');"><span class="sub-nav-dot"></span><span>Import Pukal</span></button></li>
+          </ul>
+        </li>
       </ul>
 
       <div class="sidebar-footer">
@@ -1313,6 +1926,11 @@
           <!-- SATU-SATUNYA BUTANG REFRESH APLIKASI (DESKTOP) -->
           <button type="button" class="btn-icon-refresh" onclick="refreshCurrentView()" title="Segar Semula Semua Data" aria-label="Segar semula semua data">
             <svg viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+          </button>
+          <button type="button" class="user-chip" id="userChip" onclick="logKeluarAplikasi()" title="Klik untuk log keluar" aria-label="Log keluar">
+            <span class="user-nama" id="userNama">—</span>
+            <span class="user-peranan" id="userPeranan">—</span>
+            <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
           </button>
         </div>
       </div>
@@ -1795,6 +2413,169 @@
         </div>
       </section>
 
+      <!-- SEKSYEN: LEADS -->
+      <section id="tab-leads" class="hidden">
+
+        <!-- Sub-tab: Senarai Lead -->
+        <div id="subSectionLeadsSenarai">
+          <div id="skopBanner" class="skop-banner hidden"></div>
+          <div class="metrics-grid" id="leadMetrik" style="grid-template-columns: repeat(4, minmax(0, 1fr));"></div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Senarai Lead</h3>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button type="button" class="btn btn-secondary hidden" id="btnUrusPakej" style="padding:6px 13px; min-height:34px; font-size:12px;" onclick="bukaPakejModal()">Pakej</button>
+                <button type="button" class="btn btn-secondary" style="padding:6px 13px; min-height:34px; font-size:12px;" onclick="bukaTemplatWa()">Templat Mesej</button>
+                <button type="button" class="btn btn-secondary" style="padding:6px 13px; min-height:34px; font-size:12px;" onclick="bukaImportLeads()">Import Pukal</button>
+                <button type="button" class="btn btn-primary" style="padding:6px 13px; min-height:34px; font-size:12px;" onclick="bukaTambahLead()">+ Lead Baru</button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="filter-pills-bar" id="leadTapisanPeringkat" style="margin-bottom:12px;"></div>
+
+              <div class="input-row" style="grid-template-columns: 2fr 1fr; gap:10px; margin-bottom:16px;">
+                <div>
+                  <label for="leadCari">Cari</label>
+                  <input type="search" id="leadCari" placeholder="Nama, telefon, emel, nota..." oninput="tapisanLeadBerubah()">
+                </div>
+                <div>
+                  <label for="leadTapisSumber">Sumber</label>
+                  <select id="leadTapisSumber" onchange="tapisanLeadBerubah()">
+                    <option value="">Semua sumber</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Nama</th>
+                      <th>Telefon</th>
+                      <th>Sumber</th>
+                      <th>Peringkat</th>
+                      <th>Pakej</th>
+                      <th>Susulan</th>
+                      <th style="text-align:center;">Tindakan</th>
+                    </tr>
+                  </thead>
+                  <tbody id="leadTbody"></tbody>
+                </table>
+              </div>
+
+              <div id="leadMobileCards" style="display:none; flex-direction:column; gap:10px;"></div>
+
+              <div id="leadKosong" class="hidden" style="text-align:center; padding:36px 20px; color:var(--text-muted);">
+                <svg viewBox="0 0 24 24" style="width:42px;height:42px;fill:none;stroke:#cbd5e1;stroke-width:1.6;margin-bottom:10px;"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                <div style="font-size:13px;">Tiada lead dijumpai.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sub-tab: Import Pukal -->
+        <div id="subSectionLeadsImport" class="hidden">
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Import Lead Pukal</h3>
+            </div>
+            <div class="panel-body">
+              <div style="background:var(--primary-soft); border:1px solid #a7f3d0; border-radius:10px; padding:13px 15px; margin-bottom:16px; font-size:12.5px; line-height:1.65;">
+                <strong style="color:var(--primary);">Dua cara import</strong><br>
+                <strong>1. Muat naik fail</strong> — CSV atau Excel (.csv, .xlsx, .xls). Baris pertama boleh jadi header.<br>
+                <strong>2. Tampal teks</strong> — satu lead satu baris, pisah dengan koma / tab / |.<br>
+                <span style="display:block; margin-top:8px;">Susunan medan: <code>nama, telefon, sumber, pakej, bilPax, nota</code></span>
+                <div style="margin-top:9px; color:#b45309; font-weight:700;">Telefon yang sudah ada akan dilangkau automatik.</div>
+              </div>
+
+              <!-- MUAT NAIK FAIL -->
+              <div style="margin-bottom:18px;">
+                <label>Muat Naik Fail</label>
+                <div id="impDropzone" class="file-dropzone-compact" style="border-style:dashed; padding:22px 16px; text-align:center; justify-content:center; flex-direction:column; gap:8px;"
+                     onclick="document.getElementById('impFail').click()">
+                  <svg viewBox="0 0 24 24" style="width:30px;height:30px;fill:none;stroke:var(--primary);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                  <div style="font-size:13px; font-weight:700; color:var(--primary);">Klik untuk pilih fail CSV / Excel</div>
+                  <div style="font-size:11.5px; color:var(--text-muted);">atau seret fail ke sini</div>
+                </div>
+                <input type="file" id="impFail" accept=".csv,.xlsx,.xls,text/csv" class="hidden" onchange="handleImportFail(event)">
+                <div id="impFailInfo" class="hidden" style="margin-top:10px; padding:11px 14px; background:#ecfdf5; border:1px solid #a7f3d0; border-radius:9px; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
+                  <div style="font-size:12.5px; min-width:0;">
+                    <strong id="impFailNama" style="color:var(--primary); word-break:break-all;"></strong>
+                    <div id="impFailStat" style="font-size:11.5px; color:var(--text-muted); margin-top:2px;"></div>
+                  </div>
+                  <button type="button" class="btn btn-secondary" style="padding:5px 12px; min-height:32px; font-size:11.5px;" onclick="buangImportFail()">Buang</button>
+                </div>
+              </div>
+
+              <!-- PRATONTON -->
+              <div id="impPratonton" class="hidden" style="margin-bottom:18px;">
+                <label>Pratonton <span id="impPratononBil" style="color:var(--text-muted); font-weight:600; text-transform:none; letter-spacing:0;"></span></label>
+                <div class="table-container" style="max-height:300px; overflow-y:auto;">
+                  <table id="impPratononJadual">
+                    <thead id="impPratononHead"></thead>
+                    <tbody id="impPratononBody"></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div style="display:flex; align-items:center; gap:12px; margin:18px 0;">
+                <div style="flex:1; height:1px; background:var(--border);"></div>
+                <span style="font-size:11px; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.7px;">atau tampal teks</span>
+                <div style="flex:1; height:1px; background:var(--border);"></div>
+              </div>
+
+              <div class="form-group">
+                <div>
+                  <label for="impTeks">Tampal Data</label>
+                  <textarea id="impTeks" rows="7" placeholder="Ahmad bin Ali, 0123456789, WhatsApp, Pakej Premium, 2&#10;Siti Aminah, 0198765432, Facebook"></textarea>
+                </div>
+
+                <div class="input-row">
+                  <div>
+                    <label for="impSumber">Sumber Lalai</label>
+                    <select id="impSumber">
+                      <option value="WhatsApp">WhatsApp</option>
+                      <option value="Telefon">Telefon</option>
+                      <option value="Facebook">Facebook</option>
+                      <option value="Instagram">Instagram</option>
+                      <option value="TikTok">TikTok</option>
+                      <option value="Walk-in">Walk-in</option>
+                      <option value="Rujukan">Rujukan</option>
+                      <option value="Pameran">Pameran</option>
+                      <option value="Lain-lain">Lain-lain</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label for="impPIC">PIC</label>
+                    <select id="impPIC">
+                      <option value="">— Tiada —</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="input-row">
+                  <div>
+                    <label for="impTarikh">Tarikh Masuk</label>
+                    <input type="date" id="impTarikh">
+                  </div>
+                  <div style="display:flex; align-items:flex-end;">
+                    <button type="button" class="btn btn-primary btn-block" id="btnImport" onclick="jalankanImport()" style="min-height:42px;">Import Sekarang</button>
+                  </div>
+                </div>
+              </div>
+
+              <div id="hasilImport" class="hidden" style="margin-top:20px;"></div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
     </main>
 
     <!-- MOBILE BOTTOM NAVIGATION -->
@@ -1810,6 +2591,10 @@
       <button id="mBtnUmrah" class="m-btn" type="button" onclick="switchTab('umrahForm')">
         <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
         <span>Kursus</span>
+      </button>
+      <button id="mBtnLeads" class="m-btn" type="button" onclick="switchTab('leads')">
+        <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+        <span>Leads</span>
       </button>
     </nav>
   </div>
@@ -1828,7 +2613,7 @@
        tetapi BUKAN pengesahan sebenar. Untuk perlindungan penuh data jemaah,
        gunakan Google OAuth atau backend dengan Row Level Security.
        ========================================================================== */
-    const API_TOKEN = 'cxXgyorHUEN8V9Z2pdf8wFJI0izQavcv'; // <-- Tampal token SHARED_TOKEN anda di sini selepas set di pelayan
+    const API_TOKEN = ''; // <-- Tampal token SHARED_TOKEN anda di sini selepas set di pelayan
 
     /* Sertakan token dalam semua permintaan API. */
     function withToken(url) {
@@ -1939,7 +2724,8 @@
       currentJemaahIC: '',
       stockMenuOpen: true,
       jemaahMenuOpen: false,
-      umrahMenuOpen: false
+      umrahMenuOpen: false,
+      leadsMenuOpen: false
     };
 
     let html5QrCodeScanner = null;
@@ -1976,21 +2762,40 @@
       }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('txDate').valueAsDate = new Date();
-      
-      const defaultDate = new Date();
-      defaultDate.setDate(defaultDate.getDate() + ((6 - defaultDate.getDay() + 7) % 7 || 7));
-      const dateInput = document.getElementById('ufTarikhInput');
-      if (dateInput) dateInput.value = defaultDate.toISOString().split('T')[0];
-
+    document.addEventListener('DOMContentLoaded', async () => {
       initDelegatedEvents();
       initNetworkAwareness();
       registerServiceWorker();
 
-      addBatchRow();
-      loadLocalCacheImmediately();
-      loadData(false);
+      // Semak sesi yang disimpan. Kalau ada, sahkan dengan pelayan.
+      const sesi = bacaSesi();
+      if (sesi) {
+        appState.sesi = sesi.token;
+        appState.sesiPengguna = sesi.pengguna;
+
+        try {
+          const semak = await apiGet('getSesiSaya');
+          if (semak.ok) {
+            appState.sesiPengguna = semak.pengguna;
+            await mulaAplikasi();
+          } else {
+            buangSesi();
+          }
+        } catch (e) {
+          buangSesi();
+        }
+      }
+
+      // Jika tiada sesi sah, tunjuk skrin log masuk.
+      if (!appState.sesi) {
+        document.getElementById('loginScreen').classList.remove('hidden');
+        document.getElementById('appShell').classList.add('hidden');
+        setTimeout(() => {
+          const el = document.getElementById('loginId');
+          if (el) el.focus();
+        }, 150);
+      }
+
       setTimeout(checkAutoSystemUpdate, 3500);
     });
 
@@ -2038,20 +2843,30 @@
         appState.stockMenuOpen = !appState.stockMenuOpen;
         appState.jemaahMenuOpen = false;
         appState.umrahMenuOpen = false;
+        appState.leadsMenuOpen = false;
         switchTab('dashboard');
         switchStokSubTab('summary');
       } else if (targetMenu === 'jemaah') {
         appState.jemaahMenuOpen = !appState.jemaahMenuOpen;
         appState.stockMenuOpen = false;
         appState.umrahMenuOpen = false;
+        appState.leadsMenuOpen = false;
         switchTab('jemaahList');
         switchJemaahSubTab('list');
       } else if (targetMenu === 'umrah') {
         appState.umrahMenuOpen = !appState.umrahMenuOpen;
         appState.stockMenuOpen = false;
         appState.jemaahMenuOpen = false;
+        appState.leadsMenuOpen = false;
         switchTab('umrahForm');
         switchUmrahSubTab('generate');
+      } else if (targetMenu === 'leads') {
+        appState.leadsMenuOpen = !appState.leadsMenuOpen;
+        appState.stockMenuOpen = false;
+        appState.jemaahMenuOpen = false;
+        appState.umrahMenuOpen = false;
+        switchTab('leads');
+        switchLeadsSubTab('senarai');
       }
       updateSidebarAccordionUI();
     }
@@ -2076,6 +2891,13 @@
       if (subUmrah && chevUmrah) {
         subUmrah.classList.toggle('hidden', !appState.umrahMenuOpen);
         chevUmrah.classList.toggle('open', appState.umrahMenuOpen);
+      }
+
+      const subLeads = document.getElementById('subLeadsMenu');
+      const chevLeads = document.getElementById('chevronLeads');
+      if (subLeads && chevLeads) {
+        subLeads.classList.toggle('hidden', !appState.leadsMenuOpen);
+        chevLeads.classList.toggle('open', appState.leadsMenuOpen);
       }
     }
 
@@ -2153,43 +2975,55 @@
       const isStockTab = ['dashboard', 'transactions', 'items'].includes(tab);
       const isJemaahTab = ['jemaahList', 'jemaahAdd', 'jemaahEdit'].includes(tab);
       const isUmrahTab = (tab === 'umrahForm');
+      const isLeadsTab = (tab === 'leads');
 
       if (isStockTab) {
         appState.stockMenuOpen = true;
         appState.jemaahMenuOpen = false;
         appState.umrahMenuOpen = false;
+        appState.leadsMenuOpen = false;
       } else if (isJemaahTab) {
         appState.stockMenuOpen = false;
         appState.jemaahMenuOpen = true;
         appState.umrahMenuOpen = false;
+        appState.leadsMenuOpen = false;
       } else if (isUmrahTab) {
         appState.stockMenuOpen = false;
         appState.jemaahMenuOpen = false;
         appState.umrahMenuOpen = true;
+        appState.leadsMenuOpen = false;
+      } else if (isLeadsTab) {
+        appState.stockMenuOpen = false;
+        appState.jemaahMenuOpen = false;
+        appState.umrahMenuOpen = false;
+        appState.leadsMenuOpen = true;
       }
       updateSidebarAccordionUI();
 
       document.getElementById('btnParentStock').classList.toggle('active', isStockTab);
       document.getElementById('btnParentJemaah').classList.toggle('active', isJemaahTab);
       document.getElementById('btnNavUmrah').classList.toggle('active', isUmrahTab);
+      document.getElementById('btnParentLeads').classList.toggle('active', isLeadsTab);
 
       document.getElementById('mBtnStock').classList.toggle('active', isStockTab);
       document.getElementById('mBtnJemaah').classList.toggle('active', isJemaahTab);
       document.getElementById('mBtnUmrah').classList.toggle('active', isUmrahTab);
+      document.getElementById('mBtnLeads').classList.toggle('active', isLeadsTab);
 
-      const allTabs = ['dashboard', 'umrahForm', 'jemaahList'];
+      const allTabs = ['dashboard', 'umrahForm', 'jemaahList', 'leads'];
+      const curKey = isStockTab ? 'dashboard' : (isJemaahTab ? 'jemaahList' : (isUmrahTab ? 'umrahForm' : 'leads'));
       allTabs.forEach(t => {
         const el = document.getElementById('tab-' + t);
-        if (el) el.classList.toggle('hidden', t !== (isStockTab ? 'dashboard' : (isJemaahTab ? 'jemaahList' : 'umrahForm')));
+        if (el) el.classList.toggle('hidden', t !== curKey);
       });
 
       const titles = {
         dashboard: ['Stok & Inventori', 'Paparan metrik dan status operasi inventori semasa.'],
         umrahForm: ['Kursus Umrah', 'Pusat penjanaan dan pengurusan borang pendaftaran digital.'],
-        jemaahList: ['Pengurusan Jemaah', 'Senarai rekod, pendaftaran dan semakan dokumen jemaah.']
+        jemaahList: ['Pengurusan Jemaah', 'Senarai rekod, pendaftaran dan semakan dokumen jemaah.'],
+        leads: ['Leads', 'Pengurusan prospek bakal jemaah dan susulan jualan.']
       };
 
-      const curKey = isStockTab ? 'dashboard' : (isJemaahTab ? 'jemaahList' : 'umrahForm');
       document.getElementById('viewTitle').textContent = titles[curKey][0];
       document.getElementById('viewSubtitle').textContent = titles[curKey][1];
 
@@ -2206,6 +3040,9 @@
         if (!appState.senaraiJemaah || appState.senaraiJemaah.length === 0) {
           loadDataJemaah(false);
         }
+      }
+      if (isLeadsTab) {
+        switchLeadsSubTab('senarai');
       }
 
       window.scrollTo({ top: 0, behavior: 'instant' });
@@ -3595,6 +4432,1402 @@ Jom pakat mari ramai-ramai!
     function dismissUpdateBanner() { document.getElementById('updateBanner').classList.add('hidden'); }
 
     /* ==========================================================================
+       MODUL LEADS
+       ========================================================================== */
+
+    const PERINGKAT_LEAD = ['Baru', 'Dihubungi', 'Berjaya', 'Tolak'];
+    const SUMBER_LEAD = ['WhatsApp', 'Telefon', 'Facebook', 'Instagram', 'TikTok', 'Walk-in', 'Rujukan', 'Pameran', 'Lain-lain'];
+
+    /** Tarikh hari ini dalam format YYYY-MM-DD (waktu tempatan, bukan UTC). */
+    function todayStr() {
+      const d = new Date();
+      return d.getFullYear() + '-' +
+        String(d.getMonth() + 1).padStart(2, '0') + '-' +
+        String(d.getDate()).padStart(2, '0');
+    }
+
+    /* Helper API — bungkus fetch + token + sesi + pengendalian ralat. */
+    async function apiGet(action, params) {
+      let url = withToken(SCRIPT_URL + '?action=' + encodeURIComponent(action));
+      if (appState.sesi) url += '&sesi=' + encodeURIComponent(appState.sesi);
+      if (params) {
+        Object.keys(params).forEach(k => {
+          const v = params[k];
+          if (v !== undefined && v !== null && v !== '') {
+            url += '&' + encodeURIComponent(k) + '=' + encodeURIComponent(v);
+          }
+        });
+      }
+      const res = await fetch(url, { method: 'GET', redirect: 'follow' });
+      const data = await res.json();
+      if (data && data.perluLogMasuk) paksaLogMasuk();
+      return data;
+    }
+
+    async function apiPost(action, data) {
+      const payload = Object.assign({}, data || {});
+      if (appState.sesi) payload.sesi = appState.sesi;
+
+      const res = await fetch(withToken(SCRIPT_URL), {
+        method: 'POST',
+        headers: apiHeaders(),
+        body: apiBody({ action: action, data: payload })
+      });
+      const hasil = await res.json();
+      if (hasil && hasil.perluLogMasuk) paksaLogMasuk();
+      return hasil;
+    }
+
+    /** Sesi tamat — tunjuk skrin log masuk semula. */
+    function paksaLogMasuk() {
+      buangSesi();
+      document.getElementById('appShell').classList.add('hidden');
+      document.getElementById('loginScreen').classList.remove('hidden');
+      const ralat = document.getElementById('loginRalat');
+      if (ralat) {
+        ralat.textContent = 'Sesi tamat. Sila log masuk semula.';
+        ralat.classList.remove('hidden');
+      }
+      showLoading(false);
+    }
+
+    appState.leads = [];
+    appState.leadRingkasan = null;
+    appState.leadTapisan = { peringkat: '', sumber: '', cari: '' };
+    appState.leadSemasa = null;
+
+    function kelasPeringkat(p) {
+      const map = { 'Baru': 'p-baru', 'Dihubungi': 'p-dihubungi', 'Berjaya': 'p-berjaya', 'Tolak': 'p-tolak' };
+      return map[p] || 'p-baru';
+    }
+
+    function badgePeringkat(p) {
+      return '<span class="peringkat-badge ' + kelasPeringkat(p) + '">' + esc(p || 'Baru') + '</span>';
+    }
+
+    function rupiahRingkas(n) {
+      const v = Number(n) || 0;
+      if (v >= 1000000) return 'RM' + (v / 1000000).toFixed(1) + 'j';
+      if (v >= 1000) return 'RM' + (v / 1000).toFixed(0) + 'k';
+      return 'RM' + v;
+    }
+
+    /** Kiraan hari dari hari ini ke tarikh sasaran (negatif = sudah lepas). */
+    function bezaHari(tarikhStr) {
+      if (!tarikhStr) return null;
+      const p = String(tarikhStr).split('-');
+      const target = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+      const hari = new Date();
+      hari.setHours(0, 0, 0, 0);
+      return Math.round((target - hari) / 86400000);
+    }
+
+    function teksSusulan(tarikhStr) {
+      const d = bezaHari(tarikhStr);
+      if (d === null) return '<span style="color:var(--text-muted);">—</span>';
+      if (d < 0) return '<span class="lead-susulan-lewat">Lewat ' + Math.abs(d) + ' hari</span>';
+      if (d === 0) return '<span class="lead-susulan-hari">Hari ini</span>';
+      if (d === 1) return '<span style="color:var(--status-low-text);font-weight:700;">Esok</span>';
+      return '<span style="color:var(--text-muted);">Dalam ' + d + ' hari</span>';
+    }
+
+    async function loadLeads() {
+      showLoading(true, 'Memuatkan leads...');
+      try {
+        const p = { peringkat: appState.leadTapisan.peringkat, sumber: appState.leadTapisan.sumber, cari: appState.leadTapisan.cari };
+        const res = await apiGet('getLeads', p);
+        if (!res.ok) throw new Error(res.message);
+        appState.leads = res.data || [];
+        appState.leadRingkasan = res.ringkasan;
+        renderLeads();
+      } catch (err) {
+        showToast('Gagal memuat leads: ' + err.message, true);
+      } finally {
+        showLoading(false);
+      }
+    }
+
+    function renderLeads() {
+      const senarai = appState.leads || [];
+      const r = appState.leadRingkasan || { jumlah: 0, kira: {}, nilaiBerjaya: 0, nilaiPipeline: 0, kadarTukar: 0 };
+
+      document.getElementById('leadMetrik').innerHTML = [
+        { t: 'Jumlah Lead', v: r.jumlah || 0, s: 'dalam tapisan' },
+        { t: 'Baru', v: (r.kira && r.kira.Baru) || 0, s: 'belum dihubungi' },
+        { t: 'Berjaya', v: (r.kira && r.kira.Berjaya) || 0, s: 'kadar ' + (r.kadarTukar || 0) + '%' },
+        { t: 'Nilai Pipeline', v: rupiahRingkas(r.nilaiPipeline), s: 'belum selesai' }
+      ].map(x =>
+        '<div class="metric-card"><div class="metric-title">' + esc(x.t) + '</div>' +
+        '<div class="metric-val">' + esc(x.v) + '</div>' +
+        '<div class="metric-sub">' + esc(x.s) + '</div></div>'
+      ).join('');
+
+      // Pill tapisan peringkat
+      const semula = [{ k: '', label: 'Semua' }].concat(PERINGKAT_LEAD.map(p => ({ k: p, label: p })));
+      document.getElementById('leadTapisanPeringkat').innerHTML = semula.map(x => {
+        const aktif = appState.leadTapisan.peringkat === x.k;
+        const bil = x.k === '' ? (r.jumlah || 0) : ((r.kira && r.kira[x.k]) || 0);
+        return '<button type="button" class="pill-btn' + (aktif ? ' active' : '') + '" onclick="tapisLeadPeringkat(\'' + esc(x.k) + '\')">' +
+          esc(x.label) + (x.k ? ' (' + bil + ')' : '') + '</button>';
+      }).join('');
+
+      // Dropdown sumber
+      const selSumber = document.getElementById('leadTapisSumber');
+      if (selSumber.options.length <= 1) {
+        selSumber.innerHTML = '<option value="">Semua sumber</option>' +
+          SUMBER_LEAD.map(s => '<option value="' + esc(s) + '">' + esc(s) + '</option>').join('');
+        selSumber.value = appState.leadTapisan.sumber;
+      }
+
+      const tbody = document.getElementById('leadTbody');
+      const cards = document.getElementById('leadMobileCards');
+      const kosong = document.getElementById('leadKosong');
+
+      if (!senarai.length) {
+        tbody.innerHTML = '';
+        cards.innerHTML = '';
+        kosong.classList.remove('hidden');
+        return;
+      }
+      kosong.classList.add('hidden');
+
+      tbody.innerHTML = senarai.map(l => `
+        <tr class="clickable-row" data-lead-id="${esc(l.id)}" role="button" tabindex="0" aria-label="Buka lead">
+          <td>
+            <div class="lead-nama">${esc(l.nama)}${l.jemaahId ? ' <span class="badge badge-ok" style="font-size:9.5px;">JEMAAH</span>' : ''}</div>
+            ${l.pakej ? '<div class="lead-sub">' + esc(l.pakej) + (l.bilPax ? ' · ' + esc(l.bilPax) + ' pax' : '') + '</div>' : ''}
+          </td>
+          <td>${esc(l.telefon || '—')}</td>
+          <td><span style="font-size:11.5px;">${esc(l.sumber || '—')}</span></td>
+          <td>${badgePeringkat(l.peringkat)}</td>
+          <td>${l.nilai ? esc(rupiahRingkas(l.nilai)) : '<span style="color:var(--text-muted);">—</span>'}</td>
+          <td>${teksSusulan(l.tarikhSusulan)}</td>
+          <td style="text-align:center;">
+            <div style="display:flex; gap:5px; justify-content:center;">
+              ${l.telefon ? '<button type="button" class="btn btn-whatsapp" data-wa-cepat="' + esc(l.id) + '" title="Hantar WhatsApp" style="padding:3px 8px;font-size:11px;min-height:28px;">' + WA_ICON + '</button>' : ''}
+              <button type="button" class="btn btn-secondary" data-lead-id="${esc(l.id)}" style="padding:3px 10px;font-size:11px;min-height:28px;">Buka</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+
+      cards.innerHTML = senarai.map(l => `
+        <div class="lead-kad">
+          <div class="lead-kad-atas">
+            <div style="min-width:0;">
+              <div class="lead-nama">${esc(l.nama)}${l.jemaahId ? ' <span class="badge badge-ok" style="font-size:9.5px;">JEMAAH</span>' : ''}</div>
+              <div class="lead-sub">${esc(l.telefon || 'Tiada telefon')} · ${esc(l.sumber || '—')}</div>
+              ${l.pakej ? '<div class="lead-sub">' + esc(l.pakej) + (l.bilPax ? ' · ' + esc(l.bilPax) + ' pax' : '') + '</div>' : ''}
+            </div>
+            ${badgePeringkat(l.peringkat)}
+          </div>
+          <div class="lead-kad-bawah">
+            <span>${teksSusulan(l.tarikhSusulan)}</span>
+            <div style="display:flex; gap:6px;">
+              ${l.telefon ? '<button type="button" class="btn btn-whatsapp" data-wa-cepat="' + esc(l.id) + '" style="padding:4px 11px;font-size:11.5px;min-height:30px;">' + WA_ICON + ' WhatsApp</button>' : ''}
+              <button type="button" class="btn btn-secondary" data-lead-id="${esc(l.id)}" style="padding:4px 12px;font-size:11.5px;min-height:30px;">Buka</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function tapisLeadPeringkat(p) {
+      appState.leadTapisan.peringkat = (appState.leadTapisan.peringkat === p) ? '' : p;
+      loadLeads();
+    }
+
+    function tapisanLeadBerubah() {
+      appState.leadTapisan.cari = document.getElementById('leadCari').value.trim();
+      appState.leadTapisan.sumber = document.getElementById('leadTapisSumber').value;
+      clearTimeout(window.__leadTapisTimer);
+      window.__leadTapisTimer = setTimeout(loadLeads, 300);
+    }
+
+    function switchLeadsSubTab(sub) {
+      const senarai = sub === 'senarai';
+      document.getElementById('subBtnLeadsSenarai').classList.toggle('active', senarai);
+      document.getElementById('subBtnLeadsImport').classList.toggle('active', !senarai);
+      document.getElementById('subSectionLeadsSenarai').classList.toggle('hidden', !senarai);
+      document.getElementById('subSectionLeadsImport').classList.toggle('hidden', senarai);
+
+      if (senarai) loadLeads();
+      else isiBorangImport();
+    }
+
+    /* ===== BORANG LEAD ===== */
+
+    /** Adakah pengguna semasa admin? */
+    function isAdmin() {
+      return appState.sesiPengguna && appState.sesiPengguna.peranan === 'admin';
+    }
+
+    /** Isi dropdown PIC — hanya admin boleh pilih. */
+    function isiPilihanPIC() {
+      const senarai = (appState.data && appState.data.lists && appState.data.lists.pic) || ['Pengurus', 'PU', 'Media'];
+      const sel = document.getElementById('leadPIC');
+      if (!sel) return;
+
+      if (isAdmin()) {
+        sel.innerHTML = '<option value="">— Tiada —</option>' +
+          senarai.map(x => '<option value="' + esc(x) + '">' + esc(x) + '</option>').join('');
+      } else {
+        const picSaya = (appState.sesiPengguna && appState.sesiPengguna.pic) || '';
+        sel.innerHTML = '<option value="' + esc(picSaya) + '">' + esc(picSaya) + '</option>';
+      }
+    }
+
+    function bukaTambahLead() {
+      appState.leadSemasa = null;
+      document.getElementById('leadId').value = '';
+      document.getElementById('leadModalTitle').textContent = 'Lead Baru';
+      document.getElementById('leadNama').value = '';
+      document.getElementById('leadTelefon').value = '';
+      document.getElementById('leadEmel').value = '';
+      document.getElementById('leadSumber').value = 'WhatsApp';
+      document.getElementById('leadPeringkat').value = 'Baru';
+      document.getElementById('leadBilPax').value = 1;
+      document.getElementById('leadNilai').value = 0;
+      isiPilihanPakej('');
+      document.getElementById('leadPIC').value = '';
+      document.getElementById('leadTarikhMasuk').value = todayStr();
+      document.getElementById('leadSusulan').value = '';
+      document.getElementById('leadNota').value = '';
+      isiPilihanPIC();
+      document.getElementById('leadAktivitiWrap').classList.add('hidden');
+      document.getElementById('btnPadamLead').classList.add('hidden');
+      document.getElementById('btnTukarJemaah').classList.add('hidden');
+      openModal('leadModal');
+    }
+
+    function bukaLead(id) {
+      const l = (appState.leads || []).find(x => x.id === id);
+      if (!l) return;
+      appState.leadSemasa = l;
+
+      document.getElementById('leadId').value = l.id;
+      document.getElementById('leadModalTitle').textContent = l.nama;
+      document.getElementById('leadNama').value = l.nama || '';
+      document.getElementById('leadTelefon').value = l.telefon || '';
+      document.getElementById('leadEmel').value = l.emel || '';
+      document.getElementById('leadSumber').value = l.sumber || 'Lain-lain';
+      document.getElementById('leadPeringkat').value = l.peringkat || 'Baru';
+      document.getElementById('leadBilPax').value = l.bilPax || 0;
+      document.getElementById('leadNilai').value = l.nilai || 0;
+      isiPilihanPakej(l.pakej || '');
+      document.getElementById('leadPIC').value = l.pic || '';
+      document.getElementById('leadTarikhMasuk').value = l.tarikhMasuk || todayStr();
+      document.getElementById('leadSusulan').value = l.tarikhSusulan || '';
+      document.getElementById('leadNota').value = l.nota || '';
+
+      isiPilihanPIC();
+      document.getElementById('btnPadamLead').classList.remove('hidden');
+      document.getElementById('btnTukarJemaah').classList.toggle('hidden', l.peringkat !== 'Berjaya' || !!l.jemaahId);
+      document.getElementById('btnWaLead').classList.toggle('hidden', !String(l.telefon || '').trim());
+
+      loadAktivitiLead(l.id);
+      openModal('leadModal');
+    }
+
+    function closeLeadModal() {
+      closeModal('leadModal');
+      appState.leadSemasa = null;
+    }
+
+    async function loadAktivitiLead(id) {
+      const wrap = document.getElementById('leadAktivitiWrap');
+      const list = document.getElementById('leadAktivitiList');
+      wrap.classList.remove('hidden');
+      list.innerHTML = '<div class="skeleton" style="height:14px;width:70%;"></div>';
+
+      try {
+        const res = await apiGet('getAktivitiLead', { id: id });
+        if (!res.ok || !res.data.length) {
+          list.innerHTML = '<div style="font-size:12px;color:var(--text-muted);padding:8px 0;">Belum ada aktiviti.</div>';
+          return;
+        }
+        list.innerHTML = res.data.slice(0, 12).map(a => {
+          const masa = a.masa ? new Date(a.masa).toLocaleString('ms-MY', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '';
+          let teks = esc(a.tindakan);
+          if (a.dari && a.ke) teks += ': <strong>' + esc(a.dari) + '</strong> → <strong>' + esc(a.ke) + '</strong>';
+          else if (a.catatan) teks += ': ' + esc(a.catatan);
+          return '<div class="aktiviti-row"><div class="aktiviti-dot"></div><div style="flex:1;min-width:0;">' +
+            '<div style="font-weight:600;">' + teks + '</div>' +
+            '<div style="font-size:10.5px;color:var(--text-muted);margin-top:2px;">' + esc(masa) + '</div>' +
+            '</div></div>';
+        }).join('');
+      } catch (e) {
+        list.innerHTML = '<div style="font-size:12px;color:var(--text-muted);">Gagal memuat aktiviti.</div>';
+      }
+    }
+
+    async function simpanLeadSemasa() {
+      const nama = document.getElementById('leadNama').value.trim();
+      if (!nama) { showToast('Nama lead diperlukan.', true); return; }
+
+      const btn = document.getElementById('btnSimpanLead');
+      btn.disabled = true;
+      showLoading(true, 'Menyimpan lead...');
+
+      try {
+        const data = {
+          id: document.getElementById('leadId').value || undefined,
+          nama: nama,
+          telefon: document.getElementById('leadTelefon').value.trim(),
+          emel: document.getElementById('leadEmel').value.trim(),
+          sumber: document.getElementById('leadSumber').value,
+          peringkat: document.getElementById('leadPeringkat').value,
+          bilPax: Number(document.getElementById('leadBilPax').value) || 0,
+          nilai: Number(document.getElementById('leadNilai').value) || 0,
+          pakej: bacaPakejBorang(),
+          pic: document.getElementById('leadPIC').value,
+          tarikhMasuk: document.getElementById('leadTarikhMasuk').value,
+          tarikhSusulan: document.getElementById('leadSusulan').value,
+          nota: document.getElementById('leadNota').value.trim()
+        };
+
+        const res = await apiPost('simpanLead', data);
+        if (!res.ok) throw new Error(res.message);
+
+        closeLeadModal();
+        showToast('Lead disimpan.');
+        await loadLeads();
+      } catch (err) {
+        showToast('Gagal menyimpan: ' + err.message, true);
+      } finally {
+        showLoading(false);
+        btn.disabled = false;
+      }
+    }
+
+    async function padamLeadSemasa() {
+      const l = appState.leadSemasa;
+      if (!l) return;
+      const ok = await requestConfirm({
+        title: 'Padam Lead',
+        message: 'Sahkan padam lead\n' + l.nama + '?\n\nTindakan ini tidak boleh dibatalkan.',
+        okLabel: 'Padam',
+        danger: true
+      });
+      if (!ok) return;
+
+      showLoading(true, 'Memadam lead...');
+      try {
+        const res = await apiPost('padamLead', { id: l.id });
+        if (!res.ok) throw new Error(res.message);
+        closeLeadModal();
+        showToast('Lead dipadam.');
+        await loadLeads();
+      } catch (err) {
+        showToast('Gagal memadam: ' + err.message, true);
+      } finally {
+        showLoading(false);
+      }
+    }
+
+    /* ===== TUKAR LEAD KE JEMAAH ===== */
+
+    function bukaTukarJemaah() {
+      const l = appState.leadSemasa;
+      if (!l) return;
+      document.getElementById('tjNama').value = l.nama;
+      document.getElementById('tjNokp').value = '';
+      document.getElementById('tjPU').value = 'Fatin';
+      openModal('tukarJemaahModal');
+    }
+
+    async function sahkanTukarJemaah() {
+      const l = appState.leadSemasa;
+      if (!l) return;
+      const nokp = document.getElementById('tjNokp').value.trim();
+      if (!/^\d{12}$/.test(nokp)) { showToast('No. Kad Pengenalan mesti 12 digit.', true); return; }
+
+      const btn = document.getElementById('btnTukarJemaahSah');
+      btn.disabled = true;
+      showLoading(true, 'Mendaftar sebagai jemaah...');
+
+      try {
+        const res = await apiPost('tukarLeadKeJemaah', {
+          id: l.id, nokp: nokp, namaPU: document.getElementById('tjPU').value
+        });
+        if (!res.ok) throw new Error(res.message);
+
+        closeModal('tukarJemaahModal');
+        closeLeadModal();
+        showToast('Berjaya didaftarkan sebagai jemaah.');
+        await loadLeads();
+      } catch (err) {
+        showToast('Gagal mendaftar: ' + err.message, true);
+      } finally {
+        showLoading(false);
+        btn.disabled = false;
+      }
+    }
+
+    /* ===== IMPORT PUKAL ===== */
+
+    function isiBorangImport() {
+      const t = document.getElementById('impTarikh');
+      if (t && !t.value) t.value = todayStr();
+
+      const sel = document.getElementById('impPIC');
+      if (sel.options.length <= 1) {
+        const senarai = (appState.data && appState.data.lists && appState.data.lists.pic) || ['Pengurus', 'PU', 'Media'];
+        sel.innerHTML = '<option value="">— Tiada —</option>' +
+          senarai.map(x => '<option value="' + esc(x) + '">' + esc(x) + '</option>').join('');
+      }
+
+      pasangDropzoneImport();
+    }
+
+    /** Drag-and-drop untuk kawasan muat naik fail. */
+    function pasangDropzoneImport() {
+      const dz = document.getElementById('impDropzone');
+      if (!dz || dz._dropSiap) return;
+      dz._dropSiap = true;
+
+      const tunjukAktif = (on) => {
+        dz.style.borderColor = on ? 'var(--primary)' : '';
+        dz.style.background = on ? '#f0fdf9' : '';
+      };
+
+      ['dragenter', 'dragover'].forEach(ev => {
+        dz.addEventListener(ev, e => { e.preventDefault(); e.stopPropagation(); tunjukAktif(true); });
+      });
+      ['dragleave', 'drop'].forEach(ev => {
+        dz.addEventListener(ev, e => { e.preventDefault(); e.stopPropagation(); tunjukAktif(false); });
+      });
+      dz.addEventListener('drop', e => {
+        const fail = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+        if (!fail) return;
+        if (fail.size > 5 * 1024 * 1024) { showToast('Fail melebihi 5 MB.', true); return; }
+        if (!/\.(csv|txt|tsv|xlsx|xls)$/i.test(fail.name)) {
+          showToast('Format tidak disokong. Guna CSV atau Excel.', true);
+          return;
+        }
+        handleImportFail({ target: { files: [fail], value: '' } });
+      });
+    }
+
+    function bukaImportLeads() {
+      switchTab('leads');
+      switchLeadsSubTab('import');
+    }
+
+    /* ==========================================================================
+       IMPORT DARI FAIL (CSV / Excel)
+       ========================================================================== */
+
+    appState.impFailData = null; // { nama, saiz, baris: [[...]] }
+
+    /* Parser CSV yang kendali petikan dan koma dalam medan.
+       Contoh: '"Ahmad, bin Ali",0123456789' -> ['Ahmad, bin Ali', '0123456789'] */
+    function parseCSV(teks) {
+      const baris = [];
+      let medan = [];
+      let semasa = '';
+      let dalamPetikan = false;
+      let i = 0;
+
+      // Buang BOM
+      if (teks.charCodeAt(0) === 0xFEFF) teks = teks.slice(1);
+
+      while (i < teks.length) {
+        const c = teks[i];
+        const next = teks[i + 1];
+
+        if (dalamPetikan) {
+          if (c === '"') {
+            if (next === '"') { semasa += '"'; i += 2; continue; }
+            dalamPetikan = false; i++; continue;
+          }
+          semasa += c; i++; continue;
+        }
+
+        if (c === '"') { dalamPetikan = true; i++; continue; }
+        if (c === ',') { medan.push(semasa); semasa = ''; i++; continue; }
+        if (c === '\r') { i++; continue; }
+        if (c === '\n') { medan.push(semasa); baris.push(medan); medan = []; semasa = ''; i++; continue; }
+
+        semasa += c; i++;
+      }
+
+      medan.push(semasa);
+      baris.push(medan);
+
+      // Buang baris kosong, dan trim ruang pada hujung medan
+      // (failKeTeks menulis ", " sebagai pemisah).
+      return baris
+        .filter(b => b.some(x => String(x).trim() !== ''))
+        .map(b => b.map(x => String(x).trim()));
+    }
+
+    /* Kesan pemisah yang paling mungkin untuk fail yang dipisah tab/pipe. */
+    function kesanPemisah(teks) {
+      const barisUji = teks.split('\n').slice(0, 5).join('\n');
+      const kiraTab = (barisUji.match(/\t/g) || []).length;
+      const kiraPipe = (barisUji.match(/\|/g) || []).length;
+      const kiraKoma = (barisUji.match(/,/g) || []).length;
+      if (kiraTab >= kiraPipe && kiraTab >= kiraKoma && kiraTab > 0) return '\t';
+      if (kiraPipe > kiraKoma && kiraPipe > 0) return '|';
+      return ',';
+    }
+
+    /* Tukar teks (CSV / TSV / pipe) kepada array baris. */
+    function teksKeBaris(teks) {
+      const pemisah = kesanPemisah(teks);
+      if (pemisah === ',') return parseCSV(teks);
+
+      return teks.replace(/\r\n/g, '\n').replace(/\r/g, '\n')
+        .split('\n')
+        .filter(b => b.trim())
+        .map(b => b.split(pemisah).map(x => String(x).trim()));
+    }
+
+    async function handleImportFail(event) {
+      const fail = event.target.files && event.target.files[0];
+      if (!fail) return;
+
+      const nama = fail.name.toLowerCase();
+      const maks = 5 * 1024 * 1024;
+
+      if (fail.size > maks) {
+        showToast('Fail melebihi 5 MB.', true);
+        event.target.value = '';
+        return;
+      }
+
+      const jenisSah = /\.(csv|txt|tsv|xlsx|xls)$/.test(nama);
+      if (!jenisSah) {
+        showToast('Format fail tidak disokong. Guna CSV atau Excel.', true);
+        event.target.value = '';
+        return;
+      }
+
+      showLoading(true, 'Membaca fail...');
+      try {
+        let baris = [];
+
+        if (/\.(csv|txt|tsv)$/.test(nama)) {
+          const teks = await fail.text();
+          baris = teksKeBaris(teks);
+        } else {
+          // Excel: perlu SheetJS. Jika tiada, beritahu pengguna.
+          if (typeof XLSX === 'undefined') {
+            throw new Error('Pembaca Excel belum dimuat. Sila simpan fail sebagai CSV dan cuba lagi.');
+          }
+          const buf = await fail.arrayBuffer();
+          const wb = XLSX.read(buf, { type: 'array' });
+          const sheet = wb.Sheets[wb.SheetNames[0]];
+          baris = XLSX.utils.sheet_to_json(sheet, { header: 1, raw: false, defval: '' });
+          baris = baris.filter(b => b.some(x => String(x).trim() !== ''));
+        }
+
+        if (!baris.length) throw new Error('Fail kosong atau tiada data dibaca.');
+
+        appState.impFailData = { nama: fail.name, saiz: fail.size, baris: baris };
+
+        document.getElementById('impFailInfo').classList.remove('hidden');
+        document.getElementById('impFailNama').textContent = fail.name;
+        document.getElementById('impFailStat').textContent =
+          baris.length + ' baris · ' + (baris[0] ? baris[0].length : 0) + ' kolum · ' + (fail.size / 1024).toFixed(1) + ' KB';
+
+        renderPratontonImport(baris);
+        showToast(baris.length + ' baris dibaca dari fail.');
+      } catch (err) {
+        showToast('Gagal membaca fail: ' + err.message, true);
+        buangImportFail();
+      } finally {
+        showLoading(false);
+        event.target.value = '';
+      }
+    }
+
+    function renderPratontonImport(baris) {
+      const wrap = document.getElementById('impPratonton');
+      const head = document.getElementById('impPratononHead');
+      const body = document.getElementById('impPratononBody');
+
+      const adaHeader = baris.length > 1 && /^(nama|name|telefon|phone|tel)/i.test(String(baris[0][0] || '').trim());
+      const header = adaHeader
+        ? baris[0].map(x => String(x || '').trim())
+        : ['Nama', 'Telefon', 'Sumber', 'Pakej', 'BilPax', 'Nota'];
+      const data = adaHeader ? baris.slice(1) : baris;
+
+      head.innerHTML = '<tr>' + header.slice(0, 6).map(h => '<th>' + esc(h || '—') + '</th>').join('') + '</tr>';
+
+      const tunjuk = data.slice(0, 20);
+      body.innerHTML = tunjuk.map(r =>
+        '<tr>' + header.slice(0, 6).map((_, i) =>
+          '<td style="font-size:12px;">' + esc(String(r[i] !== undefined ? r[i] : '')) + '</td>'
+        ).join('') + '</tr>'
+      ).join('');
+
+      document.getElementById('impPratononBil').textContent =
+        '(' + data.length + ' lead' + (data.length > 20 ? ', tunjuk 20 pertama' : '') + ')';
+
+      wrap.classList.remove('hidden');
+    }
+
+    function buangImportFail() {
+      appState.impFailData = null;
+      const f = document.getElementById('impFail');
+      if (f) f.value = '';
+      document.getElementById('impFailInfo').classList.add('hidden');
+      document.getElementById('impPratonton').classList.add('hidden');
+    }
+
+    /** Tukar data fail kepada teks untuk dihantar ke backend. */
+    function failKeTeks(baris) {
+      return baris.map(r => r.slice(0, 6).map(x => {
+        const s = String(x === undefined || x === null ? '' : x).trim();
+        // CSV perlu petikan bila medan ada koma, petikan, atau baris baharu.
+        const perluPetik = /[",\n\r]/.test(s);
+        return perluPetik ? '"' + s.replace(/"/g, '""') + '"' : s;
+      }).join(', ')).join('\n');
+    }
+
+    async function jalankanImport() {
+      let teks = document.getElementById('impTeks').value.trim();
+      let dariFail = false;
+
+      // Keutamaan: fail yang dimuat naik.
+      if (appState.impFailData && appState.impFailData.baris.length) {
+        teks = failKeTeks(appState.impFailData.baris);
+        dariFail = true;
+      }
+
+      if (!teks) { showToast('Muat naik fail atau tampal data untuk diimport.', true); return; }
+
+      const btn = document.getElementById('btnImport');
+      btn.disabled = true;
+      showLoading(true, 'Mengimport ' + (dariFail ? 'dari fail' : '') + '...');
+
+      try {
+        const res = await apiPost('importLeadsPukal', {
+          teks: teks,
+          sumber: document.getElementById('impSumber').value,
+          pic: document.getElementById('impPIC').value,
+          tarikhMasuk: document.getElementById('impTarikh').value
+        });
+        if (!res.ok) throw new Error(res.message);
+
+        renderHasilImport(res);
+        document.getElementById('impTeks').value = '';
+        buangImportFail();
+        showToast(res.message);
+      } catch (err) {
+        showToast('Gagal mengimport: ' + err.message, true);
+      } finally {
+        showLoading(false);
+        btn.disabled = false;
+      }
+    }
+
+    function renderHasilImport(res) {
+      const wrap = document.getElementById('hasilImport');
+      wrap.classList.remove('hidden');
+
+      const kelas = res.bilBerjaya > 0 ? 'ok' : (res.bilGagal > 0 ? 'amaran' : 'ralat');
+
+      let html = '<div class="import-hasil-box ' + kelas + '">' +
+        '<div style="font-size:14px;font-weight:800;margin-bottom:6px;">' + esc(res.message) + '</div>' +
+        '<div style="font-size:12.5px;color:var(--text-muted);">' +
+        'Berjaya: <strong style="color:var(--status-ok-text);">' + res.bilBerjaya + '</strong> · ' +
+        'Dilangkau: <strong style="color:var(--status-low-text);">' + res.bilGagal + '</strong>' +
+        '</div></div>';
+
+      if (res.contoh && res.contoh.length) {
+        html += '<div style="margin-bottom:12px;"><div style="font-size:11.5px;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Contoh diimport</div>' +
+          res.contoh.map(n => '<div style="font-size:12.5px;padding:3px 0;">• ' + esc(n) + '</div>').join('') + '</div>';
+      }
+
+      if (res.gagal && res.gagal.length) {
+        html += '<div><div style="font-size:11.5px;font-weight:800;color:var(--status-low-text);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">Dilangkau (' + res.bilGagal + ')</div>' +
+          '<div class="table-container"><table><thead><tr><th>Baris</th><th>Sebab</th><th>Teks</th></tr></thead><tbody>' +
+          res.gagal.map(g => '<tr><td>' + esc(g.baris) + '</td><td style="font-size:12px;">' + esc(g.sebab) + '</td><td style="font-size:11.5px;color:var(--text-muted);">' + esc(g.teks) + '</td></tr>').join('') +
+          '</tbody></table></div></div>';
+      }
+
+      html += '<div style="margin-top:16px;"><button type="button" class="btn btn-primary" onclick="switchLeadsSubTab(\'senarai\')">Lihat Senarai Lead</button></div>';
+
+      wrap.innerHTML = html;
+    }
+
+    /* ==========================================================================
+       MODUL WHATSAPP — TEMPLAT & PENGHANTARAN
+       ==========================================================================
+
+       PENTING: Sistem ini TIDAK menghantar WhatsApp secara automatik.
+       Ia menjana pautan wa.me dengan mesej siap; staf tekan "Hantar" sendiri.
+       Ini untuk elak nombor disekat kerana penghantaran pukal.
+       ========================================================================== */
+
+    const WA_KATEGORI = ['Susulan', 'Tawaran', 'Peringatan', 'Terima Kasih', 'Lain-lain'];
+    const WA_TAG = ['{nama}', '{pakej}', '{pax}', '{sumber}', '{pic}', '{tarikh}', '{pax_bil}'];
+
+    appState.waTemplat = [];
+    appState.waLead = null;
+
+    const WA_ICON = '<svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>';
+
+    async function loadWaTemplat() {
+      try {
+        const res = await apiGet('getWaTemplat', {});
+        if (!res.ok) throw new Error(res.message);
+        appState.waTemplat = res.data || [];
+        return appState.waTemplat;
+      } catch (err) {
+        showToast('Gagal memuat templat: ' + err.message, true);
+        return [];
+      }
+    }
+
+    /* Ganti tag dengan data lead — sama logik seperti pelayan. */
+    function gantiTagMesej(mesej, lead) {
+      const l = lead || {};
+      const peta = {
+        '{nama}': String(l.nama || ''),
+        '{pakej}': String(l.pakej || 'pakej umrah kami'),
+        '{pax}': String(l.bilPax || ''),
+        '{pax_bil}': String(l.bilPax || ''),
+        '{sumber}': String(l.sumber || ''),
+        '{pic}': String(l.pic || ''),
+        '{tarikh}': String(l.tarikhMasuk || '')
+      };
+      let hasil = String(mesej || '');
+      Object.keys(peta).forEach(k => { hasil = hasil.split(k).join(peta[k]); });
+      return hasil;
+    }
+
+    /* Tukar nombor tempatan ke format wa.me (60...). */
+    function telefonKeWa(tel) {
+      let d = String(tel || '').replace(/\D/g, '');
+      if (d.indexOf('60') === 0 && d.length > 10) return d;
+      if (d.indexOf('0') === 0) return '60' + d.slice(1);
+      return '60' + d;
+    }
+
+    /* ===== HANTAR WHATSAPP ===== */
+
+    async function bukaWaUntukLead() {
+      const l = appState.leadSemasa;
+      if (!l) return;
+
+      appState.waLead = l;
+      document.getElementById('waPenerimaNama').textContent = l.nama || '';
+      document.getElementById('waPenerimaTel').textContent = l.telefon || 'Tiada nombor';
+
+      const adaTel = !!String(l.telefon || '').trim();
+      document.getElementById('waTelSkipWrap').classList.toggle('hidden', adaTel);
+      document.getElementById('btnWaHantar').disabled = !adaTel;
+      document.getElementById('waNaikPeringkat').checked = (l.peringkat === 'Baru');
+
+      // Isi dropdown templat
+      if (!appState.waTemplat.length) await loadWaTemplat();
+      const sel = document.getElementById('waTemplatPilih');
+      const aktif = appState.waTemplat.filter(t => t.aktif);
+      sel.innerHTML = '<option value="">— Tulis sendiri —</option>' +
+        aktif.map(t => '<option value="' + esc(t.id) + '">' + esc(t.nama) + ' (' + esc(t.kategori) + ')</option>').join('');
+
+      document.getElementById('waMesej').value = '';
+      document.getElementById('waTagSenarai').textContent = WA_TAG.join(' · ');
+      kemaskiniKiraWa();
+
+      openModal('waModal');
+    }
+
+    function gunakanWaTemplat() {
+      const id = document.getElementById('waTemplatPilih').value;
+      if (!id) return;
+      const t = appState.waTemplat.find(x => x.id === id);
+      if (!t) return;
+
+      // Papar mesej MENTAH dengan tag, bukan yang sudah diganti,
+      // supaya staf boleh edit sebelum hantar.
+      document.getElementById('waMesej').value = t.mesej;
+      kemaskiniKiraWa();
+    }
+
+    function kemaskiniKiraWa() {
+      const m = document.getElementById('waMesej').value;
+      document.getElementById('waKiraAksara').textContent = m.length + ' / 3000';
+
+      const dijumpai = WA_TAG.filter(t => m.indexOf(t) !== -1);
+      document.getElementById('waKiraTag').textContent = dijumpai.length
+        ? dijumpai.length + ' tag akan diganti'
+        : '';
+    }
+
+    async function hantarWa() {
+      const l = appState.waLead;
+      if (!l) return;
+
+      const mesejMentah = document.getElementById('waMesej').value.trim();
+      if (!mesejMentah) { showToast('Mesej tidak boleh kosong.', true); return; }
+
+      const mesejAkhir = gantiTagMesej(mesejMentah, l);
+      const tel = l.telefon;
+
+      const btn = document.getElementById('btnWaHantar');
+      btn.disabled = true;
+
+      try {
+        // Minta pelayan jana pautan (validasi + log).
+        const res = await apiPost('janaPautanWa', { telefon: tel, mesej: mesejAkhir });
+        if (!res.ok) throw new Error(res.message);
+
+        // Buka WhatsApp dalam tab baharu.
+        window.open(res.pautan, '_blank', 'noopener');
+
+        // Rekod penghantaran + naik peringkat jika perlu.
+        const rekod = await apiPost('rekodWaDihantar', {
+          id: l.id,
+          jenis: 'WhatsApp',
+          naikPeringkat: document.getElementById('waNaikPeringkat').checked,
+          nota: mesejAkhir.slice(0, 100)
+        });
+
+        closeModal('waModal');
+        showToast(rekod.ok ? rekod.message : 'WhatsApp dibuka. Tekan Hantar dalam WhatsApp.');
+
+        // Muat semula senarai supaya peringkat dikemaskini.
+        await loadLeads();
+      } catch (err) {
+        showToast('Gagal membuka WhatsApp: ' + err.message, true);
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    /* ===== PENGURUS TEMPLAT ===== */
+
+    async function bukaTemplatWa() {
+      await loadWaTemplat();
+      renderTemplatWa();
+      openModal('waTemplatModal');
+    }
+
+    function renderTemplatWa() {
+      const wrap = document.getElementById('waTemplatSenarai');
+      if (!appState.waTemplat.length) {
+        wrap.innerHTML = '<div class="empty-state">' +
+          '<svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>' +
+          '<div>Belum ada templat.</div></div>';
+        return;
+      }
+
+      // Kumpul ikut kategori
+      const ikutKat = {};
+      appState.waTemplat.forEach(t => {
+        if (!ikutKat[t.kategori]) ikutKat[t.kategori] = [];
+        ikutKat[t.kategori].push(t);
+      });
+
+      let html = '';
+      Object.keys(ikutKat).forEach(kat => {
+        html += '<div style="margin-bottom:18px;">' +
+          '<div style="font-size:10.5px; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.7px; margin-bottom:8px;">' + esc(kat) + '</div>';
+
+        html += ikutKat[kat].map(t => {
+          const pratonton = String(t.mesej).slice(0, 110).replace(/\n/g, ' ');
+          return '<div class="card-row" style="margin-bottom:8px; cursor:pointer;" data-wa-templat="' + esc(t.id) + '" role="button" tabindex="0">' +
+            '<div class="card-row-top" style="align-items:flex-start;">' +
+              '<div style="min-width:0; flex:1;">' +
+                '<div class="card-title" style="font-size:13.5px;">' + esc(t.nama) +
+                  (t.aktif ? '' : ' <span class="badge badge-empty" style="font-size:9.5px;">TIDAK AKTIF</span>') +
+                '</div>' +
+                '<div class="card-sub" style="margin-top:3px; line-height:1.5;">' + esc(pratonton) + (t.mesej.length > 110 ? '...' : '') + '</div>' +
+              '</div>' +
+              '<span style="font-size:10.5px; color:var(--text-muted); white-space:nowrap;">' + esc(t.id) + '</span>' +
+            '</div>' +
+          '</div>';
+        }).join('');
+
+        html += '</div>';
+      });
+
+      wrap.innerHTML = html;
+    }
+
+    function bukaTambahTemplat() {
+      document.getElementById('tmplId').value = '';
+      document.getElementById('waTemplatEditTitle').textContent = 'Templat Baru';
+      document.getElementById('tmplNama').value = '';
+      document.getElementById('tmplKategori').value = 'Susulan';
+      document.getElementById('tmplMesej').value = '';
+      document.getElementById('tmplAktif').checked = true;
+      document.getElementById('btnPadamTemplat').classList.add('hidden');
+      kemaskiniKiraTemplat();
+      openModal('waTemplatEditModal');
+    }
+
+    function bukaEditTemplat(id) {
+      const t = appState.waTemplat.find(x => x.id === id);
+      if (!t) return;
+      document.getElementById('tmplId').value = t.id;
+      document.getElementById('waTemplatEditTitle').textContent = t.nama;
+      document.getElementById('tmplNama').value = t.nama;
+      document.getElementById('tmplKategori').value = t.kategori;
+      document.getElementById('tmplMesej').value = t.mesej;
+      document.getElementById('tmplAktif').checked = t.aktif;
+      document.getElementById('btnPadamTemplat').classList.remove('hidden');
+      kemaskiniKiraTemplat();
+      openModal('waTemplatEditModal');
+    }
+
+    function kemaskiniKiraTemplat() {
+      const m = document.getElementById('tmplMesej').value;
+      const tag = WA_TAG.filter(t => m.indexOf(t) !== -1);
+      document.getElementById('tmplKira').textContent =
+        m.length + ' / 3000 aksara' + (tag.length ? ' · tag: ' + tag.join(', ') : '');
+    }
+
+    async function simpanTemplatSemasa() {
+      const nama = document.getElementById('tmplNama').value.trim();
+      const mesej = document.getElementById('tmplMesej').value.trim();
+      if (!nama) { showToast('Nama templat diperlukan.', true); return; }
+      if (!mesej) { showToast('Mesej templat diperlukan.', true); return; }
+
+      const btn = document.getElementById('btnSimpanTemplat');
+      btn.disabled = true;
+      showLoading(true, 'Menyimpan templat...');
+
+      try {
+        const res = await apiPost('simpanWaTemplat', {
+          id: document.getElementById('tmplId').value || undefined,
+          nama: nama,
+          kategori: document.getElementById('tmplKategori').value,
+          mesej: mesej,
+          aktif: document.getElementById('tmplAktif').checked
+        });
+        if (!res.ok) throw new Error(res.message);
+
+        closeModal('waTemplatEditModal');
+        await loadWaTemplat();
+        renderTemplatWa();
+        showToast('Templat disimpan.');
+      } catch (err) {
+        showToast('Gagal menyimpan: ' + err.message, true);
+      } finally {
+        showLoading(false);
+        btn.disabled = false;
+      }
+    }
+
+    async function padamTemplatSemasa() {
+      const id = document.getElementById('tmplId').value;
+      if (!id) return;
+      const t = appState.waTemplat.find(x => x.id === id);
+      const ok = await requestConfirm({
+        title: 'Padam Templat',
+        message: 'Sahkan padam templat\n' + (t ? t.nama : id) + '?',
+        okLabel: 'Padam',
+        danger: true
+      });
+      if (!ok) return;
+
+      showLoading(true, 'Memadam templat...');
+      try {
+        const res = await apiPost('padamWaTemplat', { id: id });
+        if (!res.ok) throw new Error(res.message);
+        closeModal('waTemplatEditModal');
+        await loadWaTemplat();
+        renderTemplatWa();
+        showToast('Templat dipadam.');
+      } catch (err) {
+        showToast('Gagal memadam: ' + err.message, true);
+      } finally {
+        showLoading(false);
+      }
+    }
+
+    /* ==========================================================================
+       MODUL AUTH — LOG MASUK & SESI
+       ==========================================================================
+
+       Sesi disimpan dalam localStorage. Token luput selepas 12 jam di pelayan.
+       PENTING: tapisan PIC dikuatkuasakan di PELAYAN, bukan di sini.
+       Klien hanya memaparkan apa yang pelayan pulangkan.
+       ========================================================================== */
+
+    const SESI_KEY = 'eastra_sesi';
+
+    appState.sesi = null;
+    appState.sesiPengguna = null;
+
+    function simpanSesi(token, pengguna, luput) {
+      appState.sesi = token;
+      appState.sesiPengguna = pengguna;
+      try {
+        localStorage.setItem(SESI_KEY, JSON.stringify({ token: token, pengguna: pengguna, luput: luput, masa: Date.now() }));
+      } catch (e) {}
+    }
+
+    function bacaSesi() {
+      try {
+        const raw = localStorage.getItem(SESI_KEY);
+        if (!raw) return null;
+        const s = JSON.parse(raw);
+        if (!s || !s.token) return null;
+        // Buang sesi yang sudah luput mengikut masa klien.
+        if (s.luput && new Date(s.luput).getTime() < Date.now()) {
+          localStorage.removeItem(SESI_KEY);
+          return null;
+        }
+        return s;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function buangSesi() {
+      appState.sesi = null;
+      appState.sesiPengguna = null;
+      try { localStorage.removeItem(SESI_KEY); } catch (e) {}
+    }
+
+    function initials(nama) {
+      const p = String(nama || '?').trim().split(/\s+/);
+      if (p.length === 1) return p[0].slice(0, 2).toUpperCase();
+      return (p[0][0] + p[1][0]).toUpperCase();
+    }
+
+    function tunjukPassword() {
+      const inp = document.getElementById('loginPassword');
+      inp.type = inp.type === 'password' ? 'text' : 'password';
+      inp.focus();
+    }
+
+    async function hantarLogMasuk(e) {
+      e.preventDefault();
+
+      const id = document.getElementById('loginId').value.trim();
+      const pwd = document.getElementById('loginPassword').value;
+      const ralatEl = document.getElementById('loginRalat');
+      const btn = document.getElementById('btnLogMasuk');
+
+      ralatEl.classList.add('hidden');
+      if (!id || !pwd) {
+        ralatEl.textContent = 'Sila isi ID dan kata laluan.';
+        ralatEl.classList.remove('hidden');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Memproses...';
+
+      try {
+        const res = await fetch(withToken(SCRIPT_URL), {
+          method: 'POST',
+          headers: apiHeaders(),
+          body: apiBody({ action: 'logMasuk', data: { id: id, password: pwd } })
+        });
+        const hasil = await res.json();
+
+        if (!hasil.ok) throw new Error(hasil.message || 'Log masuk gagal.');
+
+        simpanSesi(hasil.token, hasil.pengguna, hasil.luput);
+        document.getElementById('loginPassword').value = '';
+
+        await mulaAplikasi();
+      } catch (err) {
+        ralatEl.textContent = err.message;
+        ralatEl.classList.remove('hidden');
+        document.getElementById('loginPassword').value = '';
+        document.getElementById('loginPassword').focus();
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Log Masuk';
+      }
+    }
+
+    /** Tunjuk aplikasi selepas log masuk berjaya. */
+    async function mulaAplikasi() {
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('appShell').classList.remove('hidden');
+      renderChipPengguna();
+      terapkanSkopPengguna();
+
+      document.getElementById('txDate').valueAsDate = new Date();
+      const defaultDate = new Date();
+      defaultDate.setDate(defaultDate.getDate() + ((6 - defaultDate.getDay() + 7) % 7 || 7));
+      const dateInput = document.getElementById('ufTarikhInput');
+      if (dateInput) dateInput.value = defaultDate.toISOString().split('T')[0];
+
+      addBatchRow();
+      loadLocalCacheImmediately();
+      loadData(false);
+    }
+
+    /** Log keluar. */
+    async function logKeluarAplikasi() {
+      const ok = await requestConfirm({
+        title: 'Log Keluar',
+        message: 'Sahkan log keluar dari sistem?',
+        okLabel: 'Log Keluar'
+      });
+      if (!ok) return;
+
+      showLoading(true, 'Log keluar...');
+      try {
+        await fetch(withToken(SCRIPT_URL), {
+          method: 'POST',
+          headers: apiHeaders(),
+          body: apiBody({ action: 'logKeluar', data: { sesi: appState.sesi } })
+        });
+      } catch (e) {
+        // Abaikan — kita buang sesi tempatan juga.
+      } finally {
+        buangSesi();
+        showLoading(false);
+        window.location.reload();
+      }
+    }
+    /** Papar chip pengguna dalam topbar. */
+    function renderChipPengguna() {
+      const u = appState.sesiPengguna;
+      if (!u) return;
+
+      const chip = document.getElementById('userChip');
+      if (!chip) return;
+
+      document.getElementById('userNama').textContent = u.nama;
+
+      const perEl = document.getElementById('userPeranan');
+      if (u.peranan === 'admin') {
+        perEl.textContent = 'Admin';
+        perEl.classList.add('admin');
+      } else {
+        // Jangan ulang nama PIC — tunjuk label jenis sahaja.
+        perEl.textContent = 'PIC';
+        perEl.classList.remove('admin');
+      }
+    }
+
+    /**
+     * Tunjuk skop data. Hanya admin dapat banner (sebab dia nampak SEMUA data,
+     * yang perlu dijelaskan). PIC biasa tidak perlu banner — chip sudah cukup.
+     */
+    function terapkanSkopPengguna() {
+      const u = appState.sesiPengguna;
+      if (!u) return;
+
+      const el = document.getElementById('skopBanner');
+      if (!el) return;
+
+      const btnPakej = document.getElementById('btnUrusPakej');
+      if (btnPakej) btnPakej.classList.toggle('hidden', !isAdmin());
+
+      if (u.peranan === 'admin') {
+        el.className = 'skop-banner admin';
+        el.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>' +
+          '<span>Anda melihat <strong>semua data</strong> sebagai Admin.</span>';
+        el.classList.remove('hidden');
+      } else {
+        // PIC biasa: tiada banner, elak berulang maklumat.
+        el.classList.add('hidden');
+      }
+    }
+
+    /* ==========================================================================
+       MODUL PAKEJ
+       ========================================================================== */
+
+    appState.pakej = [];
+
+    async function loadPakej() {
+      try {
+        const res = await apiGet('getPakej', {});
+        if (!res.ok) throw new Error(res.message);
+        appState.pakej = res.pakej || [];
+        return appState.pakej;
+      } catch (err) {
+        showToast('Gagal memuat pakej: ' + err.message, true);
+        return [];
+      }
+    }
+
+    /** Isi dropdown pakej dalam borang lead. */
+    async function isiPilihanPakej(nilaiSemasa) {
+      const sel = document.getElementById('leadPakej');
+      if (!sel) return;
+
+      if (!appState.pakej.length) await loadPakej();
+
+      const aktif = appState.pakej.filter(p => p.aktif);
+      let html = '<option value="">— Tiada —</option>' +
+        aktif.map(p => '<option value="' + esc(p.nama) + '">' + esc(p.nama) + '</option>').join('') +
+        '<option value="__LAIN__">Lain-lain...</option>';
+
+      sel.innerHTML = html;
+
+      // Kalau nilai semasa tidak ada dalam senarai, pilih "Lain-lain" dan isi medan teks.
+      const ada = aktif.some(p => p.nama === nilaiSemasa);
+      const inpLain = document.getElementById('leadPakejLain');
+
+      if (nilaiSemasa && !ada) {
+        sel.value = '__LAIN__';
+        inpLain.value = nilaiSemasa;
+        inpLain.classList.remove('hidden');
+      } else {
+        sel.value = nilaiSemasa || '';
+        inpLain.value = '';
+        inpLain.classList.add('hidden');
+      }
+    }
+
+    /** Tunjuk medan teks bila pilih "Lain-lain". */
+    function onPakejLeadChange() {
+      const sel = document.getElementById('leadPakej');
+      const inp = document.getElementById('leadPakejLain');
+      if (!sel || !inp) return;
+
+      if (sel.value === '__LAIN__') {
+        inp.classList.remove('hidden');
+        inp.focus();
+      } else {
+        inp.classList.add('hidden');
+        inp.value = '';
+      }
+    }
+
+    /** Ambil nilai pakej sebenar dari borang. */
+    function bacaPakejBorang() {
+      const sel = document.getElementById('leadPakej');
+      const inp = document.getElementById('leadPakejLain');
+      if (!sel) return '';
+      if (sel.value === '__LAIN__') return inp ? inp.value.trim() : '';
+      return sel.value;
+    }
+
+    /* ===== PENGURUS PAKEJ (ADMIN) ===== */
+
+    async function bukaPakejModal() {
+      await loadPakej();
+      renderPakej();
+      openModal('pakejModal');
+    }
+
+    function renderPakej() {
+      const wrap = document.getElementById('pakejSenarai');
+      if (!appState.pakej.length) {
+        wrap.innerHTML = '<div class="empty-state">' +
+          '<svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>' +
+          '<div>Belum ada pakej.</div></div>';
+        return;
+      }
+
+      wrap.innerHTML = appState.pakej.map(p =>
+        '<div class="card-row" style="margin-bottom:8px; cursor:pointer;" data-pakej="' + esc(p.id) + '" role="button" tabindex="0">' +
+          '<div class="card-row-top" style="align-items:flex-start;">' +
+            '<div style="min-width:0; flex:1;">' +
+              '<div class="card-title" style="font-size:13.5px;">' + esc(p.nama) +
+                (p.aktif ? '' : ' <span class="badge badge-empty" style="font-size:9.5px;">TIDAK AKTIF</span>') +
+              '</div>' +
+              (p.keterangan ? '<div class="card-sub" style="margin-top:2px;">' + esc(p.keterangan) + '</div>' : '') +
+              (p.harga || p.bilHari
+                ? '<div class="card-sub" style="margin-top:3px;">' +
+                    (p.harga ? rupiahRingkas(p.harga) : '') +
+                    (p.harga && p.bilHari ? ' · ' : '') +
+                    (p.bilHari ? p.bilHari + ' hari' : '') +
+                  '</div>'
+                : '') +
+            '</div>' +
+            '<span style="font-size:10.5px; color:var(--text-muted); white-space:nowrap;">' + esc(p.id) + '</span>' +
+          '</div>' +
+        '</div>'
+      ).join('');
+    }
+
+    function bukaTambahPakej() {
+      document.getElementById('pkgId').value = '';
+      document.getElementById('pakejEditTitle').textContent = 'Pakej Baru';
+      document.getElementById('pkgNama').value = '';
+      document.getElementById('pkgKeterangan').value = '';
+      document.getElementById('pkgHarga').value = 0;
+      document.getElementById('pkgHari').value = 0;
+      document.getElementById('pkgSusunan').value = appState.pakej.length + 1;
+      document.getElementById('pkgAktif').checked = true;
+      document.getElementById('btnPadamPakej').classList.add('hidden');
+      openModal('pakejEditModal');
+    }
+
+    function bukaEditPakej(id) {
+      const p = appState.pakej.find(x => x.id === id);
+      if (!p) return;
+      document.getElementById('pkgId').value = p.id;
+      document.getElementById('pakejEditTitle').textContent = p.nama;
+      document.getElementById('pkgNama').value = p.nama;
+      document.getElementById('pkgKeterangan').value = p.keterangan || '';
+      document.getElementById('pkgHarga').value = p.harga || 0;
+      document.getElementById('pkgHari').value = p.bilHari || 0;
+      document.getElementById('pkgSusunan').value = p.susunan || 0;
+      document.getElementById('pkgAktif').checked = p.aktif;
+      document.getElementById('btnPadamPakej').classList.remove('hidden');
+      openModal('pakejEditModal');
+    }
+
+    async function simpanPakejSemasa() {
+      const nama = document.getElementById('pkgNama').value.trim();
+      if (!nama) { showToast('Nama pakej diperlukan.', true); return; }
+
+      const btn = document.getElementById('btnSimpanPakej');
+      btn.disabled = true;
+      showLoading(true, 'Menyimpan pakej...');
+
+      try {
+        const res = await apiPost('simpanPakej', {
+          id: document.getElementById('pkgId').value || undefined,
+          nama: nama,
+          keterangan: document.getElementById('pkgKeterangan').value.trim(),
+          harga: Number(document.getElementById('pkgHarga').value) || 0,
+          bilHari: Number(document.getElementById('pkgHari').value) || 0,
+          susunan: Number(document.getElementById('pkgSusunan').value) || 0,
+          aktif: document.getElementById('pkgAktif').checked
+        });
+        if (!res.ok) throw new Error(res.message);
+
+        closeModal('pakejEditModal');
+        await loadPakej();
+        renderPakej();
+        showToast('Pakej disimpan.');
+      } catch (err) {
+        showToast('Gagal menyimpan: ' + err.message, true);
+      } finally {
+        showLoading(false);
+        btn.disabled = false;
+      }
+    }
+
+    async function padamPakejSemasa() {
+      const id = document.getElementById('pkgId').value;
+      if (!id) return;
+      const p = appState.pakej.find(x => x.id === id);
+      const ok = await requestConfirm({
+        title: 'Padam Pakej',
+        message: 'Sahkan padam pakej\n' + (p ? p.nama : id) + '?\n\nLead sedia ada yang menggunakan nama ini tidak akan berubah.',
+        okLabel: 'Padam',
+        danger: true
+      });
+      if (!ok) return;
+
+      showLoading(true, 'Memadam pakej...');
+      try {
+        const res = await apiPost('padamPakej', { id: id });
+        if (!res.ok) throw new Error(res.message);
+        closeModal('pakejEditModal');
+        await loadPakej();
+        renderPakej();
+        showToast('Pakej dipadam.');
+      } catch (err) {
+        showToast('Gagal memadam: ' + err.message, true);
+      } finally {
+        showLoading(false);
+      }
+    }
+
+    /* ==========================================================================
        PENGURUSAN MODAL: fokus, aria, dan scroll lock yang tidak hilang posisi
        ========================================================================== */
     let lastFocusedElement = null;
@@ -3778,8 +6011,7 @@ Jom pakat mari ramai-ramai!
        PENGENDALI EVENT TERPUSAT (menggantikan inline onclick dengan data-attribute)
        ========================================================================== */
     function initDelegatedEvents() {
-      document.addEventListener('click', e => {
-        const delBtn = e.target.closest('[data-edit-item]');
+      document.addEventListener('click', e => {        const delBtn = e.target.closest('[data-edit-item]');
         if (delBtn) {
           const item = findItemById(delBtn.getAttribute('data-edit-item'));
           if (item) populateEditItem(item);
@@ -3808,6 +6040,25 @@ Jom pakat mari ramai-ramai!
 
         const logRow = e.target.closest('[data-log-index]');
         if (logRow) { openLogDetailModalByIndex(Number(logRow.getAttribute('data-log-index'))); return; }
+
+        const leadRow = e.target.closest('[data-lead-id]');
+        if (leadRow) { bukaLead(leadRow.getAttribute('data-lead-id')); return; }
+
+        const tmplRow = e.target.closest('[data-wa-templat]');
+        if (tmplRow) { bukaEditTemplat(tmplRow.getAttribute('data-wa-templat')); return; }
+
+        const pakejRow = e.target.closest('[data-pakej]');
+        if (pakejRow) { bukaEditPakej(pakejRow.getAttribute('data-pakej')); return; }
+
+        const waBtn = e.target.closest('[data-wa-cepat]');
+        if (waBtn) {
+          const l = (appState.leads || []).find(x => x.id === waBtn.getAttribute('data-wa-cepat'));
+          if (l) {
+            appState.leadSemasa = l;
+            bukaWaUntukLead();
+          }
+          return;
+        }
       });
 
       document.addEventListener('keydown', e => {
@@ -3831,6 +6082,12 @@ Jom pakat mari ramai-ramai!
           target.click();
         }
       });
+
+      // Kiraan aksara langsung untuk medan mesej WhatsApp.
+      const waMesej = document.getElementById('waMesej');
+      if (waMesej) waMesej.addEventListener('input', kemaskiniKiraWa);
+      const tmplMesej = document.getElementById('tmplMesej');
+      if (tmplMesej) tmplMesej.addEventListener('input', kemaskiniKiraTemplat);
     }
 
     /* ==========================================================================
