@@ -3093,9 +3093,12 @@
 
     function refreshCurrentView() {
       showToast('Menyegerakkan semua data dari pelayan...');
+      // Kosongkan cache supaya semua data diambil semula dari pelayan.
+      kosongkanCache();
       loadData(true);
       fetchUmrahFormsList(true);
       loadDataJemaah(true);
+      if (appState.aktifTabLeads || (appState.leads && appState.leads.length)) loadLeads(true);
     }
 
     function renderLoadingPlaceholders() {
@@ -4587,7 +4590,38 @@ Jom pakat mari ramai-ramai!
       return '<span style="color:var(--text-muted);">Dalam ' + d + ' hari</span>';
     }
 
-    async function loadLeads() {
+    /* ==========================================================================
+       CACHE DATA — kurangkan panggilan berulang
+       Apps Script lambat (~300-700ms setiap panggilan). Cache elak panggilan
+       berulang bila pengguna buka tutup tab.
+       ========================================================================== */
+
+    const TTL_LEADS = 60000;      // 1 minit
+    const TTL_PAKEJ = 600000;     // 10 minit (jarang berubah)
+    const TTL_TEMPLAT = 600000;   // 10 minit
+
+    appState.cache = { leads: 0, pakej: 0, templat: 0 };
+
+    function cacheSah(kunci, ttl) {
+      return (Date.now() - (appState.cache[kunci] || 0)) < ttl;
+    }
+
+    function tandaCache(kunci) {
+      appState.cache[kunci] = Date.now();
+    }
+
+    function kosongkanCache(kunci) {
+      if (kunci) appState.cache[kunci] = 0;
+      else appState.cache = { leads: 0, pakej: 0, templat: 0 };
+    }
+
+    async function loadLeads(paksa) {
+      // Guna hasil lama kalau baru sahaja dimuat.
+      if (!paksa && cacheSah('leads', TTL_LEADS) && appState.leads && appState.leads.length) {
+        renderLeads();
+        return;
+      }
+
       showLoading(true, 'Memuatkan leads...');
       try {
         const p = { peringkat: appState.leadTapisan.peringkat, sumber: appState.leadTapisan.sumber, cari: appState.leadTapisan.cari };
@@ -4595,6 +4629,7 @@ Jom pakat mari ramai-ramai!
         if (!res.ok) throw new Error(res.message);
         appState.leads = res.data || [];
         appState.leadRingkasan = res.ringkasan;
+        tandaCache('leads');
         renderLeads();
       } catch (err) {
         showToast('Gagal memuat leads: ' + err.message, true);
@@ -4863,7 +4898,8 @@ Jom pakat mari ramai-ramai!
 
         closeLeadModal();
         showToast('Lead disimpan.');
-        await loadLeads();
+        kosongkanCache('leads');
+        await loadLeads(true);
       } catch (err) {
         showToast('Gagal menyimpan: ' + err.message, true);
       } finally {
@@ -4889,7 +4925,8 @@ Jom pakat mari ramai-ramai!
         if (!res.ok) throw new Error(res.message);
         closeLeadModal();
         showToast('Lead dipadam.');
-        await loadLeads();
+        kosongkanCache('leads');
+        await loadLeads(true);
       } catch (err) {
         showToast('Gagal memadam: ' + err.message, true);
       } finally {
@@ -4927,7 +4964,8 @@ Jom pakat mari ramai-ramai!
         closeModal('tukarJemaahModal');
         closeLeadModal();
         showToast('Berjaya didaftarkan sebagai jemaah.');
-        await loadLeads();
+        kosongkanCache('leads');
+        await loadLeads(true);
       } catch (err) {
         showToast('Gagal mendaftar: ' + err.message, true);
       } finally {
@@ -5243,11 +5281,15 @@ Jom pakat mari ramai-ramai!
 
     const WA_ICON = '<svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>';
 
-    async function loadWaTemplat() {
+    async function loadWaTemplat(paksa) {
+      if (!paksa && cacheSah('templat', TTL_TEMPLAT) && appState.waTemplat && appState.waTemplat.length) {
+        return appState.waTemplat;
+      }
       try {
         const res = await apiGet('getWaTemplat', {});
         if (!res.ok) throw new Error(res.message);
         appState.waTemplat = res.data || [];
+        tandaCache('templat');
         return appState.waTemplat;
       } catch (err) {
         showToast('Gagal memuat templat: ' + err.message, true);
@@ -5364,7 +5406,8 @@ Jom pakat mari ramai-ramai!
         showToast(rekod.ok ? rekod.message : 'WhatsApp dibuka. Tekan Hantar dalam WhatsApp.');
 
         // Muat semula senarai supaya peringkat dikemaskini.
-        await loadLeads();
+        kosongkanCache('leads');
+        await loadLeads(true);
       } catch (err) {
         showToast('Gagal membuka WhatsApp: ' + err.message, true);
       } finally {
@@ -5716,11 +5759,15 @@ Jom pakat mari ramai-ramai!
 
     appState.pakej = [];
 
-    async function loadPakej() {
+    async function loadPakej(paksa) {
+      if (!paksa && cacheSah('pakej', TTL_PAKEJ) && appState.pakej && appState.pakej.length) {
+        return appState.pakej;
+      }
       try {
         const res = await apiGet('getPakej', {});
         if (!res.ok) throw new Error(res.message);
         appState.pakej = res.pakej || [];
+        tandaCache('pakej');
         return appState.pakej;
       } catch (err) {
         showToast('Gagal memuat pakej: ' + err.message, true);
