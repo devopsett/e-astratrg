@@ -1168,8 +1168,32 @@
     .hidden { display: none !important; }
     .mobile-cards { display: none; }
 
-    /* ===== KEADAAN KOSONG ===== */
-    .empty-state {
+    /* ===== MAKLUMAT TAPISAN AKTIF ===== */
+    .tapisan-info {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: var(--radius-sm);
+      padding: 9px 13px;
+      font-size: var(--fs-sm);
+      color: #1d4ed8;
+      margin-bottom: 12px;
+      line-height: 1.5;
+      flex-wrap: wrap;
+      animation: slideDown 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .tapisan-info svg {
+      width: 15px;
+      height: 15px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      flex-shrink: 0;
+    }
+
+    /* ===== KEADAAN KOSONG ===== */    .empty-state {
       text-align: center;
       padding: 40px 20px;
       color: var(--text-muted);
@@ -2600,6 +2624,8 @@
             <div class="panel-body">
               <div class="filter-pills-bar" id="leadTapisanPeringkat" style="margin-bottom:12px;"></div>
 
+              <div id="leadTapisanInfo" class="tapisan-info hidden" role="status"></div>
+
               <div class="input-row" style="grid-template-columns: 2fr 1fr; gap:10px; margin-bottom:16px;">
                 <div>
                   <label for="leadCari">Cari</label>
@@ -2632,9 +2658,11 @@
 
               <div id="leadMobileCards" style="display:none; flex-direction:column; gap:10px;"></div>
 
-              <div id="leadKosong" class="hidden" style="text-align:center; padding:36px 20px; color:var(--text-muted);">
-                <svg viewBox="0 0 24 24" style="width:42px;height:42px;fill:none;stroke:#cbd5e1;stroke-width:1.6;margin-bottom:10px;"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
-                <div style="font-size: var(--fs-base);">Tiada lead dijumpai.</div>
+              <div id="leadKosong" class="hidden empty-state">
+                <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                <div class="empty-state-title" id="leadKosongTajuk">Tiada lead dijumpai</div>
+                <div class="empty-state-text" id="leadKosongTeks">Lead yang anda tambah atau import akan muncul di sini.</div>
+                <button type="button" class="btn btn-secondary hidden" id="leadKosongReset" onclick="kosongkanTapisanLead()">Set semula tapisan</button>
               </div>
             </div>
           </div>
@@ -4678,8 +4706,11 @@ Jom pakat mari ramai-ramai!
       showLoading(false);
     }
 
-    appState.leads = [];
+    appState.leads = [];           // senarai terapis (untuk paparan)
+    appState.leadsSemua = [];      // semua lead dari pelayan (untuk tapisan klien)
     appState.leadRingkasan = null;
+    appState.leadRingkasanSemua = null;
+    appState.leadPilihan = {};
     appState.leadTapisan = { peringkat: '', sumber: '', cari: '' };
     appState.leadSemasa = null;
 
@@ -4744,51 +4775,106 @@ Jom pakat mari ramai-ramai!
     }
 
     async function loadLeads(paksa) {
-      // Guna hasil lama kalau baru sahaja dimuat.
-      if (!paksa && cacheSah('leads', TTL_LEADS) && appState.leads && appState.leads.length) {
-        renderLeads();
+      // Muat SEMUA lead sekali (tanpa tapisan), kemudian tapis di klien.
+      // Ini elak panggilan pelayan setiap kali taip — sama seperti carian jemaah.
+      const bolehGunaCache = !paksa && cacheSah('leads', TTL_LEADS)
+        && appState.leadsSemua && appState.leadsSemua.length;
+
+      if (bolehGunaCache) {
+        terapkanTapisanLead();
         return;
       }
 
-      showLoading(true, 'Memuatkan leads...');
       try {
-        const p = { peringkat: appState.leadTapisan.peringkat, sumber: appState.leadTapisan.sumber, cari: appState.leadTapisan.cari };
-        const res = await apiGet('getLeads', p);
+        // Hanya tapisan PIC dihantar ke pelayan (kawalan akses).
+        const res = await apiGet('getLeads', {});
         if (!res.ok) throw new Error(res.message);
-        appState.leads = res.data || [];
+
+        appState.leadsSemua = res.data || [];
         appState.leadRingkasan = res.ringkasan;
+        appState.leadRingkasanSemua = res.ringkasanSemua || res.ringkasan;
+        appState.leadPilihan = res.pilihan || {};
         tandaCache('leads');
-        renderLeads();
+
+        terapkanTapisanLead();
       } catch (err) {
         showToast('Gagal memuat leads: ' + err.message, true);
-      } finally {
-        showLoading(false);
       }
+    }
+
+    /** Tapis senarai lead di klien — tiada panggilan pelayan. */
+    function terapkanTapisanLead() {
+      const semua = appState.leadsSemua || [];
+      const t = appState.leadTapisan;
+
+      let hasil = semua;
+
+      if (t.peringkat) {
+        hasil = hasil.filter(l => l.peringkat === t.peringkat);
+      }
+      if (t.sumber) {
+        hasil = hasil.filter(l => l.sumber === t.sumber);
+      }
+      if (t.cari) {
+        const q = String(t.cari).toLowerCase();
+        hasil = hasil.filter(l =>
+          (String(l.nama || '') + ' ' + String(l.telefon || '') + ' ' +
+           String(l.emel || '') + ' ' + String(l.nota || '') + ' ' + String(l.pakej || ''))
+            .toLowerCase().indexOf(q) !== -1
+        );
+      }
+
+      appState.leads = hasil;
+      renderLeads();
     }
 
     function renderLeads() {
       const senarai = appState.leads || [];
-      const r = appState.leadRingkasan || { jumlah: 0, kira: {}, nilaiBerjaya: 0, nilaiPipeline: 0, kadarTukar: 0 };
+      const kosongR = { jumlah: 0, kira: {}, nilaiBerjaya: 0, nilaiPipeline: 0, kadarTukar: 0 };
+      const r = appState.leadRingkasan || kosongR;
+      // Ringkasan keseluruhan (tanpa tapisan) — untuk metrik dan pill.
+      const rs = appState.leadRingkasanSemua || r;
+
+      const adaTapisan = !!(appState.leadTapisan.peringkat || appState.leadTapisan.sumber || appState.leadTapisan.cari);
 
       document.getElementById('leadMetrik').innerHTML = [
-        { t: 'Jumlah Lead', v: r.jumlah || 0, s: 'dalam tapisan' },
-        { t: 'Baru', v: (r.kira && r.kira.Baru) || 0, s: 'belum dihubungi' },
-        { t: 'Berjaya', v: (r.kira && r.kira.Berjaya) || 0, s: 'kadar ' + (r.kadarTukar || 0) + '%' },
-        { t: 'Nilai Pipeline', v: rupiahRingkas(r.nilaiPipeline), s: 'belum selesai' }
+        { t: 'Jumlah Lead', v: rs.jumlah || 0, s: adaTapisan ? 'keseluruhan' : 'semua lead' },
+        { t: 'Baru', v: (rs.kira && rs.kira.Baru) || 0, s: 'belum dihubungi' },
+        { t: 'Berjaya', v: (rs.kira && rs.kira.Berjaya) || 0, s: 'kadar ' + (rs.kadarTukar || 0) + '%' },
+        { t: 'Nilai Pipeline', v: rupiahRingkas(rs.nilaiPipeline), s: 'belum selesai' }
       ].map(x =>
         '<div class="metric-card"><div class="metric-title">' + esc(x.t) + '</div>' +
         '<div class="metric-val">' + esc(x.v) + '</div>' +
         '<div class="metric-sub">' + esc(x.s) + '</div></div>'
       ).join('');
 
-      // Pill tapisan peringkat
+      // Pill tapisan peringkat — jumlah dari ringkasan KESELURUHAN,
+      // supaya pengguna nampak berapa banyak setiap peringkat walaupun
+      // sedang menapis.
       const semula = [{ k: '', label: 'Semua' }].concat(PERINGKAT_LEAD.map(p => ({ k: p, label: p })));
       document.getElementById('leadTapisanPeringkat').innerHTML = semula.map(x => {
         const aktif = appState.leadTapisan.peringkat === x.k;
-        const bil = x.k === '' ? (r.jumlah || 0) : ((r.kira && r.kira[x.k]) || 0);
+        const bil = x.k === '' ? (rs.jumlah || 0) : ((rs.kira && rs.kira[x.k]) || 0);
         return '<button type="button" class="pill-btn' + (aktif ? ' active' : '') + '" onclick="tapisLeadPeringkat(\'' + esc(x.k) + '\')">' +
-          esc(x.label) + (x.k ? ' (' + bil + ')' : '') + '</button>';
+          esc(x.label) + ' (' + bil + ')</button>';
       }).join('');
+
+      // Baris maklumat tapisan aktif
+      const infoEl = document.getElementById('leadTapisanInfo');
+      if (infoEl) {
+        if (adaTapisan) {
+          const bahagian = [];
+          if (appState.leadTapisan.peringkat) bahagian.push('Peringkat: <strong>' + esc(appState.leadTapisan.peringkat) + '</strong>');
+          if (appState.leadTapisan.sumber) bahagian.push('Sumber: <strong>' + esc(appState.leadTapisan.sumber) + '</strong>');
+          if (appState.leadTapisan.cari) bahagian.push('Carian: "<strong>' + esc(appState.leadTapisan.cari) + '</strong>"');
+          infoEl.innerHTML = '<svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>' +
+            '<span>Menapis ' + bahagian.join(' · ') + ' — ' + senarai.length + ' daripada ' + (rs.jumlah || 0) + ' lead.</span>' +
+            '<button type="button" class="btn btn-secondary" style="padding:3px 10px; min-height:26px; font-size:var(--fs-xs); margin-left:auto;" onclick="kosongkanTapisanLead()">Set semula</button>';
+          infoEl.classList.remove('hidden');
+        } else {
+          infoEl.classList.add('hidden');
+        }
+      }
 
       // Dropdown sumber
       const selSumber = document.getElementById('leadTapisSumber');
@@ -4805,6 +4891,22 @@ Jom pakat mari ramai-ramai!
       if (!senarai.length) {
         tbody.innerHTML = '';
         cards.innerHTML = '';
+
+        // Mesej berbeza: ada tapisan vs tiada data langsung.
+        const tajuk = document.getElementById('leadKosongTajuk');
+        const teks = document.getElementById('leadKosongTeks');
+        const btnReset = document.getElementById('leadKosongReset');
+
+        if (adaTapisan) {
+          if (tajuk) tajuk.textContent = 'Tiada lead sepadan';
+          if (teks) teks.textContent = 'Cuba ubah atau set semula tapisan untuk lihat lebih banyak lead.';
+          if (btnReset) btnReset.classList.remove('hidden');
+        } else {
+          if (tajuk) tajuk.textContent = 'Belum ada lead';
+          if (teks) teks.textContent = 'Lead yang anda tambah atau import akan muncul di sini.';
+          if (btnReset) btnReset.classList.add('hidden');
+        }
+
         kosong.classList.remove('hidden');
         return;
       }
@@ -4853,14 +4955,24 @@ Jom pakat mari ramai-ramai!
 
     function tapisLeadPeringkat(p) {
       appState.leadTapisan.peringkat = (appState.leadTapisan.peringkat === p) ? '' : p;
-      loadLeads();
+      terapkanTapisanLead();  // tapis di klien — tiada loading
+    }
+
+    /** Set semula semua tapisan dan carian. */
+    function kosongkanTapisanLead() {
+      appState.leadTapisan = { peringkat: '', sumber: '', cari: '' };
+      const cariEl = document.getElementById('leadCari');
+      if (cariEl) cariEl.value = '';
+      const sumEl = document.getElementById('leadTapisSumber');
+      if (sumEl) sumEl.value = '';
+      terapkanTapisanLead();
     }
 
     function tapisanLeadBerubah() {
       appState.leadTapisan.cari = document.getElementById('leadCari').value.trim();
       appState.leadTapisan.sumber = document.getElementById('leadTapisSumber').value;
-      clearTimeout(window.__leadTapisTimer);
-      window.__leadTapisTimer = setTimeout(loadLeads, 300);
+      // Tapis serta-merta di klien — tiada debounce, tiada loading.
+      terapkanTapisanLead();
     }
 
     function switchLeadsSubTab(sub) {
