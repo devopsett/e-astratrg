@@ -2427,7 +2427,7 @@
               <div style="display:flex; gap:8px; flex-wrap:wrap;">
                 <button type="button" class="btn btn-secondary hidden" id="btnUrusPakej" style="padding:6px 13px; min-height:34px; font-size:12px;" onclick="bukaPakejModal()">Pakej</button>
                 <button type="button" class="btn btn-secondary" style="padding:6px 13px; min-height:34px; font-size:12px;" onclick="bukaTemplatWa()">Templat Mesej</button>
-                <button type="button" class="btn btn-secondary" style="padding:6px 13px; min-height:34px; font-size:12px;" onclick="bukaImportLeads()">Import Pukal</button>
+                <button type="button" class="btn btn-secondary hidden" id="btnImportPukal" style="padding:6px 13px; min-height:34px; font-size:12px;" onclick="bukaImportLeads()">Import Pukal</button>
                 <button type="button" class="btn btn-primary" style="padding:6px 13px; min-height:34px; font-size:12px;" onclick="bukaTambahLead()">+ Lead Baru</button>
               </div>
             </div>
@@ -3209,10 +3209,25 @@
         const el = document.getElementById(id);
         if (el) el.innerHTML = (arr || []).map(x => `<option value="${esc(x)}">${esc(x)}</option>`).join(''); 
       };
-      fill('txPic', l.pic);
-      fill('txLocation', l.lokasi);
       fill('itCategory', l.kategori);
       fill('itLocation', l.lokasi);
+
+      // Dropdown PIC dalam borang transaksi stok.
+      // Semua pilihan dipaparkan, tetapi default kepada PIC yang sedang login.
+      const picSaya = (appState.sesiPengguna && appState.sesiPengguna.pic) || '';
+      let senaraiPic = l.pic || [];
+      if (picSaya && senaraiPic.indexOf(picSaya) === -1) senaraiPic = [picSaya].concat(senaraiPic);
+      senaraiPic = senaraiPic.filter(function(x, i, a) { return x && a.indexOf(x) === i; });
+
+      const elPic = document.getElementById('txPic');
+      if (elPic) {
+        elPic.innerHTML = senaraiPic.map(x => `<option value="${esc(x)}">${esc(x)}</option>`).join('');
+        if (picSaya) elPic.value = picSaya;
+      }
+
+      // Dropdown lokasi (tidak berkaitan PIC)
+      fill('txLocation', l.lokasi);
+
       updateBatchOptions();
     }
 
@@ -4662,19 +4677,31 @@ Jom pakat mari ramai-ramai!
       return appState.sesiPengguna && appState.sesiPengguna.peranan === 'admin';
     }
 
-    /** Isi dropdown PIC — hanya admin boleh pilih. */
-    function isiPilihanPIC() {
-      const senarai = (appState.data && appState.data.lists && appState.data.lists.pic) || ['Pengurus', 'PU', 'Media'];
+    /**
+     * Isi dropdown PIC.
+     * Semua pengguna nampak senarai penuh dan boleh pilih — tetapi:
+     *   - PIC biasa: default kepada PIC sendiri
+     *   - Admin: boleh pilih mana-mana
+     * Pelayan tetap paksa PIC sendiri untuk PIC biasa semasa simpan.
+     */
+    function isiPilihanPIC(nilaiSemasa) {
       const sel = document.getElementById('leadPIC');
       if (!sel) return;
 
-      if (isAdmin()) {
-        sel.innerHTML = '<option value="">— Tiada —</option>' +
-          senarai.map(x => '<option value="' + esc(x) + '">' + esc(x) + '</option>').join('');
-      } else {
-        const picSaya = (appState.sesiPengguna && appState.sesiPengguna.pic) || '';
-        sel.innerHTML = '<option value="' + esc(picSaya) + '">' + esc(picSaya) + '</option>';
-      }
+      let senarai = (appState.data && appState.data.lists && appState.data.lists.pic) || [];
+
+      // Tambah PIC pengguna sendiri kalau belum ada dalam senarai.
+      const picSaya = (appState.sesiPengguna && appState.sesiPengguna.pic) || '';
+      if (picSaya && senarai.indexOf(picSaya) === -1) senarai = [picSaya].concat(senarai);
+
+      senarai = senarai.filter(function(x, i, a) { return x && a.indexOf(x) === i; });
+
+      sel.innerHTML = '<option value="">— Tiada —</option>' +
+        senarai.map(x => '<option value="' + esc(x) + '">' + esc(x) + '</option>').join('');
+
+      // Nilai: nilai semasa kalau ada, jika tidak default kepada PIC sendiri.
+      const pilih = nilaiSemasa || picSaya || '';
+      sel.value = pilih;
     }
 
     function bukaTambahLead() {
@@ -4689,11 +4716,10 @@ Jom pakat mari ramai-ramai!
       document.getElementById('leadBilPax').value = 1;
       document.getElementById('leadNilai').value = 0;
       isiPilihanPakej('');
-      document.getElementById('leadPIC').value = '';
+      isiPilihanPIC('');
       document.getElementById('leadTarikhMasuk').value = todayStr();
       document.getElementById('leadSusulan').value = '';
       document.getElementById('leadNota').value = '';
-      isiPilihanPIC();
       document.getElementById('leadAktivitiWrap').classList.add('hidden');
       document.getElementById('btnPadamLead').classList.add('hidden');
       document.getElementById('btnTukarJemaah').classList.add('hidden');
@@ -4715,12 +4741,11 @@ Jom pakat mari ramai-ramai!
       document.getElementById('leadBilPax').value = l.bilPax || 0;
       document.getElementById('leadNilai').value = l.nilai || 0;
       isiPilihanPakej(l.pakej || '');
-      document.getElementById('leadPIC').value = l.pic || '';
+      isiPilihanPIC(l.pic || '');
       document.getElementById('leadTarikhMasuk').value = l.tarikhMasuk || todayStr();
       document.getElementById('leadSusulan').value = l.tarikhSusulan || '';
       document.getElementById('leadNota').value = l.nota || '';
 
-      isiPilihanPIC();
       document.getElementById('btnPadamLead').classList.remove('hidden');
       document.getElementById('btnTukarJemaah').classList.toggle('hidden', l.peringkat !== 'Berjaya' || !!l.jemaahId);
       document.getElementById('btnWaLead').classList.toggle('hidden', !String(l.telefon || '').trim());
@@ -5618,6 +5643,10 @@ Jom pakat mari ramai-ramai!
 
       const btnPakej = document.getElementById('btnUrusPakej');
       if (btnPakej) btnPakej.classList.toggle('hidden', !isAdmin());
+
+      // Import pukal: admin sahaja.
+      const btnImport = document.getElementById('btnImportPukal');
+      if (btnImport) btnImport.classList.toggle('hidden', !isAdmin());
 
       if (u.peranan === 'admin') {
         el.className = 'skop-banner admin';
