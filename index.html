@@ -876,6 +876,16 @@
       background: radial-gradient(circle at 30% 15%, rgba(110, 231, 183, 0.16), transparent 55%);
       pointer-events: none;
     }
+
+    /* Skrin memuatkan semasa semak sesi — elak skrin login berkelip. */
+    .boot-screen {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(168deg, #0d3f1d 0%, #082713 55%, #04150a 100%);
+      z-index: var(--z-login);
+    }
     .login-box {
       background: #ffffff;
       border-radius: 20px;
@@ -1792,7 +1802,7 @@
   </div>
 
   <!-- SKRIN LOG MASUK -->
-  <div id="loginScreen" class="login-screen">
+  <div id="loginScreen" class="login-screen hidden">
     <div class="login-box">
       <div class="login-brand">
         <img src="Logo%20Azzuha.png" alt="Logo e-ASTRA" class="login-logo">
@@ -1825,6 +1835,17 @@
       <div class="login-nota">
         Lupa kata laluan? Hubungi pentadbir sistem.
       </div>
+    </div>
+  </div>
+
+  <!-- SKRIN MEMUATKAN (semasa semak sesi) -->
+  <div id="bootScreen" class="boot-screen">
+    <div style="text-align:center;">
+      <img src="Logo%20Azzuha.png" alt="e-ASTRA" style="width:58px;height:58px;border-radius:15px;object-fit:cover;background:#0b3818;border:2px solid #a7f3d0;box-shadow:0 6px 18px -4px rgba(0,0,0,0.4);">
+      <div style="margin-top:16px;">
+        <div class="spinner" style="margin:0 auto;border-color:rgba(255,255,255,0.25);border-top-color:#6ee7b7;"></div>
+      </div>
+      <div style="color:#a7f3d0;font-size:12px;font-weight:700;margin-top:14px;letter-spacing:0.3px;">Memuatkan...</div>
     </div>
   </div>
 
@@ -2767,8 +2788,11 @@
       initNetworkAwareness();
       registerServiceWorker();
 
-      // Semak sesi yang disimpan. Kalau ada, sahkan dengan pelayan.
+      // Skrin boot kelihatan secara lalai (dalam HTML).
+      // Kita tentukan: masuk app terus, atau tunjuk skrin login.
+      const boot = document.getElementById('bootScreen');
       const sesi = bacaSesi();
+
       if (sesi) {
         appState.sesi = sesi.token;
         appState.sesiPengguna = sesi.pengguna;
@@ -2777,24 +2801,26 @@
           const semak = await apiGet('getSesiSaya');
           if (semak.ok) {
             appState.sesiPengguna = semak.pengguna;
+            if (boot) boot.classList.add('hidden');
+            // mulaAplikasi juga sembunyikan loginScreen.
             await mulaAplikasi();
-          } else {
-            buangSesi();
+            setTimeout(checkAutoSystemUpdate, 3500);
+            return;
           }
+          buangSesi();
         } catch (e) {
           buangSesi();
         }
       }
 
-      // Jika tiada sesi sah, tunjuk skrin log masuk.
-      if (!appState.sesi) {
-        document.getElementById('loginScreen').classList.remove('hidden');
-        document.getElementById('appShell').classList.add('hidden');
-        setTimeout(() => {
-          const el = document.getElementById('loginId');
-          if (el) el.focus();
-        }, 150);
-      }
+      // Tiada sesi sah — tunjuk skrin log masuk.
+      if (boot) boot.classList.add('hidden');
+      document.getElementById('loginScreen').classList.remove('hidden');
+      document.getElementById('appShell').classList.add('hidden');
+      setTimeout(() => {
+        const el = document.getElementById('loginId');
+        if (el) el.focus();
+      }, 150);
 
       setTimeout(checkAutoSystemUpdate, 3500);
     });
@@ -4492,6 +4518,8 @@ Jom pakat mari ramai-ramai!
     /** Sesi tamat — tunjuk skrin log masuk semula. */
     function paksaLogMasuk() {
       buangSesi();
+      const boot = document.getElementById('bootScreen');
+      if (boot) boot.classList.add('hidden');
       document.getElementById('appShell').classList.add('hidden');
       document.getElementById('loginScreen').classList.remove('hidden');
       const ralat = document.getElementById('loginRalat');
