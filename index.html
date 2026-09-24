@@ -1899,7 +1899,7 @@
 
           <ul id="subLeadsMenu" class="sub-nav-list hidden">
             <li><button id="subBtnLeadsSenarai" class="sub-nav-btn" type="button" onclick="switchTab('leads'); switchLeadsSubTab('senarai');"><span class="sub-nav-dot"></span><span>Senarai Lead</span></button></li>
-            <li><button id="subBtnLeadsImport" class="sub-nav-btn" type="button" onclick="switchTab('leads'); switchLeadsSubTab('import');"><span class="sub-nav-dot"></span><span>Import Pukal</span></button></li>
+            <li id="liLeadsImport" class="hidden"><button id="subBtnLeadsImport" class="sub-nav-btn" type="button" onclick="switchTab('leads'); switchLeadsSubTab('import');"><span class="sub-nav-dot"></span><span>Import Pukal</span></button></li>
           </ul>
         </li>
       </ul>
@@ -4656,6 +4656,12 @@ Jom pakat mari ramai-ramai!
     }
 
     function switchLeadsSubTab(sub) {
+      // Import pukal: admin sahaja. Kalau bukan admin, paksa ke senarai.
+      if (sub === 'import' && !isAdmin()) {
+        showToast('Import pukal hanya untuk admin.', true);
+        sub = 'senarai';
+      }
+
       const senarai = sub === 'senarai';
       document.getElementById('subBtnLeadsSenarai').classList.toggle('active', senarai);
       document.getElementById('subBtnLeadsImport').classList.toggle('active', !senarai);
@@ -5643,6 +5649,10 @@ Jom pakat mari ramai-ramai!
       // Import pukal: admin sahaja.
       const btnImport = document.getElementById('btnImportPukal');
       if (btnImport) btnImport.classList.toggle('hidden', !isAdmin());
+
+      // Sub-menu sidebar Import Pukal: admin sahaja.
+      const liImport = document.getElementById('liLeadsImport');
+      if (liImport) liImport.classList.toggle('hidden', !isAdmin());
 
       if (u.peranan === 'admin') {
         el.className = 'skop-banner admin';
