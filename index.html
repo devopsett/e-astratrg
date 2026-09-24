@@ -3083,15 +3083,15 @@
       }
     }
 
-    function loadData(forceRefresh = false) {
+    async function loadData(forceRefresh = false) {
       if (forceRefresh || !appState.data.items || !appState.data.items.length) {
         renderLoadingPlaceholders();
       }
       setSyncBadge('syncing');
 
-      fetch(withToken(`${SCRIPT_URL}?action=getAppData`), { method: 'GET', redirect: 'follow' })
-      .then(res => res.json())
-      .then(res => {
+      try {
+        // Guna apiGet supaya sesi log masuk disertakan.
+        const res = await apiGet('getAppData');
         if (!res.ok) throw new Error(res.message);
         const payload = res.data ? res.data : res;
 
@@ -3106,18 +3106,17 @@
           localStorage.setItem('eastra_cached_stock', JSON.stringify(appState.data));
         } catch (e) {}
 
-        renderDashboard(); 
-        renderDropdowns(); 
-        renderLogs(); 
+        renderDashboard();
+        renderDropdowns();
+        renderLogs();
         renderItems();
         setSyncBadge('synced');
         if (forceRefresh) showToast('Data stok & inventori disegerakkan.');
-      })
-      .catch(err => {
-        console.error("Ralat muat data:", err);
+      } catch (err) {
+        console.error('Ralat muat data:', err);
         setSyncBadge('cached');
         if (forceRefresh) showToast('Gagal berhubung ke pelayan, memaparkan data lokal.', true);
-      });
+      }
     }
 
     function setInventoryFilter(filterType) {
@@ -3850,8 +3849,7 @@
         `).join('');
       }
 
-      fetch(withToken(`${SCRIPT_URL}?action=getSenaraiJemaah`), { method: 'GET', redirect: 'follow' })
-      .then(res => res.json())
+      apiGet('getSenaraiJemaah')
       .then(res => {
         if (!res.ok && res.message) throw new Error(res.message);
         appState.senaraiJemaah = Array.isArray(res.data) ? res.data : [];
@@ -4025,8 +4023,7 @@
       feedback.style.color = 'var(--text-muted)';
       panel.classList.add('hidden');
 
-      fetch(withToken(`${SCRIPT_URL}?action=semakStatusJemaah&nokp=${encodeURIComponent(nokp)}`), { method: 'GET', redirect: 'follow' })
-      .then(res => res.json())
+      apiGet('semakStatusJemaah', { nokp: nokp })
       .then(res => {
         if (!res.ok) throw new Error(res.message);
         const j = res.data;
@@ -4365,8 +4362,7 @@ Jom pakat mari ramai-ramai!
       const localForms = JSON.parse(localStorage.getItem('eastra_umrah_forms') || '[]');
       if (localForms.length) renderUmrahFormsList(localForms);
 
-      fetch(withToken(`${SCRIPT_URL}?action=getUmrahFormsList`), { method: 'GET', redirect: 'follow' })
-      .then(res => res.json())
+      apiGet('getUmrahFormsList')
       .then(res => {
         const forms = (res && Array.isArray(res.forms)) ? res.forms : [];
         if (forms.length) {
