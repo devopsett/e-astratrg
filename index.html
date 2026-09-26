@@ -1787,8 +1787,124 @@
     </div>
   </div>
 
-  <!-- MODAL: PENGURUS PAKEJ (ADMIN) -->
-  <div id="pakejModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="pakejTitle" onclick="closeModalOnBackdrop(event, 'pakejModal')">
+  <!-- MODAL: MENU PILIHAN PENGGUNA -->
+  <div id="menuPilihanModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="menuPilihanTajuk">
+    <div class="modal-dialog" style="max-width:340px;">
+      <div class="modal-header">
+        <div style="min-width:0;">
+          <h4 id="menuPilihanTajuk">Pengguna</h4>
+          <div id="menuPilihanSub" style="font-size:var(--fs-xs); color:var(--text-muted); margin-top:2px;"></div>
+        </div>
+        <button type="button" class="modal-x" onclick="pilihMenu(null)" aria-label="Tutup">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="menuPilihanSenarai"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: PENGGUNA (ADMIN) -->
+  <div id="penggunaModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="penggunaTitle">
+    <div class="modal-dialog" style="max-width:480px;">
+      <div class="modal-header">
+        <h4 id="penggunaTitle">Pengguna</h4>
+        <button type="button" class="modal-x" onclick="closeModal('penggunaModal')" aria-label="Tutup">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="pggIdLama">
+
+        <div class="field" style="margin-bottom:14px;">
+          <label for="pggId">ID Pengguna *</label>
+          <input type="text" id="pggId" maxlength="30" autocapitalize="none" spellcheck="false" placeholder="cth: fatin">
+          <div style="font-size:var(--fs-xs); color:var(--text-muted); margin-top:4px;">3-30 aksara. Huruf kecil, nombor, . _ - sahaja.</div>
+        </div>
+
+        <div class="field" style="margin-bottom:14px;">
+          <label for="pggNama">Nama Penuh *</label>
+          <input type="text" id="pggNama" maxlength="80" placeholder="cth: Fatin Nabila">
+        </div>
+
+        <div class="input-row" style="grid-template-columns: 1fr 1fr; margin-bottom:14px;">
+          <div>
+            <label for="pggPeranan">Peranan</label>
+            <select id="pggPeranan" onchange="onPerananChange()">
+              <option value="pic">PIC</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <div>
+            <label for="pggPic">PIC</label>
+            <select id="pggPic">
+              <option value="">— Tiada —</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field" style="margin-bottom:14px;">
+          <label for="pggPassword">Kata Laluan <span id="pggPwdNota" style="color:var(--text-muted); font-weight:500; text-transform:none;">(biar kosong untuk kekalkan)</span></label>
+          <input type="password" id="pggPassword" maxlength="100" autocomplete="new-password" placeholder="Minimum 6 aksara">
+        </div>
+
+        <label class="jemaah-toggle" for="pggAktif">
+          <input type="checkbox" id="pggAktif" checked>
+          <span>
+            <span class="jemaah-toggle-text">Akaun Aktif</span>
+            <span class="jemaah-toggle-sub">Akaun tidak aktif tidak boleh log masuk</span>
+          </span>
+        </label>
+
+        <div style="display:flex; gap:8px; justify-content:space-between; margin-top:20px; flex-wrap:wrap;">
+          <button type="button" class="btn btn-danger hidden" id="btnPadamPengguna" onclick="padamPenggunaSemasa()">Padam</button>
+          <div style="display:flex; gap:8px; margin-left:auto;">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('penggunaModal')">Batal</button>
+            <button type="button" class="btn btn-primary" id="btnSimpanPengguna" onclick="simpanPenggunaSemasa()">Simpan</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: TUKAR KATA LALUAN -->
+  <div id="tukarPwdModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="tukarPwdTitle">
+    <div class="modal-dialog" style="max-width:400px;">
+      <div class="modal-header">
+        <h4 id="tukarPwdTitle">Tukar Kata Laluan</h4>
+        <button type="button" class="modal-x" onclick="closeModal('tukarPwdModal')" aria-label="Tutup">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="field" style="margin-bottom:14px;">
+          <label for="tpwdLama">Kata Laluan Semasa *</label>
+          <input type="password" id="tpwdLama" maxlength="100" autocomplete="current-password">
+        </div>
+        <div class="field" style="margin-bottom:8px;">
+          <label for="tpwdBaru">Kata Laluan Baharu *</label>
+          <input type="password" id="tpwdBaru" maxlength="100" autocomplete="new-password" placeholder="Minimum 6 aksara">
+        </div>
+        <div class="field" style="margin-bottom:8px;">
+          <label for="tpwdUlang">Ulang Kata Laluan Baharu *</label>
+          <input type="password" id="tpwdUlang" maxlength="100" autocomplete="new-password">
+        </div>
+        <div id="tpwdRalat" class="login-ralat hidden" role="alert"></div>
+
+        <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:var(--radius-sm); padding:9px 12px; margin-top:14px; font-size:var(--fs-xs); color:#b45309; line-height:1.5;">
+          Semua sesi lain akan ditamatkan selepas kata laluan ditukar.
+        </div>
+
+        <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:20px;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('tukarPwdModal')">Batal</button>
+          <button type="button" class="btn btn-primary" id="btnTukarPwd" onclick="hantarTukarPwd()">Tukar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: PENGURUS PAKEJ (ADMIN) -->  <div id="pakejModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="pakejTitle" onclick="closeModalOnBackdrop(event, 'pakejModal')">
     <div class="modal-dialog" style="max-width:600px;">
       <div class="modal-header">
         <h4 id="pakejTitle">Senarai Pakej</h4>
@@ -2180,6 +2296,22 @@
             <li id="liLeadsImport" class="hidden"><button id="subBtnLeadsImport" class="sub-nav-btn" type="button" onclick="switchTab('leads'); switchLeadsSubTab('import');"><span class="sub-nav-dot"></span><span>Import Pukal</span></button></li>
           </ul>
         </li>
+
+        <!-- MENU ADMIN SAHAJA -->
+        <li id="liMenuAdmin" class="hidden">
+          <button id="btnParentAdmin" class="nav-btn" type="button" onclick="handleDesktopMenuToggle('admin')">
+            <div class="nav-btn-content">
+              <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              <span>Pentadbiran</span>
+            </div>
+            <svg id="chevronAdmin" class="chevron-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+
+          <ul id="subAdminMenu" class="sub-nav-list hidden">
+            <li><button id="subBtnAdminPengguna" class="sub-nav-btn" type="button" onclick="switchTab('adminPengguna'); switchAdminSubTab('pengguna');"><span class="sub-nav-dot"></span><span>Pengguna</span></button></li>
+            <li><button id="subBtnAdminAudit" class="sub-nav-btn" type="button" onclick="switchTab('adminAudit'); switchAdminSubTab('audit');"><span class="sub-nav-dot"></span><span>Log Audit</span></button></li>
+          </ul>
+        </li>
       </ul>
 
       <div class="sidebar-footer">
@@ -2205,7 +2337,7 @@
           <button type="button" class="btn-icon-refresh" onclick="refreshCurrentView()" title="Segar Semula Semua Data" aria-label="Segar semula semua data">
             <svg viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
           </button>
-          <button type="button" class="user-chip" id="userChip" onclick="logKeluarAplikasi()" title="Klik untuk log keluar" aria-label="Log keluar">
+          <button type="button" class="user-chip" id="userChip" onclick="bukaMenuPengguna()" title="Menu pengguna" aria-label="Menu pengguna">
             <span class="user-nama" id="userNama">—</span>
             <span class="user-peranan" id="userPeranan">—</span>
             <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
@@ -2722,6 +2854,8 @@
 
               <div class="mobile-cards" id="leadMobileCards"></div>
 
+              <div id="leadMuatLagi"></div>
+
               <div id="leadKosong" class="hidden empty-state">
                 <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
                 <div class="empty-state-title" id="leadKosongTajuk">Tiada lead dijumpai</div>
@@ -2828,6 +2962,87 @@
               </div>
 
               <div id="hasilImport" class="hidden" style="margin-top:20px;"></div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- SEKSYEN: PENTADBIRAN (ADMIN SAHAJA) -->
+      <section id="tab-admin" class="hidden">
+
+        <!-- Sub: Pengguna -->
+        <div id="subSectionAdminPengguna" class="hidden">
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Pengguna Sistem</h3>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="bukaPakejModal()">Pakej</button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="bukaTambahPengguna()">+ Pengguna</button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="table-container desktop-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Nama</th>
+                      <th>PIC</th>
+                      <th>Peranan</th>
+                      <th>Status</th>
+                      <th style="text-align:center;">Tindakan</th>
+                    </tr>
+                  </thead>
+                  <tbody id="penggunaTbody"></tbody>
+                </table>
+              </div>
+              <div class="mobile-cards" id="penggunaMobileCards"></div>
+              <div id="penggunaKosong" class="hidden empty-state">
+                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <div class="empty-state-title">Belum ada pengguna</div>
+                <div class="empty-state-text">Tambah pengguna untuk beri akses kepada staf.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sub: Log Audit -->
+        <div id="subSectionAdminAudit" class="hidden">
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Log Audit</h3>
+              <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                <label for="auditCari" class="sr-only">Cari log</label>
+                <input type="search" id="auditCari" placeholder="Cari log..." style="width:150px; min-height:34px; padding:4px 10px; font-size:var(--fs-sm);" oninput="tapisAudit()">
+                <label for="auditTapisTindakan" class="sr-only">Tapis tindakan</label>
+                <select id="auditTapisTindakan" style="width:160px; min-height:34px; padding:4px 8px; font-size:var(--fs-sm);" onchange="tapisAudit()">
+                  <option value="">Semua tindakan</option>
+                </select>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="loadAuditLog(true)">Segar</button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div id="auditTapisanInfo" class="tapisan-info hidden" role="status"></div>
+              <div class="table-container desktop-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Masa</th>
+                      <th>Tindakan</th>
+                      <th>Pengguna</th>
+                      <th>Butiran</th>
+                    </tr>
+                  </thead>
+                  <tbody id="auditTbody"></tbody>
+                </table>
+              </div>
+              <div class="mobile-cards" id="auditMobileCards"></div>
+              <div id="auditKosong" class="hidden empty-state">
+                <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+                <div class="empty-state-title" id="auditKosongTajuk">Tiada log</div>
+                <div class="empty-state-text" id="auditKosongTeks">Aktiviti pengguna akan direkod di sini.</div>
+              </div>
             </div>
           </div>
         </div>
@@ -3139,8 +3354,18 @@
         appState.stockMenuOpen = false;
         appState.jemaahMenuOpen = false;
         appState.umrahMenuOpen = false;
+        appState.adminMenuOpen = false;
         switchTab('leads');
         switchLeadsSubTab('senarai');
+      } else if (targetMenu === 'admin') {
+        if (!isAdmin()) { showToast('Akses pentadbiran hanya untuk admin.', true); return; }
+        appState.adminMenuOpen = !appState.adminMenuOpen;
+        appState.stockMenuOpen = false;
+        appState.jemaahMenuOpen = false;
+        appState.umrahMenuOpen = false;
+        appState.leadsMenuOpen = false;
+        switchTab('adminPengguna');
+        switchAdminSubTab('pengguna');
       }
       updateSidebarAccordionUI();
     }
@@ -3172,6 +3397,13 @@
       if (subLeads && chevLeads) {
         subLeads.classList.toggle('hidden', !appState.leadsMenuOpen);
         chevLeads.classList.toggle('open', appState.leadsMenuOpen);
+      }
+
+      const subAdmin = document.getElementById('subAdminMenu');
+      const chevAdmin = document.getElementById('chevronAdmin');
+      if (subAdmin && chevAdmin) {
+        subAdmin.classList.toggle('hidden', !appState.adminMenuOpen);
+        chevAdmin.classList.toggle('open', appState.adminMenuOpen);
       }
     }
 
@@ -3315,8 +3547,24 @@
       const isJemaahTab = ['jemaahList', 'jemaahAdd', 'jemaahEdit'].includes(tab);
       const isUmrahTab = (tab === 'umrahForm');
       const isLeadsTab = (tab === 'leads');
+      const isAdminTab = (tab === 'adminPengguna' || tab === 'adminAudit');
 
-      if (isStockTab) {
+      // Pentadbiran: admin sahaja.
+      if (isAdminTab && !isAdmin()) {
+        showToast('Akses pentadbiran hanya untuk admin.', true);
+        tab = 'dashboard';
+        appState.activeTab = tab;
+      }
+
+      const isStockTabF = ['dashboard', 'transactions', 'items'].includes(tab);
+      const isAdminTabF = (tab === 'adminPengguna' || tab === 'adminAudit');
+      if (isAdminTabF) {
+        appState.stockMenuOpen = false;
+        appState.jemaahMenuOpen = false;
+        appState.umrahMenuOpen = false;
+        appState.leadsMenuOpen = false;
+        appState.adminMenuOpen = true;
+      } else if (isStockTabF) {
         appState.stockMenuOpen = true;
         appState.jemaahMenuOpen = false;
         appState.umrahMenuOpen = false;
@@ -3344,13 +3592,19 @@
       document.getElementById('btnNavUmrah').classList.toggle('active', isUmrahTab);
       document.getElementById('btnParentLeads').classList.toggle('active', isLeadsTab);
 
+      const btnAdmin = document.getElementById('btnParentAdmin');
+      if (btnAdmin) btnAdmin.classList.toggle('active', isAdminTabF);
+
       document.getElementById('mBtnStock').classList.toggle('active', isStockTab);
       document.getElementById('mBtnJemaah').classList.toggle('active', isJemaahTab);
       document.getElementById('mBtnUmrah').classList.toggle('active', isUmrahTab);
       document.getElementById('mBtnLeads').classList.toggle('active', isLeadsTab);
 
-      const allTabs = ['dashboard', 'umrahForm', 'jemaahList', 'leads'];
-      const curKey = isStockTab ? 'dashboard' : (isJemaahTab ? 'jemaahList' : (isUmrahTab ? 'umrahForm' : 'leads'));
+      const allTabs = ['dashboard', 'umrahForm', 'jemaahList', 'leads', 'admin'];
+      const curKey = isStockTab ? 'dashboard'
+        : (isJemaahTab ? 'jemaahList'
+        : (isUmrahTab ? 'umrahForm'
+        : (isLeadsTab ? 'leads' : 'admin')));
       allTabs.forEach(t => {
         const el = document.getElementById('tab-' + t);
         if (el) el.classList.toggle('hidden', t !== curKey);
@@ -3360,7 +3614,8 @@
         dashboard: ['Stok & Inventori', 'Paparan metrik dan status operasi inventori semasa.'],
         umrahForm: ['Kursus Umrah', 'Pusat penjanaan dan pengurusan borang pendaftaran digital.'],
         jemaahList: ['Pengurusan Jemaah', 'Senarai rekod, pendaftaran dan semakan dokumen jemaah.'],
-        leads: ['Leads', 'Pengurusan prospek bakal jemaah dan susulan jualan.']
+        leads: ['Leads', 'Pengurusan prospek bakal jemaah dan susulan jualan.'],
+        admin: ['Pentadbiran', 'Pengurusan pengguna sistem dan log audit.']
       };
 
       document.getElementById('viewTitle').textContent = titles[curKey][0];
@@ -3389,6 +3644,10 @@
       }
       if (isLeadsTab) {
         switchLeadsSubTab('senarai');
+      }
+      if (isAdminTabF) {
+        if (tab === 'adminPengguna') switchAdminSubTab('pengguna');
+        else switchAdminSubTab('audit');
       }
 
       // Kemas kini sub-nav mobile supaya pengguna boleh capai sub-tab
@@ -4960,6 +5219,10 @@ Jom pakat mari ramai-ramai!
     appState.leadRingkasanSemua = null;
     appState.leadPilihan = {};
     appState.leadTapisan = { peringkat: '', sumber: '', cari: '' };
+    appState.leadTapisLepas = null;
+    appState.leadOffset = 0;
+    appState.leadReqId = 0;
+    appState.leadPagination = null;
     appState.leadSemasa = null;
 
     function kelasPeringkat(p) {
@@ -5024,40 +5287,101 @@ Jom pakat mari ramai-ramai!
     }
 
     async function loadLeads(paksa) {
-      // Muat SEMUA lead sekali (tanpa tapisan), kemudian tapis di klien.
-      // Ini elak panggilan pelayan setiap kali taip — sama seperti carian jemaah.
-      const bolehGunaCache = !paksa && cacheSah('leads', TTL_LEADS)
-        && appState.leadsSemua && appState.leadsSemua.length;
+      // Permintaan terkini menang — elak respons lama menimpa yang baru.
+      const idReq = ++appState.leadReqId;
 
-      if (bolehGunaCache) {
-        terapkanTapisanLead();
-        return;
+      // Saringan/kata kunci semasa (dihantar ke pelayan).
+      const tapisan = {
+        peringkat: appState.leadTapisan.peringkat || '',
+        sumber: appState.leadTapisan.sumber || '',
+        cari: appState.leadTapisan.cari || ''
+      };
+
+      // Muat semula: mula dari halaman pertama.
+      if (paksa || tapisanTukar(appState.leadTapisLepas, tapisan)) {
+        appState.leadOffset = 0;
+        appState.leadsSemua = [];
       }
 
-      // Tunjuk skeleton hanya kalau belum ada data langsung.
-      const adaData = appState.leadsSemua && appState.leadsSemua.length;
-      if (!adaData) renderSkeletonLeads();
+      const had = 50;
+      const dari = appState.leadOffset;
+      const adaDataSedia = appState.leadsSemua.length > 0;
+
+      if (!adaDataSedia) {
+        renderSkeletonLeads();
+      } else {
+        renderButangMuatLagi(true); // tunjuk "memuat..."
+      }
 
       try {
-        // Hanya tapisan PIC dihantar ke pelayan (kawalan akses).
-        const res = await apiGet('getLeads', {});
-        if (!res.ok) throw new Error(res.message);
+        const params = {
+          had: had,
+          dari: dari
+        };
+        if (tapisan.peringkat) params.peringkat = tapisan.peringkat;
+        if (tapisan.sumber) params.sumber = tapisan.sumber;
+        if (tapisan.cari) params.cari = tapisan.cari;
 
-        appState.leadsSemua = res.data || [];
+        const res = await apiGet('getLeads', params);
+        if (!res.ok) throw new Error(res.message);
+        if (idReq !== appState.leadReqId) return; // respons lama — abaikan
+
+        // Gabung dengan data sedia ada (untuk "muat lagi").
+        appState.leadsSemua = dari > 0
+          ? appState.leadsSemua.concat(res.data || [])
+          : (res.data || []);
+
         appState.leadRingkasan = res.ringkasan;
         appState.leadRingkasanSemua = res.ringkasanSemua || res.ringkasan;
         appState.leadPilihan = res.pilihan || {};
-        tandaCache('leads');
+        appState.leadPagination = res.pagination || { jumlah: appState.leadsSemua.length, adaLagi: false };
+        appState.leadTapisLepas = tapisan;
+        appState.leadOffset = appState.leadsSemua.length;
 
-        terapkanTapisanLead();
+        // Data sudah terapis di pelayan — render terus.
+        appState.leads = appState.leadsSemua;
+        renderLeads();
       } catch (err) {
-        // Buang skeleton supaya keadaan kosong/ralat boleh muncul.
+        if (idReq !== appState.leadReqId) return;
         const tbody = document.getElementById('leadTbody');
         const cards = document.getElementById('leadMobileCards');
         if (tbody) tbody.innerHTML = '';
         if (cards) cards.innerHTML = '';
         showToast('Gagal memuat leads: ' + err.message, true);
+      } finally {
+        if (idReq === appState.leadReqId) renderButangMuatLagi(false);
       }
+    }
+
+    /** Bandingkan tapisan lama vs baru. */
+    function tapisanTukar(a, b) {
+      if (!a) return true;
+      return a.peringkat !== b.peringkat || a.sumber !== b.sumber || a.cari !== b.cari;
+    }
+
+    /** Muat lagi 50 lead. */
+    function muatLagiLeads() {
+      if (!appState.leadPagination || !appState.leadPagination.adaLagi) return;
+      loadLeads(false);
+    }
+
+    /** Tunjuk/sembunyi butang "Muat Lagi". */
+    function renderButangMuatLagi(memuat) {
+      const el = document.getElementById('leadMuatLagi');
+      if (!el) return;
+
+      const p = appState.leadPagination || {};
+      if (!p.adaLagi) {
+        el.innerHTML = p.jumlah > 0
+          ? '<div style="text-align:center; font-size:var(--fs-xs); color:var(--text-muted); padding:12px 0;">Semua ' + p.jumlah + ' lead dipaparkan.</div>'
+          : '';
+        return;
+      }
+
+      const baki = p.jumlah - (appState.leadsSemua || []).length;
+      el.innerHTML = '<button type="button" class="btn btn-secondary btn-block" onclick="muatLagiLeads()" ' + (memuat ? 'disabled' : '') + ' style="margin-top:14px;">' +
+        (memuat ? 'Memuat...' : 'Muat ' + Math.min(50, baki) + ' lagi (' + baki + ' baki)') +
+        '</button>';
     }
 
     /** Skeleton semasa muat pertama — sama corak seperti Stok & Jemaah. */
@@ -5105,29 +5429,12 @@ Jom pakat mari ramai-ramai!
       }
     }
 
-    /** Tapis senarai lead di klien — tiada panggilan pelayan. */
+    /**
+     * Data sudah ditapis di pelayan — fungsi ini hanya render.
+     * (Dahulunya tapis di klien, kini pagination bermakna pelayan yang tapis.)
+     */
     function terapkanTapisanLead() {
-      const semua = appState.leadsSemua || [];
-      const t = appState.leadTapisan;
-
-      let hasil = semua;
-
-      if (t.peringkat) {
-        hasil = hasil.filter(l => l.peringkat === t.peringkat);
-      }
-      if (t.sumber) {
-        hasil = hasil.filter(l => l.sumber === t.sumber);
-      }
-      if (t.cari) {
-        const q = String(t.cari).toLowerCase();
-        hasil = hasil.filter(l =>
-          (String(l.nama || '') + ' ' + String(l.telefon || '') + ' ' +
-           String(l.emel || '') + ' ' + String(l.nota || '') + ' ' + String(l.pakej || ''))
-            .toLowerCase().indexOf(q) !== -1
-        );
-      }
-
-      appState.leads = hasil;
+      appState.leads = appState.leadsSemua || [];
       renderLeads();
     }
 
@@ -5258,7 +5565,7 @@ Jom pakat mari ramai-ramai!
 
     function tapisLeadPeringkat(p) {
       appState.leadTapisan.peringkat = (appState.leadTapisan.peringkat === p) ? '' : p;
-      terapkanTapisanLead();  // tapis di klien — tiada loading
+      loadLeads(true);  // tapis di pelayan — muat semula
     }
 
     /** Set semula semua tapisan dan carian. */
@@ -5268,14 +5575,16 @@ Jom pakat mari ramai-ramai!
       if (cariEl) cariEl.value = '';
       const sumEl = document.getElementById('leadTapisSumber');
       if (sumEl) sumEl.value = '';
-      terapkanTapisanLead();
+      loadLeads(true);
     }
 
+    let leadCariTimer = null;
     function tapisanLeadBerubah() {
       appState.leadTapisan.cari = document.getElementById('leadCari').value.trim();
       appState.leadTapisan.sumber = document.getElementById('leadTapisSumber').value;
-      // Tapis serta-merta di klien — tiada debounce, tiada loading.
-      terapkanTapisanLead();
+      // Debounce 400ms — elak panggilan pelayan setiap huruf.
+      if (leadCariTimer) clearTimeout(leadCariTimer);
+      leadCariTimer = setTimeout(() => loadLeads(true), 400);
     }
 
     function switchLeadsSubTab(sub) {
@@ -6290,6 +6599,10 @@ Jom pakat mari ramai-ramai!
       const liImport = document.getElementById('liLeadsImport');
       if (liImport) liImport.classList.toggle('hidden', !isAdmin());
 
+      // Menu Pentadbiran: admin sahaja.
+      const liAdmin = document.getElementById('liMenuAdmin');
+      if (liAdmin) liAdmin.classList.toggle('hidden', !isAdmin());
+
       if (u.peranan === 'admin') {
         el.className = 'skop-banner admin';
         el.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>' +
@@ -6500,6 +6813,440 @@ Jom pakat mari ramai-ramai!
       } finally {
         showLoading(false);
       }
+    }
+
+    /* ==========================================================================
+       MODUL PENTADBIRAN — PENGURUSAN PENGGUNA & LOG AUDIT
+       Admin sahaja. Dikuatkuasakan di pelayan juga.
+       ========================================================================== */
+
+    appState.senaraiPengguna = [];
+    appState.auditLog = [];
+    appState.auditTindakan = [];
+
+    /* ===== MENU PENGGUNA (chip profil) ===== */
+
+    async function bukaMenuPengguna() {
+      const u = appState.sesiPengguna || {};
+      const pilihan = [
+        { label: 'Tukar Kata Laluan', nilai: 'pwd' },
+        { label: 'Log Keluar', nilai: 'keluar' }
+      ];
+
+      // Guna confirm modal dengan pilihan
+      const jawapan = await tunjukMenuPilihan(
+        u.nama || 'Pengguna',
+        (u.peranan === 'admin' ? 'Admin' : (u.pic || 'PIC')) + ' · ' + (u.id || ''),
+        pilihan
+      );
+
+      if (jawapan === 'pwd') bukaTukarPwd();
+      else if (jawapan === 'keluar') logKeluarAplikasi();
+    }
+
+    /** Modal menu ringkas dengan butang pilihan. */
+    function tunjukMenuPilihan(tajuk, sub, pilihan) {
+      return new Promise(resolve => {
+        const m = document.getElementById('menuPilihanModal');
+        document.getElementById('menuPilihanTajuk').textContent = tajuk;
+        document.getElementById('menuPilihanSub').textContent = sub;
+        document.getElementById('menuPilihanSenarai').innerHTML = pilihan.map(p =>
+          '<button type="button" class="btn btn-secondary btn-block" style="justify-content:flex-start; margin-bottom:8px;" data-menu-nilai="' + esc(p.nilai) + '">' + esc(p.label) + '</button>'
+        ).join('');
+
+        window.__menuResolve = resolve;
+        openModal('menuPilihanModal');
+      });
+    }
+
+    function pilihMenu(nilai) {
+      closeModal('menuPilihanModal');
+      const r = window.__menuResolve;
+      window.__menuResolve = null;
+      if (r) r(nilai);
+    }
+
+    /* ===== TUKAR KATA LALUAN ===== */
+
+    function bukaTukarPwd() {
+      document.getElementById('tpwdLama').value = '';
+      document.getElementById('tpwdBaru').value = '';
+      document.getElementById('tpwdUlang').value = '';
+      document.getElementById('tpwdRalat').classList.add('hidden');
+      openModal('tukarPwdModal');
+    }
+
+    async function hantarTukarPwd() {
+      const lama = document.getElementById('tpwdLama').value;
+      const baru = document.getElementById('tpwdBaru').value;
+      const ulang = document.getElementById('tpwdUlang').value;
+      const ralatEl = document.getElementById('tpwdRalat');
+      const btn = document.getElementById('btnTukarPwd');
+
+      ralatEl.classList.add('hidden');
+
+      if (!lama || !baru || !ulang) {
+        ralatEl.textContent = 'Sila isi semua medan.';
+        ralatEl.classList.remove('hidden'); return;
+      }
+      if (baru.length < 6) {
+        ralatEl.textContent = 'Kata laluan baharu mesti sekurang-kurangnya 6 aksara.';
+        ralatEl.classList.remove('hidden'); return;
+      }
+      if (baru !== ulang) {
+        ralatEl.textContent = 'Kata laluan baharu tidak sepadan.';
+        ralatEl.classList.remove('hidden'); return;
+      }
+      if (baru === lama) {
+        ralatEl.textContent = 'Kata laluan baharu mesti berbeza dari yang lama.';
+        ralatEl.classList.remove('hidden'); return;
+      }
+
+      btn.disabled = true;
+      try {
+        const res = await apiPost('tukarPassword', { lama: lama, baru: baru });
+        if (!res.ok) throw new Error(res.message);
+
+        closeModal('tukarPwdModal');
+        showToast('Kata laluan ditukar. Sesi lain telah ditamatkan.');
+
+        // Sesi sendiri masih sah — tetapi tanda agar tidak keliru.
+        document.getElementById('tpwdLama').value = '';
+        document.getElementById('tpwdBaru').value = '';
+        document.getElementById('tpwdUlang').value = '';
+      } catch (err) {
+        ralatEl.textContent = err.message;
+        ralatEl.classList.remove('hidden');
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    /* ===== PENGURUSAN PENGGUNA (ADMIN) ===== */
+
+    async function loadPengguna(paksa) {
+      if (!isAdmin()) return;
+      if (!paksa && appState.senaraiPengguna.length && cacheSah('pengguna', TTL_JEMAAH)) {
+        renderPengguna();
+        return;
+      }
+      try {
+        const res = await apiGet('getSenaraiPengguna');
+        if (!res.ok) throw new Error(res.message);
+        appState.senaraiPengguna = res.pengguna || [];
+        tandaCache('pengguna');
+        renderPengguna();
+      } catch (err) {
+        showToast('Gagal memuat pengguna: ' + err.message, true);
+      }
+    }
+
+    function renderPengguna() {
+      const senarai = appState.senaraiPengguna || [];
+      const tbody = document.getElementById('penggunaTbody');
+      const cards = document.getElementById('penggunaMobileCards');
+      const kosong = document.getElementById('penggunaKosong');
+      if (!tbody) return;
+
+      if (!senarai.length) {
+        tbody.innerHTML = '';
+        cards.innerHTML = '';
+        kosong.classList.remove('hidden');
+        return;
+      }
+      kosong.classList.add('hidden');
+
+      tbody.innerHTML = senarai.map(u => `
+        <tr>
+          <td><strong>${esc(u.id)}</strong></td>
+          <td>${esc(u.nama)}</td>
+          <td>${esc(u.pic || '—')}</td>
+          <td>${u.peranan === 'admin'
+              ? '<span class="badge" style="background:#fef3c7;color:#b45309;">Admin</span>'
+              : '<span class="badge badge-ok">PIC</span>'}</td>
+          <td>${u.aktif
+              ? '<span class="badge badge-ok">Aktif</span>'
+              : '<span class="badge badge-empty">Tidak Aktif</span>'}</td>
+          <td style="text-align:center;">
+            <button type="button" class="btn btn-secondary btn-xs" data-edit-pengguna="${esc(u.id)}">Kemaskini</button>
+          </td>
+        </tr>
+      `).join('');
+
+      cards.innerHTML = senarai.map(u => `
+        <div class="card-row">
+          <div class="card-row-top">
+            <div>
+              <div class="card-title">${esc(u.nama)}</div>
+              <div class="card-sub">${esc(u.id)} &bull; ${esc(u.pic || 'Tiada PIC')}</div>
+            </div>
+            ${u.aktif ? '<span class="badge badge-ok">Aktif</span>' : '<span class="badge badge-empty">Tidak Aktif</span>'}
+          </div>
+          <div class="card-row-bottom">
+            <span>${u.peranan === 'admin' ? 'Admin' : 'PIC'}</span>
+            <button type="button" class="btn btn-secondary btn-xs" data-edit-pengguna="${esc(u.id)}">Kemaskini</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function bukaTambahPengguna() {
+      document.getElementById('pggIdLama').value = '';
+      document.getElementById('penggunaTitle').textContent = 'Pengguna Baru';
+      document.getElementById('pggId').value = '';
+      document.getElementById('pggId').disabled = false;
+      document.getElementById('pggNama').value = '';
+      document.getElementById('pggPeranan').value = 'pic';
+      document.getElementById('pggPassword').value = '';
+      document.getElementById('pggAktif').checked = true;
+      document.getElementById('pggPwdNota').textContent = '(minimum 6 aksara)';
+      document.getElementById('btnPadamPengguna').classList.add('hidden');
+      isiPilihanPICPengguna();
+      onPerananChange();
+      openModal('penggunaModal');
+    }
+
+    function bukaEditPengguna(id) {
+      const u = appState.senaraiPengguna.find(x => x.id === id);
+      if (!u) return;
+      document.getElementById('pggIdLama').value = u.id;
+      document.getElementById('penggunaTitle').textContent = u.nama;
+      document.getElementById('pggId').value = u.id;
+      document.getElementById('pggId').disabled = true;
+      document.getElementById('pggNama').value = u.nama;
+      document.getElementById('pggPeranan').value = u.peranan;
+      document.getElementById('pggPassword').value = '';
+      document.getElementById('pggAktif').checked = u.aktif;
+      document.getElementById('pggPwdNota').textContent = '(biar kosong untuk kekalkan)';
+      document.getElementById('btnPadamPengguna').classList.toggle('hidden', u.id === 'admin');
+      isiPilihanPICPengguna(u.pic);
+      onPerananChange();
+      openModal('penggunaModal');
+    }
+
+    function isiPilihanPICPengguna(nilaiSemasa) {
+      const sel = document.getElementById('pggPic');
+      if (!sel) return;
+      let senarai = (appState.data && appState.data.lists && appState.data.lists.pic) || [];
+      // Tambah PIC yang ada dalam senarai pengguna.
+      (appState.senaraiPengguna || []).forEach(u => {
+        if (u.pic && senarai.indexOf(u.pic) === -1) senarai.push(u.pic);
+      });
+      senarai = senarai.filter((x, i, a) => x && a.indexOf(x) === i);
+
+      sel.innerHTML = '<option value="">— Tiada —</option>' +
+        senarai.map(x => '<option value="' + esc(x) + '">' + esc(x) + '</option>').join('');
+      if (nilaiSemasa) sel.value = nilaiSemasa;
+    }
+
+    /** PIC hanya perlu bila peranan = pic. */
+    function onPerananChange() {
+      const peranan = document.getElementById('pggPeranan').value;
+      const picEl = document.getElementById('pggPic');
+      const label = picEl ? picEl.previousElementSibling : null;
+      const perlu = (peranan === 'pic');
+      if (picEl) picEl.disabled = !perlu;
+      if (label) label.style.opacity = perlu ? '1' : '0.5';
+    }
+
+    async function simpanPenggunaSemasa() {
+      const idBaru = document.getElementById('pggId').value.trim().toLowerCase();
+      const idLama = document.getElementById('pggIdLama').value;
+      const nama = document.getElementById('pggNama').value.trim();
+      const peranan = document.getElementById('pggPeranan').value;
+      const pic = document.getElementById('pggPic').value;
+      const password = document.getElementById('pggPassword').value;
+
+      if (!idBaru) { showToast('ID pengguna diperlukan.', true); return; }
+      if (!/^[a-z0-9._-]{3,30}$/.test(idBaru)) {
+        showToast('ID mesti 3-30 aksara (huruf kecil, nombor, . _ - sahaja).', true); return;
+      }
+      if (!nama) { showToast('Nama diperlukan.', true); return; }
+      if (peranan === 'pic' && !pic) { showToast('PIC diperlukan untuk peranan PIC.', true); return; }
+      if (!idLama && (!password || password.length < 6)) {
+        showToast('Kata laluan mesti sekurang-kurangnya 6 aksara.', true); return;
+      }
+      if (password && password.length < 6) {
+        showToast('Kata laluan mesti sekurang-kurangnya 6 aksara.', true); return;
+      }
+
+      const btn = document.getElementById('btnSimpanPengguna');
+      btn.disabled = true;
+      showLoading(true, 'Menyimpan pengguna...');
+
+      try {
+        const data = {
+          id: idBaru,
+          nama: nama,
+          peranan: peranan,
+          pic: peranan === 'admin' ? '' : pic,
+          aktif: document.getElementById('pggAktif').checked
+        };
+        if (password) data.password = password;
+
+        const res = await apiPost('simpanPenggunaAuth', data);
+        if (!res.ok) throw new Error(res.message);
+
+        closeModal('penggunaModal');
+        kosongkanCache('pengguna');
+        await loadPengguna(true);
+        showToast('Pengguna disimpan.');
+      } catch (err) {
+        showToast('Gagal menyimpan: ' + err.message, true);
+      } finally {
+        showLoading(false);
+        btn.disabled = false;
+      }
+    }
+
+    async function padamPenggunaSemasa() {
+      const id = document.getElementById('pggIdLama').value;
+      if (!id) return;
+      const u = appState.senaraiPengguna.find(x => x.id === id);
+      const ok = await requestConfirm({
+        title: 'Padam Pengguna',
+        message: 'Sahkan padam pengguna\n' + (u ? u.nama + ' (' + id + ')' : id) + '?\n\nAkaun ini tidak lagi boleh log masuk.',
+        okLabel: 'Padam',
+        danger: true
+      });
+      if (!ok) return;
+
+      showLoading(true, 'Memadam pengguna...');
+      try {
+        const res = await apiPost('padamPenggunaAuth', { id: id });
+        if (!res.ok) throw new Error(res.message);
+        closeModal('penggunaModal');
+        kosongkanCache('pengguna');
+        await loadPengguna(true);
+        showToast('Pengguna dipadam.');
+      } catch (err) {
+        showToast('Gagal memadam: ' + err.message, true);
+      } finally {
+        showLoading(false);
+      }
+    }
+
+    /* ===== LOG AUDIT (ADMIN) ===== */
+
+    async function loadAuditLog(paksa) {
+      if (!isAdmin()) return;
+      try {
+        const tapis = document.getElementById('auditTapisTindakan');
+        const res = await apiGet('getAuditLog', {
+          had: 200,
+          tindakan: tapis ? tapis.value : '',
+          cari: (document.getElementById('auditCari') || {}).value || ''
+        });
+        if (!res.ok) throw new Error(res.message);
+
+        // Isi dropdown tindakan sekali sahaja.
+        if (tapis && tapis.options.length <= 1 && res.tindakan) {
+          tapis.innerHTML = '<option value="">Semua tindakan</option>' +
+            res.tindakan.map(t => '<option value="' + esc(t) + '">' + esc(t) + '</option>').join('');
+        }
+
+        appState.auditLog = res.data || [];
+        renderAudit();
+      } catch (err) {
+        showToast('Gagal memuat log audit: ' + err.message, true);
+      }
+    }
+
+    let auditTimer = null;
+    function tapisAudit() {
+      if (auditTimer) clearTimeout(auditTimer);
+      auditTimer = setTimeout(() => loadAuditLog(true), 400);
+    }
+
+    function renderAudit() {
+      const senarai = appState.auditLog || [];
+      const tbody = document.getElementById('auditTbody');
+      const cards = document.getElementById('auditMobileCards');
+      const kosong = document.getElementById('auditKosong');
+      if (!tbody) return;
+
+      const adaTapis = !!(String((document.getElementById('auditCari') || {}).value || '').trim() ||
+                          String((document.getElementById('auditTapisTindakan') || {}).value || '').trim());
+
+      const info = document.getElementById('auditTapisanInfo');
+      if (info) {
+        if (adaTapis) {
+          info.innerHTML = '<svg viewBox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>' +
+            '<span>' + senarai.length + ' log sepadan.</span>' +
+            '<button type="button" class="btn btn-secondary btn-xs" style="margin-left:auto;" onclick="setSemulaAudit()">Set semula</button>';
+          info.classList.remove('hidden');
+        } else {
+          info.classList.add('hidden');
+        }
+      }
+
+      if (!senarai.length) {
+        tbody.innerHTML = '';
+        cards.innerHTML = '';
+        const tajuk = document.getElementById('auditKosongTajuk');
+        const teks = document.getElementById('auditKosongTeks');
+        if (tajuk) tajuk.textContent = adaTapis ? 'Tiada log sepadan' : 'Tiada log';
+        if (teks) teks.textContent = adaTapis ? 'Cuba ubah tapisan.' : 'Aktiviti pengguna akan direkod di sini.';
+        kosong.classList.remove('hidden');
+        return;
+      }
+      kosong.classList.add('hidden');
+
+      const formatMasa = (iso) => {
+        if (!iso) return '—';
+        try {
+          const d = new Date(iso);
+          return d.toLocaleString('ms-MY', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit', second:'2-digit' });
+        } catch (e) { return iso; }
+      };
+
+      tbody.innerHTML = senarai.map(a => `
+        <tr>
+          <td style="white-space:nowrap; font-size:var(--fs-xs);">${esc(formatMasa(a.masa))}</td>
+          <td><strong style="font-size:var(--fs-sm);">${esc(a.tindakan)}</strong></td>
+          <td><span class="badge badge-ok">${esc(a.pengguna)}</span></td>
+          <td style="font-size:var(--fs-xs); color:var(--text-muted); max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${esc(a.butiran)}">${esc(a.butiran)}</td>
+        </tr>
+      `).join('');
+
+      cards.innerHTML = senarai.map(a => `
+        <div class="card-row">
+          <div class="card-row-top">
+            <div>
+              <div class="card-title">${esc(a.tindakan)}</div>
+              <div class="card-sub">${esc(formatMasa(a.masa))} &bull; ${esc(a.pengguna)}</div>
+            </div>
+          </div>
+          ${a.butiran ? '<div style="font-size:var(--fs-xs); color:var(--text-muted); word-break:break-all;">' + esc(a.butiran) + '</div>' : ''}
+        </div>
+      `).join('');
+    }
+
+    function setSemulaAudit() {
+      const c = document.getElementById('auditCari');
+      const t = document.getElementById('auditTapisTindakan');
+      if (c) c.value = '';
+      if (t) t.value = '';
+      loadAuditLog(true);
+    }
+
+    /* ===== SUB-TAB PENTADBIRAN ===== */
+    function switchAdminSubTab(sub) {
+      const isPgg = (sub === 'pengguna');
+      const subPgg = document.getElementById('subBtnAdminPengguna');
+      const subAudit = document.getElementById('subBtnAdminAudit');
+      if (subPgg) subPgg.classList.toggle('active', isPgg);
+      if (subAudit) subAudit.classList.toggle('active', !isPgg);
+
+      const secPgg = document.getElementById('subSectionAdminPengguna');
+      const secAudit = document.getElementById('subSectionAdminAudit');
+      if (secPgg) secPgg.classList.toggle('hidden', !isPgg);
+      if (secAudit) secAudit.classList.toggle('hidden', isPgg);
+
+      if (isPgg) loadPengguna();
+      else loadAuditLog();
+
+      setMobileSubAktif(isPgg ? 'pengguna' : 'audit');
     }
 
     /* ==========================================================================
@@ -6729,6 +7476,12 @@ Jom pakat mari ramai-ramai!
 
         const pakejRow = e.target.closest('[data-pakej]');
         if (pakejRow) { bukaEditPakej(pakejRow.getAttribute('data-pakej')); return; }
+
+        const pggBtn = e.target.closest('[data-edit-pengguna]');
+        if (pggBtn) { bukaEditPengguna(pggBtn.getAttribute('data-edit-pengguna')); return; }
+
+        const menuBtn = e.target.closest('[data-menu-nilai]');
+        if (menuBtn) { pilihMenu(menuBtn.getAttribute('data-menu-nilai')); return; }
 
         const waBtn = e.target.closest('[data-wa-cepat]');
         if (waBtn) {
