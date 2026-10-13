@@ -3205,11 +3205,13 @@
       globalTxType: 'Keluar',
       umrahForms: [],
       senaraiJemaah: [],
+      jemaahDipapar: [],
       currentJemaahIC: '',
       stockMenuOpen: true,
       jemaahMenuOpen: false,
       umrahMenuOpen: false,
-      leadsMenuOpen: false
+      leadsMenuOpen: false,
+      adminMenuOpen: false
     };
 
     let html5QrCodeScanner = null;
@@ -4073,7 +4075,9 @@
       rows.forEach(r => {
         const itemId = r.querySelector('.batch-item').value;
         const qty = Number(r.querySelector('.batch-qty').value);
-        if (itemId && qty >= 0) items.push({ itemId, type: appState.globalTxType, qty });
+        // Pelarasan membenarkan 0 (kiraan fizikal sifar); Masuk/Keluar mesti >= 1.
+        const minQty = appState.globalTxType === TX.PELARASAN ? 0 : 1;
+        if (itemId && qty >= minQty) items.push({ itemId, type: appState.globalTxType, qty });
       });
       if (!items.length) { showToast('Sila pilih sekurang-kurangnya satu item.', true); return; }
 
@@ -4561,6 +4565,10 @@
       const tbody = document.getElementById('tbodyJemaah');
       const mCards = document.getElementById('mobileCardsJemaah');
 
+      // Simpan senarai yang SEDANG dipaparkan supaya butang perincian
+      // (data-jemaah-nokp) merujuk rekod yang betul walaupun selepas tapisan.
+      appState.jemaahDipapar = data || [];
+
       // Statistik dari senarai KESELURUHAN, bukan senarai terapis —
       // supaya kad metrik tidak berubah bila pengguna menapis.
       const semua = appState.senaraiJemaah || [];
@@ -4597,7 +4605,7 @@
         const c_key = `<span class="badge ${j.keyin === CHECKLIST.SELESAI ? 'badge-ok' : 'badge-empty'}">Key-In ${j.keyin === CHECKLIST.SELESAI ? '&#10004;' : '&#10006;'}</span>`;
 
         return `
-          <tr class="baris-jemaah">
+          <tr class="baris-jemaah clickable-row" data-jemaah-nokp="${esc(j.nokp || '')}" role="button" tabindex="0" aria-label="Lihat perincian jemaah">
             <td>
               <div style="font-size: var(--fs-xs); font-weight:800; color:var(--primary); text-transform:uppercase;">PU: ${esc(j.namaPU)}</div>
               <div style="font-weight:700; color:var(--text); font-size: var(--fs-base);">${esc(j.nama)}</div>
@@ -4610,7 +4618,7 @@
         `;
       }).join('');
 
-      mCards.innerHTML = data.map((j, idx) => `
+      mCards.innerHTML = data.map(j => `
         <div class="card-row">
           <div class="card-row-top">
             <div>
@@ -4621,7 +4629,7 @@
           </div>
           <div class="card-row-bottom">
             <span style="font-size: var(--fs-xs); color: var(--text-muted);">Beg:${j.beg===CHECKLIST.SELESAI?'&#10004;':'&#10006;'} | Kursus:${j.kursus===CHECKLIST.SELESAI?'&#10004;':'&#10006;'} | KeyIn:${j.keyin===CHECKLIST.SELESAI?'&#10004;':'&#10006;'}</span>
-            <button type="button" class="btn btn-secondary" data-jemaah-index="${idx}" style="padding: 4px 10px; font-size: var(--fs-xs); min-height: 28px;">Lihat Perincian</button>
+            <button type="button" class="btn btn-secondary" data-jemaah-nokp="${esc(j.nokp || '')}" style="padding: 4px 10px; font-size: var(--fs-xs); min-height: 28px;">Lihat Perincian</button>
           </div>
         </div>
       `).join('');
@@ -6846,6 +6854,13 @@ Jom pakat mari ramai-ramai!
 
     /** Modal menu ringkas dengan butang pilihan. */
     function tunjukMenuPilihan(tajuk, sub, pilihan) {
+      // Jika ada menu terdahulu yang belum selesai, selesaikannya sebagai null
+      // supaya promise tidak tergantung (Escape/backdrop/klik luar).
+      if (window.__menuResolve) {
+        const lama = window.__menuResolve;
+        window.__menuResolve = null;
+        lama(null);
+      }
       return new Promise(resolve => {
         const m = document.getElementById('menuPilihanModal');
         document.getElementById('menuPilihanTajuk').textContent = tajuk;
@@ -6860,9 +6875,9 @@ Jom pakat mari ramai-ramai!
     }
 
     function pilihMenu(nilai) {
-      closeModal('menuPilihanModal');
       const r = window.__menuResolve;
       window.__menuResolve = null;
+      closeModal('menuPilihanModal');
       if (r) r(nilai);
     }
 
@@ -7272,6 +7287,12 @@ Jom pakat mari ramai-ramai!
       modal.classList.add('hidden');
       // Pastikan pengesahan sentiasa diselesaikan supaya tiada promise tergantung.
       if (modalId === 'confirmModal') settleConfirm(false);
+      // Sama untuk modal menu pilihan (Escape/klik luar mesti resolve null).
+      if (modalId === 'menuPilihanModal' && window.__menuResolve) {
+        const rMenu = window.__menuResolve;
+        window.__menuResolve = null;
+        rMenu(null);
+      }
       unlockBodyScroll();
       if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
         try { lastFocusedElement.focus({ preventScroll: true }); } catch (e) {}
@@ -7438,16 +7459,30 @@ Jom pakat mari ramai-ramai!
        PENGENDALI EVENT TERPUSAT (menggantikan inline onclick dengan data-attribute)
        ========================================================================== */
     function initDelegatedEvents() {
-      document.addEventListener('click', e => {        const delBtn = e.target.closest('[data-edit-item]');
+      document.addEventListener('click', e => {
+        // WhatsApp laju mesti disemak DAHULU sebelum data-lead-id,
+        // kerana butang ini berada dalam baris yang ada data-lead-id.
+        const waBtnCepat = e.target.closest('[data-wa-cepat]');
+        if (waBtnCepat) {
+          const l = (appState.leads || []).find(x => x.id === waBtnCepat.getAttribute('data-wa-cepat'));
+          if (l) { appState.leadSemasa = l; bukaWaUntukLead(); }
+          return;
+        }
+
+        const delBtn = e.target.closest('[data-edit-item]');
         if (delBtn) {
           const item = findItemById(delBtn.getAttribute('data-edit-item'));
           if (item) populateEditItem(item);
           return;
         }
 
-        const jemaahBtn = e.target.closest('[data-jemaah-index]');
+        const jemaahBtn = e.target.closest('[data-jemaah-nokp]');
         if (jemaahBtn) {
-          const j = appState.senaraiJemaah[Number(jemaahBtn.getAttribute('data-jemaah-index'))];
+          const nokp = jemaahBtn.getAttribute('data-jemaah-nokp');
+          const sumber = (appState.jemaahDipapar && appState.jemaahDipapar.length)
+            ? appState.jemaahDipapar
+            : (appState.senaraiJemaah || []);
+          const j = sumber.find(x => String(x.nokp || '') === String(nokp || ''));
           if (j) openJemaahDetailModal(j);
           return;
         }
@@ -7482,16 +7517,6 @@ Jom pakat mari ramai-ramai!
 
         const menuBtn = e.target.closest('[data-menu-nilai]');
         if (menuBtn) { pilihMenu(menuBtn.getAttribute('data-menu-nilai')); return; }
-
-        const waBtn = e.target.closest('[data-wa-cepat]');
-        if (waBtn) {
-          const l = (appState.leads || []).find(x => x.id === waBtn.getAttribute('data-wa-cepat'));
-          if (l) {
-            appState.leadSemasa = l;
-            bukaWaUntukLead();
-          }
-          return;
-        }
       });
 
       document.addEventListener('keydown', e => {
