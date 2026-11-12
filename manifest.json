@@ -1,15 +1,33 @@
 {
+  "id": "/e-astratrg/",
   "short_name": "e-ASTRA",
   "name": "e-ASTRA Hab Operasi Cawangan",
+  "description": "Hab operasi cawangan: stok, jemaah, leads dan borang kursus Umrah.",
+  "lang": "ms",
   "icons": [
     {
       "src": "Logo%20Azzuha.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "Logo%20Azzuha-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "Logo%20Azzuha-maskable-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
     }
   ],
   "start_url": "?mode=standalone",
+  "scope": "./",
   "background_color": "#0b3818",
   "theme_color": "#0b3818",
-  "display": "standalone"
+  "display": "standalone",
+  "orientation": "portrait-primary"
 }
